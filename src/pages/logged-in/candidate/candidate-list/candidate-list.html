@@ -10,7 +10,7 @@
 
 <ion-content>
   <ion-list>
-    <ion-item-sliding *ngFor="let candidate of companies">
+    <ion-item-sliding *ngFor="let candidate of candidates">
       <button ion-item (click)="rowSelected(candidate)">
         {{ candidate.candidate_name }}
       </button>  

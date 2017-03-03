@@ -22,6 +22,7 @@ import { ConfigService } from '../providers/config.service';
 import { AuthHttpService } from '../providers/logged-in/authhttp.service';
 import { CandidateService } from '../providers/logged-in/candidate.service';
 import { CompanyService } from '../providers/logged-in/company.service';
+import { StoreService } from '../providers/logged-in/store.service';
 
 @NgModule({
   declarations: [
@@ -62,7 +63,8 @@ import { CompanyService } from '../providers/logged-in/company.service';
       ConfigService, // Handles Environment-specific Variables
       AuthHttpService,
       CandidateService,
-      CompanyService
+      CompanyService,
+      StoreService
   ],
   bootstrap: [IonicApp]
 })

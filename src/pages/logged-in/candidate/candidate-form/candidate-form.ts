@@ -21,6 +21,7 @@ export class CandidateFormPage {
 
   public form: FormGroup;
   public banklistData;
+  public myDate;
 
   constructor(
     params: NavParams,
@@ -34,6 +35,7 @@ export class CandidateFormPage {
   ) {
     // Load the passed model if available
     this.model = params.get('model');
+    this.myDate = new Date().toISOString();
 
     // Load the all available bank list
     this.loadBanksList();

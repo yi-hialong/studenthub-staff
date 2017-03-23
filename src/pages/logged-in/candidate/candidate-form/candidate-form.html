@@ -59,7 +59,7 @@
 
       <ion-item>
         <ion-label floating>Expiry Date</ion-label>
-        <ion-datetime displayFormat="YYYY-MM-DD" formControlName="expiry_date"></ion-datetime>
+        <ion-datetime displayFormat="YYYY-MM-DD" max="2500" [(ngModel)]="myDate" formControlName="expiry_date"></ion-datetime>
       </ion-item>
 
       <ion-item>

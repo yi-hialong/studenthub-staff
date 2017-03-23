@@ -49,12 +49,12 @@ export class CandidateViewPage {
     let alert = this.alertCtrl.create();
     alert.setTitle('Assign Candidate to Store');
     //Unassigning Candidate from Store
-    if(  this.candidate.store_id){
-    alert.addInput({
-      type: 'radio',
-      label: 'Unassign Candidate',
-      value: '-1'
-    });
+    if (this.candidate.store_id) {
+      alert.addInput({
+        type: 'radio',
+        label: 'Unassign Candidate',
+        value: '-1'
+      });
     }
 
     //Assigning Candidate from Store
@@ -100,12 +100,34 @@ export class CandidateViewPage {
      * Unassinging Candidate from store
      */
   unAssigning(candidate_id: any) {
-    let loader = this._loadingCtrl.create();
-    loader.present();
-    this.candidateService.unAssignCandidate(candidate_id).subscribe(jsonResp => {
-      loader.dismiss();
-      this.loadData();
+    let confirm = this.alertCtrl.create({
+      title: '',
+      message: 'Do you want to Unassign the Candidate from Store',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+            //handle the functionality when user click on 'cancel' button
+          }
+        },
+        {
+          text: 'Ok',
+          handler: () => {
+            //handle the functionality when user click on 'ok' button
+            let loader = this._loadingCtrl.create();
+            loader.present();
+            //Unassigning Candidate from store
+            this.candidateService.unAssignCandidate(candidate_id).subscribe(jsonResp => {
+              this.candidate.store_name = null;
+              this.candidate.store_id = null;
+              loader.dismiss();
+              this.loadData();
+            });
+          }
+        }
+      ]
     });
+    confirm.present();
   }
 
 

@@ -40,11 +40,12 @@
 
 
   <span *ngIf="!candidate.store_id">
-    <button ion-button full (click)="assignCandidateToStore()">Add Candidate to Store</button>
+    <button ion-button full (click)="assignCandidateToStore()">Assign Candidate to Store</button>
   </span>
 
   <span *ngIf="candidate.store_id">
-    <button ion-button full (click)="assignCandidateToStore()">Edit Candidate to Store</button>
+    <button ion-button full color="danger" (click)="unAssigning(candidate.candidate_id)">Unassign candidate from {{ candidate.store_name }}</button>
+   
   </span>
 
 </ion-content>

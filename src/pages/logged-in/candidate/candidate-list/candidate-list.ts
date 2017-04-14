@@ -15,7 +15,8 @@ import { Candidate } from '../../../../models/candidate';
 })
 export class CandidateListPage {
 
-  public cndSegment: string;
+  public searchBar: string = '';
+  public cndSegment: string = 'assigned';
   public candidates: Candidate[];
 
   constructor(
@@ -26,7 +27,6 @@ export class CandidateListPage {
   ) { }
 
   ionViewDidLoad() {
-    this.cndSegment = 'assigned';
     this.loadData();
   }
 
@@ -43,7 +43,7 @@ export class CandidateListPage {
     // Load list of candidates
     let loader = this._loadingCtrl.create();
     loader.present();
-    this.candidateService.listNotAssigned().subscribe(response => {
+    this.candidateService.listNotAssigned(this.searchBar).subscribe(response => {
       this.candidates = response;
       loader.dismiss();
     });
@@ -53,7 +53,7 @@ export class CandidateListPage {
     // Load list of candidates
     let loader = this._loadingCtrl.create();
     loader.present();
-    this.candidateService.listAssigned().subscribe(response => {
+    this.candidateService.listAssigned(this.searchBar).subscribe(response => {
       this.candidates = response;
       loader.dismiss();
     });

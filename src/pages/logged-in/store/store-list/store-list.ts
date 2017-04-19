@@ -14,6 +14,11 @@ import { Store } from '../../../../models/store';
   templateUrl: 'store-list.html'
 })
 export class StoreListPage {
+
+  public pageCount = 0;
+  public currentPage = 1;
+  public pages: number[] = [];
+
   public stores: Store[];
 
   private _companyId: number;
@@ -29,15 +34,38 @@ export class StoreListPage {
   }
 
   ionViewDidLoad() {
-    this.loadData();
+    this.loadData(this.currentPage);
   }
 
-  loadData(){
+  pageLinkColor(page: number) {
+
+    if(page == this.currentPage) 
+      return 'light';
+    
+    return '';
+  }
+
+  loadData(page: number) {
     // Load list of ALL stores
     let loader = this._loadingCtrl.create();
     loader.present();
     this.storeService.list(this._companyId).subscribe(response => {
-      this.stores = response;
+
+      this.pageCount = response.headers.get('X-Pagination-Page-Count');
+      this.currentPage = response.headers.get('X-Pagination-Current-Page');
+
+      this.pages = [];
+
+      for(var i = 1; i <= this.pageCount; i++){
+         this.pages.push(i);
+      }
+
+      //hide if no page = 1 
+
+      if(this.pageCount == 1)
+        this.pages = [];
+
+      this.stores = response.json();
       loader.dismiss();
     });
   }
@@ -66,7 +94,7 @@ export class StoreListPage {
     modal.onDidDismiss(data => {
       if(data){
         if(data.refresh){
-          this.loadData();
+          this.loadData(this.currentPage);
         }
       }
     });
@@ -82,7 +110,7 @@ export class StoreListPage {
 
     this.storeService.delete(store).subscribe(jsonResp => {
       loader.dismiss();
-      this.loadData();
+      this.loadData(this.currentPage);
     });
   }
 

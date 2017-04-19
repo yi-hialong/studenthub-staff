@@ -21,25 +21,25 @@ export class CandidateService {
    */
   list(): Observable<any> {
     let url = this._candidateEndpoint;
-    return this._authhttp.get(url);
+    return this._authhttp.getRaw(url);
   }
 
   /**
    * List of all candidates asigned to store 
    * @returns {Observable<any>}
    */
-  listAssigned(candidate_name: string): Observable<any> {
-    let url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name;
-    return this._authhttp.get(url);
+  listAssigned(candidate_name: string, page: number): Observable<any> {
+    let url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page;
+    return this._authhttp.getRaw(url);
   }
 
   /**
    * List of all candidates not asigned to store 
    * @returns {Observable<any>}
    */
-  listNotAssigned(candidate_name: string): Observable<any> {
-    let url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name;
-    return this._authhttp.get(url);
+  listNotAssigned(candidate_name: string, page: number): Observable<any> {
+    let url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page;
+    return this._authhttp.getRaw(url);
   }
 
   /**
@@ -138,6 +138,4 @@ export class CandidateService {
     let url = `${this._candidateEndpoint}/assign/${candidate_id}`;
     return this._authhttp.patch(url, params);
   }
-
-
 }

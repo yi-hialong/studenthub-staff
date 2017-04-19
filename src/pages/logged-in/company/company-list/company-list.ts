@@ -14,6 +14,10 @@ import { Company } from '../../../../models/company';
 })
 export class CompanyListPage {
 
+  public pageCount = 0;
+  public currentPage = 1;
+  public pages: number[] = [];
+
   public companies: Company[];
 
   constructor(
@@ -24,8 +28,12 @@ export class CompanyListPage {
     private _loadingCtrl: LoadingController,
   ) {
     this.companies = params.get("companies");
-    if(!this.companies){
-      this.loadCompanyList();
+    
+    console.log(this.companies);
+    
+    if(!this.companies)
+    {
+      this.loadCompanyList(this.currentPage);
     }
   }
 
@@ -33,12 +41,36 @@ export class CompanyListPage {
     
   }
 
-  loadCompanyList(){
+  pageLinkColor(page: number) {
+
+    if(page == this.currentPage) 
+      return 'light';
+    
+    return '';
+  }
+
+  loadCompanyList(page: number){
     // Load list of companies
     let loader = this._loadingCtrl.create();
     loader.present();
     this.companyService.list().subscribe(response => {
-      this.companies = response;
+      
+      this.pageCount = response.headers.get('X-Pagination-Page-Count');
+      this.currentPage = response.headers.get('X-Pagination-Current-Page');
+
+      this.pages = [];
+
+      for(var i = 1; i <= this.pageCount; i++){
+         this.pages.push(i);
+      }
+
+      //hide if no page = 1 
+
+      if(this.pageCount == 1)
+        this.pages = [];
+
+      this.companies = response.json();
+
       loader.dismiss();
     });
   }

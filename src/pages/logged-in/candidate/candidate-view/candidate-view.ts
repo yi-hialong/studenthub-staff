@@ -155,7 +155,7 @@ export class CandidateViewPage {
     let loader = this._loadingCtrl.create();
     loader.present();
     this.storeService.list().subscribe(response => {
-      this.stores = response;
+      this.stores = response.json();
       this.stores.forEach((value) => {
         if (value.store_id == this.candidate.store_id) {
           this.candidate.store_name = value.store_name;

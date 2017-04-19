@@ -24,7 +24,7 @@ export class StoreService {
     if(companyId){
       url = `${url}?companyId=${companyId}`;
     }
-    return this._authhttp.get(url);
+    return this._authhttp.getRaw(url);
   }
 
   /**

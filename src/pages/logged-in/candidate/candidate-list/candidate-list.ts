@@ -15,6 +15,10 @@ import { Candidate } from '../../../../models/candidate';
 })
 export class CandidateListPage {
 
+  public pageCount = 0;
+  public currentPage = 1;
+  public pages: number[] = [];
+
   public searchBar: string = '';
   public cndSegment: string = 'assigned';
   public candidates: Candidate[];
@@ -31,33 +35,76 @@ export class CandidateListPage {
     this.loadData();
   }
 
-  loadData() {
+  segSelected() {
+    this.currentPage = 1;
+    this.loadData();
+  }
 
+  loadData() {
     if(this.cndSegment == 'not-assigned') {
-      this.loadNotAssigned();
+      this.loadNotAssigned(this.currentPage);
     } else {
-      this.loadAssigned();
+      this.loadAssigned(this.currentPage);
     }
   }
 
-  loadNotAssigned() {
+  loadNotAssigned(page: number) {
     // Load list of candidates
     let loader = this._loadingCtrl.create();
     loader.present();
-    this.candidateService.listNotAssigned(this.searchBar).subscribe(response => {
-      this.candidates = response;
+    this.candidateService.listNotAssigned(this.searchBar, page).subscribe(response => {
+
+      this.pageCount = response.headers.get('X-Pagination-Page-Count');
+      this.currentPage = response.headers.get('X-Pagination-Current-Page');
+
+      this.pages = [];
+
+      for(var i = 1; i <= this.pageCount; i++){
+         this.pages.push(i);
+      }
+
+      //hide if no page = 1 
+
+      if(this.pageCount == 1)
+        this.pages = [];
+
+      this.candidates = response.json();
+
       loader.dismiss();
     });
   }
 
-  loadAssigned() {
+  loadAssigned(page: number) {
     // Load list of candidates
     let loader = this._loadingCtrl.create();
     loader.present();
-    this.candidateService.listAssigned(this.searchBar).subscribe(response => {
-      this.candidates = response;
+    this.candidateService.listAssigned(this.searchBar, page).subscribe(response => {
+      
+      this.pageCount = response.headers.get('X-Pagination-Page-Count');
+      this.currentPage = response.headers.get('X-Pagination-Current-Page');
+
+      this.pages = [];
+
+      for(var i = 1; i <= this.pageCount; i++){
+         this.pages.push(i);
+      }
+
+      //hide if no page = 1 
+
+      if(this.pageCount == 1)
+        this.pages = [];
+
+      this.candidates = response.json();
       loader.dismiss();
     });
+  }
+
+  pageLinkColor(page: number) {
+
+    if(page == this.currentPage) 
+      return 'light';
+    
+    return '';
   }
 
   /**

@@ -19,7 +19,7 @@ export class CompanyService {
    */
   list(): Observable<any>{
     let url = this._companyEndpoint;
-    return this._authhttp.get(url);
+    return this._authhttp.getRaw(url);
   }
 
 

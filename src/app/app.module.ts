@@ -8,6 +8,8 @@ import { IonicStorageModule } from '@ionic/storage';
 // Ionic Native
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { Camera } from '@ionic-native/camera';
+import { File } from '@ionic-native/file';
 
 // App Imports
 import { MyApp } from './app.component';
@@ -39,6 +41,8 @@ import { StoreFormPage } from '../pages/logged-in/store/store-form/store-form';
 // Generic Services
 import { AuthService } from '../providers/auth.service';
 import { ConfigService } from '../providers/config.service';
+import { AwsService } from '../providers/aws.service';
+import { CameraService } from '../providers/camera.service';
 // Logged-in Services
 import { AuthHttpService } from '../providers/logged-in/authhttp.service';
 import { CandidateService } from '../providers/logged-in/candidate.service';
@@ -119,8 +123,12 @@ export const cloudSettings: CloudSettings = {
       // Ionic Native 
       StatusBar,
       SplashScreen,
+      Camera,
+      File,
       {provide: ErrorHandler, useClass: IonicErrorHandler},
       // Custom
+      AwsService, // AWS S3 Upload Functionality
+      CameraService, // Handles Native Camera/Gallery selection
       AuthService, // Handles all Authorization
       ConfigService, // Handles Environment-specific Variables
       AuthHttpService,

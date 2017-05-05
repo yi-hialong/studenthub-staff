@@ -31,8 +31,17 @@ export class CandidateIdCardService {
    * List of all candidates whose card not generated, to generate card
    * @returns {Observable<any>}
    */
-  listCandidates(): Observable<any> {
-    let url = this._candidateEndpoint + '/list-candidates';
-    return this._authhttp.get(url);
+  listCandidates(candidate_name: string, page: number): Observable<any> {
+    let url = this._candidateEndpoint + '/list-candidates?candidate_name=' + candidate_name + '&page=' + page;
+    return this._authhttp.getRaw(url);
+  }
+
+  /**
+   * List of all candidates whose card already generated, to download zip 
+   * @returns {Observable<any>}
+   */
+  listCandidateIds(candidate_name: string, page: number): Observable<any> {
+    let url = this._candidateEndpoint + '/list-candidate-ids?candidate_name=' + candidate_name + '&page=' + page;
+    return this._authhttp.getRaw(url);
   }
 }

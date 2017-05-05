@@ -12,6 +12,12 @@ import { CandidateIdCardService } from '../../../../providers/logged-in/candidat
 })
 export class GenerateIdPage {
 
+  public pageCount = 0;
+  public currentPage = 1;
+  public pages: number[] = [];
+
+  public searchBar: string = '';
+  public cndSegment: string = 'not-generated';
   public candidates: any = [];
   
   public form: FormGroup;
@@ -33,20 +39,30 @@ export class GenerateIdPage {
   }
 
   ionViewDidLoad() {
+    this.loadData();
+  }
 
-    //let loader = this._loadingCtrl.create();
-    //loader.present();
-
-    // Load the all available bank list
-    this.loadCandidates();
-
-    //loader.dismiss();
+  segSelected() {
+    this.currentPage = 1;
+    this.loadData();
   }
 
   /**
    * Generate id cards
    */
   generate() {
+    
+    if(this.candidates.length == 0)
+    {
+        let prompt = this._alertCtrl.create({
+          message: 'Please select candidate(s)',
+          buttons: ["Ok"]
+        });
+        prompt.present();
+
+        return false;
+    }  
+    
     let loader = this._loadingCtrl.create();
     loader.present();
 
@@ -55,13 +71,87 @@ export class GenerateIdPage {
     });
   }
 
-  loadCandidates() {
-    this.candidateIdCardService.listCandidates().subscribe(response => {
-      this.candidatelistData = response;
+  loadData() {
+    if(this.cndSegment == 'not-generated') {
+      this.loadNotGenerated(this.currentPage);
+    } else {
+      this.loadGenerated(this.currentPage);
+    }
+  }
+
+  pageLinkColor(page: number) {
+
+    if(page == this.currentPage) 
+      return 'light';
+    
+    return '';
+  }
+
+  /**
+   * Load candidates whose ID not generated 
+   */
+  loadNotGenerated(page: number) {
+    // Load list of candidates
+    let loader = this._loadingCtrl.create();
+    loader.present();
+
+    this.candidateIdCardService.listCandidates(this.searchBar, page).subscribe(response => {
+      
+      this.pageCount = response.headers.get('X-Pagination-Page-Count');
+      this.currentPage = response.headers.get('X-Pagination-Current-Page');
+
+      this.pages = [];
+
+      for(var i = 1; i <= this.pageCount; i++){
+         this.pages.push(i);
+      }
+
+      //hide if no page = 1 
+
+      if(this.pageCount == 1)
+        this.pages = [];
+
+      this.candidatelistData = response.json();
 
       this.candidatelistData.forEach((value, index) => {
           this.candidates[index] = value.candidate_id;  
         });
+
+      loader.dismiss();
+    });
+  }
+
+  /**
+   * Load candidates whose ID generated 
+   */
+  loadGenerated(page: number) {
+
+    // Load list of candidates
+    let loader = this._loadingCtrl.create();
+    loader.present();
+
+    this.candidateIdCardService.listCandidateIds(this.searchBar, page).subscribe(response => {
+      this.pageCount = response.headers.get('X-Pagination-Page-Count');
+      this.currentPage = response.headers.get('X-Pagination-Current-Page');
+
+      this.pages = [];
+
+      for(var i = 1; i <= this.pageCount; i++){
+         this.pages.push(i);
+      }
+
+      //hide if no page = 1 
+
+      if(this.pageCount == 1)
+        this.pages = [];
+
+      this.candidatelistData = response.json();
+
+      this.candidatelistData.forEach((value, index) => {
+          this.candidates[index] = value.candidate_id;  
+        });
+
+      loader.dismiss();
     });
   }
 }

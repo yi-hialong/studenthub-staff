@@ -15,21 +15,21 @@
   <ion-grid id='uploads'>
     <ion-row>
       <ion-col col-4>
-        <ion-card (click)="photoUpload()" tappable>
+        <ion-card (click)="uploadBtnClicked('photo')" tappable>
           <ion-spinner *ngIf="isPhotoUploading"></ion-spinner>
           <ion-icon name="ios-person" *ngIf="!isPhotoUploading"></ion-icon>
           Photo
         </ion-card>
       </ion-col>
       <ion-col col-4>
-        <ion-card (click)="civilFrontUpload()" tappable>
+        <ion-card (click)="uploadBtnClicked('civilfront')" tappable>
           <ion-spinner *ngIf="isCivilFrontUploading"></ion-spinner>
           <ion-icon name="ios-card-outline" *ngIf="!isCivilFrontUploading"></ion-icon>
           Civil ID <br/>(Front)
         </ion-card>
       </ion-col>
       <ion-col col-4>
-        <ion-card (click)="civilBackUpload()" tappable>
+        <ion-card (click)="uploadBtnClicked('civilback')" tappable>
           <ion-spinner *ngIf="isCivilBackUploading"></ion-spinner>
           <ion-icon name="ios-card" *ngIf="!isCivilBackUploading"></ion-icon>
           Civil ID <br/>(Back)

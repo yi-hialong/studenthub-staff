@@ -258,34 +258,17 @@ export class CandidateFormPage {
    */
 
   /**
-   * Upload Candidate Personal Photo
-   */
-  photoUpload(){
-    this.uploadBtnClicked("photo");
-  }
-
-  /**
-   * Upload Civil ID Photo from Front
-   */
-  civilFrontUpload(){
-    this.uploadBtnClicked("civilfront");
-  }
-
-  /**
-   * Upload Civil ID Photo from Back
-   */
-  civilBackUpload(){
-    this.uploadBtnClicked("civilback");
-  }
-
-  /**
    * Upload Photo button clicked
    * - On Native device, load native camera/gallery
    * - On Browser, trigger a click on the html file input
   * @param  {string} fileType which file we're uploading
   */
   uploadBtnClicked(fileType: string){
-    this._lastClickedFileInputType = fileType; // stored for loading indicators 
+    // If Upload isn't allowed, return
+    if(!this._isUploadAllowed(fileType)) return;
+
+    // Store File Type for loading indicators 
+    this._lastClickedFileInputType = fileType; 
 
     if(this._platform.is("cordova")){
       // Display action sheet giving user option of camera vs local filesystem.
@@ -441,6 +424,27 @@ export class CandidateFormPage {
         this.isCivilBackUploading = false;
         break;
     }
+  }
+  
+  /**
+   * Is upload required for supplied file type?
+   * @param  {string} fileType
+   * @returns boolean
+   */
+  private _isUploadAllowed(fileType: string): boolean{
+    switch(fileType){
+      case "photo":
+        if(!this.isPhotoUploading) return true;
+        break;
+      case "civilfront":
+        if(!this.isCivilFrontUploading) return true;
+        break;
+      case "civilback":
+        if(!this.isCivilBackUploading) return true;
+        break;
+    }
+
+    return false;
   }
 
 }

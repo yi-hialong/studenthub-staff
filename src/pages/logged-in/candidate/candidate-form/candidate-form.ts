@@ -227,13 +227,13 @@ export class CandidateFormPage {
   onUploadComplete($event: {prefix:string, key: string, url: string}){
     switch($event.prefix){
       case "photo":
-        this.model.candidate_personal_photo = $event.url;
+        this.model.candidate_personal_photo = $event.key;
         break;
       case "civilfront":
-        this.model.candidate_civil_photo_front = $event.url;
+        this.model.candidate_civil_photo_front = $event.key;
         break;
       case "civilback":
-        this.model.candidate_civil_photo_back = $event.url;
+        this.model.candidate_civil_photo_back = $event.key;
         break;
     }
   }  

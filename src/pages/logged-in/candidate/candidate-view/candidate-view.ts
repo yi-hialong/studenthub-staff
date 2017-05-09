@@ -26,7 +26,7 @@ export class CandidateViewPage {
     public alertCtrl: AlertController,
     public storeService: StoreService,
     public candidateService: CandidateService,
-    private _loadingCtrl: LoadingController,
+    private _loadingCtrl: LoadingController
   ) {
     this.candidate = params.get('model');
   }
@@ -89,21 +89,13 @@ export class CandidateViewPage {
       text: 'Okay',
       handler: data => {
         console.log('Checkbox data:', data);
-        if (data != '-1') {
-          this.stores.forEach((value) => {
-            if (value.store_id == data) {
-              this.candidate.store_name = value.store_name;
-              this.candidate.store_id = value.store_id;
-
-              //Assinging Candidate from store
-              this.assigning(this.candidate.candidate_id, this.candidate.store_id);
-
-            }
-          });
+        if (data != '-1') 
+        {           
+          //Assinging Candidate from store
+          this.assigning(this.candidate.candidate_id, data);
         }
-        else {
-          this.candidate.store_name = null;
-          this.candidate.store_id = null;
+        else 
+        {
           //Unassinging Candidate from store
           this.unAssigning(this.candidate.candidate_id);
         }
@@ -135,11 +127,41 @@ export class CandidateViewPage {
             let loader = this._loadingCtrl.create();
             loader.present();
             //Unassigning Candidate from store
-            this.candidateService.unAssignCandidate(candidate_id).subscribe(jsonResp => {
-              this.candidate.store_name = null;
-              this.candidate.store_id = null;
-              loader.dismiss();
-              this.loadData();
+            this.candidateService.unAssignCandidate(candidate_id).subscribe(response => {
+
+              loader.dismiss();              
+
+              if(response.operation == 'success')
+              {
+                this.candidate.store_name = null;
+                this.candidate.store_id = null;
+              }
+              else
+              {
+                var html = '';
+
+                if(response.code == 2)
+                {
+                  for (let i in response.message) {
+                    
+                    for (let j of response.message[i]) {
+                       
+                       html += j + '<br />';
+                    }
+                  }
+                }
+                else
+                {
+                  html = response.message;
+                }
+
+                let prompt = this.alertCtrl.create({
+                  message: html,
+                  buttons: ["Ok"]
+                });
+                prompt.present();
+              }
+              
             });
           }
         }
@@ -156,10 +178,46 @@ export class CandidateViewPage {
     let loader = this._loadingCtrl.create();
     loader.present();
 
-    this.candidateService.assignCandidate(store_id, candidate_id).subscribe(jsonResp => {
-      loader.dismiss();
-      this.loadData();
+    this.candidateService.assignCandidate(store_id, candidate_id).subscribe(response => {
+
+      loader.dismiss();      
+
+      if(response.operation == 'success') 
+      {
+        this.candidate.store_name = response.store_name;
+        this.candidate.store_id = response.store_id;
+      }      
+      else
+      {
+        var html = '';
+
+        if(response.code == 2)
+        {
+          for (let i in response.message) {
+            
+            for (let j of response.message[i]) {
+               
+               html += j + '<br />';
+            }
+          }
+        }
+        else
+        {
+          html = response.message;
+        }
+
+        let prompt = this.alertCtrl.create({
+          message: html,
+          buttons: ["Ok"]
+        });
+        prompt.present();
+      }
+      
     });
   }
 
+  toArray(json)
+  {
+    return Object.keys(json).map(key => json[key]);
+  }
 }

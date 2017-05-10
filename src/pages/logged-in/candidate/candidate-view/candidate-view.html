@@ -76,31 +76,24 @@
       <h5>Candidate Status</h5>
       <p>{{ candidate.candidate_status }}</p>
     </ion-item>
-    <ion-item>
-      <span *ngIf="candidate.university">
-        <h5>University</h5>
-        <p>{{ candidate.university.university_name_en }}</p>
-      </span>
+    <ion-item *ngIf="candidate.university">
+      <h5>University</h5>
+      <p>{{ candidate.university.university_name_en }}</p>
     </ion-item>
-    <ion-item>
-      <span *ngIf="candidate.country">
-        <h5>Country</h5>
-        <p>{{ candidate.country.country_name_en }}</p>
-      </span>
+    <ion-item *ngIf="candidate.country">
+      <h5>Country</h5>
+      <p>{{ candidate.country.country_name_en }}</p>
     </ion-item>
-    <ion-item>
-      <span *ngIf="candidate.store_id">
-        <h5>Candidate Assigned to</h5>
-        <p>{{ candidate.store_name }}</p>
-      </span>
+    <ion-item *ngIf="candidate.store_id">
+      <h5>Candidate Assigned to</h5>
+      <p>{{ candidate.store_name }}</p>
     </ion-item>
-    <ion-item>
-      <span *ngIf="!candidate.store_id">
-        <button ion-button full (click)="assignCandidateToStore()">Assign Candidate to Store</button>
-      </span>
+    <ion-item *ngIf="!candidate.store_id">
+      <button ion-button full (click)="assignToStoreButtonClicked()">Assign Candidate to Store</button>
+    </ion-item>
+    <ion-item *ngIf="candidate.store_id">
+      <button ion-button full color="danger" (click)="unassignCandidateFromStore(candidate.candidate_id)">Unassign candidate from {{ candidate.store_name }}</button>
     </ion-item>
   </ion-list>
-  <span *ngIf="candidate.store_id">
-    <button ion-button full color="danger" (click)="unAssigning(candidate.candidate_id)">Unassign candidate from {{ candidate.store_name }}</button>
-  </span>
+  
 </ion-content>

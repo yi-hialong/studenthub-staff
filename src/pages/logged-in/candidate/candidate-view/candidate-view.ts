@@ -16,7 +16,6 @@ import { CandidateService } from '../../../../providers/logged-in/candidate.serv
 export class CandidateViewPage {
 
   public candidate: Candidate;
-
   public stores: Store[];
 
   constructor(
@@ -35,6 +34,9 @@ export class CandidateViewPage {
     this.loadData();
   }
 
+  /**
+   * Load data required
+   */
   loadData() {
     // Load list of ALL stores
     let loader = this._loadingCtrl.create();
@@ -61,12 +63,12 @@ export class CandidateViewPage {
   }
 
   /**
-  * Assigning Candidates to Store
-  */
-  assignCandidateToStore() {
+   * Assign Candidate to Store
+   */
+  assignToStoreButtonClicked() {
     let alert = this.alertCtrl.create();
     alert.setTitle('Assign Candidate to Store');
-    //Unassigning Candidate from Store
+    
     if (this.candidate.store_id) {
       alert.addInput({
         type: 'radio',
@@ -75,7 +77,6 @@ export class CandidateViewPage {
       });
     }
 
-    //Assigning Candidate from Store
     this.stores.forEach((value) => {
       alert.addInput({
         type: 'radio',
@@ -88,16 +89,13 @@ export class CandidateViewPage {
     alert.addButton({
       text: 'Okay',
       handler: data => {
-        console.log('Checkbox data:', data);
-        if (data != '-1') 
-        {           
+        if (data != '-1') {           
           //Assinging Candidate from store
-          this.assigning(this.candidate.candidate_id, data);
+          this.assignCandidateToStore(this.candidate.candidate_id, data);
         }
-        else 
-        {
+        else {
           //Unassinging Candidate from store
-          this.unAssigning(this.candidate.candidate_id);
+          this.unassignCandidateFromStore(this.candidate.candidate_id);
         }
 
       }
@@ -105,11 +103,11 @@ export class CandidateViewPage {
     alert.present();
   }
 
-
   /**
-   * Unassinging Candidate from store
+   * Unassign Candidate from store
+   * @param {*} candidate_id
    */
-  unAssigning(candidate_id: any) {
+  unassignCandidateFromStore(candidate_id: any) {
     let confirm = this.alertCtrl.create({
       title: '',
       message: 'Do you want to Unassign the Candidate from Store',
@@ -117,51 +115,32 @@ export class CandidateViewPage {
         {
           text: 'Cancel',
           handler: () => {
-            //handle the functionality when user click on 'cancel' button
+            // Handle the functionality when user click on 'cancel' button
           }
         },
         {
           text: 'Ok',
           handler: () => {
-            //handle the functionality when user click on 'ok' button
+            // Handle the functionality when user click on 'ok' button
             let loader = this._loadingCtrl.create();
             loader.present();
-            //Unassigning Candidate from store
-            this.candidateService.unAssignCandidate(candidate_id).subscribe(response => {
 
+            // Unassign Candidate from store
+            this.candidateService.unAssignCandidate(candidate_id).subscribe(response => {
+              // Dismiss the loader
               loader.dismiss();              
 
-              if(response.operation == 'success')
-              {
+              if(response.operation == 'success') {
                 this.candidate.store_name = null;
                 this.candidate.store_id = null;
               }
-              else
-              {
-                var html = '';
-
-                if(response.code == 2)
-                {
-                  for (let i in response.message) {
-                    
-                    for (let j of response.message[i]) {
-                       
-                       html += j + '<br />';
-                    }
-                  }
-                }
-                else
-                {
-                  html = response.message;
-                }
-
+              else {
                 let prompt = this.alertCtrl.create({
-                  message: html,
+                  message: this._processResponseMessage(response),
                   buttons: ["Ok"]
                 });
                 prompt.present();
               }
-              
             });
           }
         }
@@ -170,11 +149,13 @@ export class CandidateViewPage {
     confirm.present();
   }
 
-
   /**
-   * Assign Candidate to store
+   * Assign Candidate to Store
+   * 
+   * @param {number} store_id
+   * @param {number} candidate_id
    */
-  assigning(store_id: number, candidate_id: number) {
+  assignCandidateToStore(store_id: number, candidate_id: number) {
     let loader = this._loadingCtrl.create();
     loader.present();
 
@@ -187,27 +168,9 @@ export class CandidateViewPage {
         this.candidate.store_name = response.store_name;
         this.candidate.store_id = response.store_id;
       }      
-      else
-      {
-        var html = '';
-
-        if(response.code == 2)
-        {
-          for (let i in response.message) {
-            
-            for (let j of response.message[i]) {
-               
-               html += j + '<br />';
-            }
-          }
-        }
-        else
-        {
-          html = response.message;
-        }
-
+      else {
         let prompt = this.alertCtrl.create({
-          message: html,
+          message: this._processResponseMessage(response),
           buttons: ["Ok"]
         });
         prompt.present();
@@ -216,8 +179,23 @@ export class CandidateViewPage {
     });
   }
 
-  toArray(json)
-  {
-    return Object.keys(json).map(key => json[key]);
+  /**
+   * Process the response coming from the server
+   * @private
+   * @param {any} response
+   * @returns message to display in error message
+   */
+  private _processResponseMessage(response){
+    let html = '';
+    if(response.code == 2) {
+      for (let i in response.message) {
+        for (let j of response.message[i]) {
+            html += j + '<br />';
+        }
+      }
+    }else html = response.message;
+
+    return html;
   }
+
 }

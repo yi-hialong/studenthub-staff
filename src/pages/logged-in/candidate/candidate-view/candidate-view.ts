@@ -31,28 +31,20 @@ export class CandidateViewPage {
     public toastCtrl: ToastController,
   ) {
     this.candidate = params.get('model');
-    console.log(this.candidate);
   }
 
   ionViewDidLoad() {
-    this.LoadStoreData();
+    this.loadStoreData();
   }
 
   /**
-   * Load data required
+   * Load list of all stores then set store name and id as per candidate data
    */
-  LoadStoreData() {
-    // Load list of ALL stores
+  loadStoreData() {
     let loader = this._loadingCtrl.create();
     loader.present();
     this.storeService.list().subscribe(response => {
       this.stores = response.json();
-      this.stores.forEach((value) => {
-        if (value.store_id == this.candidate.store_id) {
-          this.candidate.store_name = value.store_name;
-          this.candidate.store_id = value.store_id;
-        }
-      });
       loader.dismiss();
     });
   }
@@ -68,53 +60,38 @@ export class CandidateViewPage {
 
   /**
    * Assign Candidate to Store
+   * @param {number} store_id
    */
-  assignToStoreButtonClicked() {
-    let alert = this.alertCtrl.create();
-    alert.setTitle('Assign Candidate to Store');
-    
-    if (this.candidate.store_id) {
-      alert.addInput({
-        type: 'radio',
-        label: 'Unassign Candidate',
-        value: '-1'
-      });
-    }
+  assignCandidateToStore(store_id: number) {
+    let loader = this._loadingCtrl.create();
+    loader.present();
 
-    this.stores.forEach((value) => {
-      alert.addInput({
-        type: 'radio',
-        label: value.store_name,
-        value: value.store_id.toString()
-      });
-    });
+    this.candidateService.assignCandidateToStore(this.candidate, store_id).subscribe(response => {
+      loader.dismiss();      
 
-    alert.addButton('Cancel');
-    alert.addButton({
-      text: 'Okay',
-      handler: data => {
-        if (data != '-1') {           
-          //Assinging Candidate from store
-          this.assignCandidateToStore(this.candidate.candidate_id, data);
-        }
-        else {
-          //Unassinging Candidate from store
-          this.unassignCandidateFromStore(this.candidate.candidate_id);
-        }
-
+      if(response.operation == 'success') 
+      {
+        this.candidate.store_id = response.store_id;
+        this.candidate.store_name = response.store_name;
+        this.candidate.company_name = response.company_name;        
+      }      
+      else {
+        let prompt = this.alertCtrl.create({
+          message: this._processResponseMessage(response),
+          buttons: ["Ok"]
+        });
+        prompt.present();
       }
     });
-    alert.present();
   }
 
   /**
    * Unassign Candidate from store
-   * @param {*} candidate_id
    */
-  unassignCandidateFromStore(candidate_id: any) {
+  unassignCandidateFromStore() {
     let confirm = this.alertCtrl.create({
-      title: '',
-      message: 'Do you want to Unassign the Candidate from Store',
+      title: 'Are you sure?',
+      message: 'Remove candidate from store',
       buttons: [
         {
           text: 'Cancel',
@@ -130,7 +107,7 @@ export class CandidateViewPage {
             loader.present();
 
             // Unassign Candidate from store
-            this.candidateService.unAssignCandidate(candidate_id).subscribe(response => {
+            this.candidateService.removeFromAssignedStore(this.candidate).subscribe(response => {
               // Dismiss the loader
               loader.dismiss();              
 
@@ -151,36 +128,6 @@ export class CandidateViewPage {
       ]
     });
     confirm.present();
-  }
-
-  /**
-   * Assign Candidate to Store
-   * 
-   * @param {number} store_id
-   * @param {number} candidate_id
-   */
-  assignCandidateToStore(store_id: number, candidate_id: number) {
-    let loader = this._loadingCtrl.create();
-    loader.present();
-
-    this.candidateService.assignCandidate(store_id, candidate_id).subscribe(response => {
-
-      loader.dismiss();      
-
-      if(response.operation == 'success') 
-      {
-        this.candidate.store_name = response.store_name;
-        this.candidate.store_id = response.store_id;
-      }      
-      else {
-        let prompt = this.alertCtrl.create({
-          message: this._processResponseMessage(response),
-          buttons: ["Ok"]
-        });
-        prompt.present();
-      }
-      
-    });
   }
 
   /**
@@ -205,8 +152,7 @@ export class CandidateViewPage {
   /**
    * Show confirm alert to reset password 
    */
-  resetPassword(candidate: Candidate) {
-
+  resetPassword() {
     let alert = this.alertCtrl.create({
       title: 'Confirm password reset',
       message: 'Do you want to send new password to candidate?',
@@ -218,7 +164,7 @@ export class CandidateViewPage {
         {
           text: 'Yes',
           handler: () => {
-            this.resetPasswordConfirm(candidate);
+            this.sendNewPassword();
           }
         }
       ]
@@ -227,13 +173,13 @@ export class CandidateViewPage {
   }
 
   /**
-   * Reset Password
+   * Reset and email the candidate a new password
    */
-  resetPasswordConfirm(candidate: Candidate) {
+  sendNewPassword() {
     let loader = this._loadingCtrl.create();
     loader.present();
 
-    this.candidateService.resetPassword(candidate).subscribe(response => {
+    this.candidateService.resetPassword(this.candidate).subscribe(response => {
       loader.dismiss();
 
       if(response.operation == 'error')

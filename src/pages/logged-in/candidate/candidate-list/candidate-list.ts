@@ -76,7 +76,7 @@ export class CandidateListPage {
     },
     error => {},
     () => {
-      console.log('Not Assigned Request Completed');
+      // console.log('Not Assigned Request Completed');
       loader.dismiss();
     }
     );

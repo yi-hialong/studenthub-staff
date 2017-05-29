@@ -40,21 +40,30 @@
     </p>
 
     <ion-item>
-      <button ion-button full color="danger" (click)="resetPassword(candidate)">Send new password to candidate</button>
+      <button ion-button full color="danger" (click)="resetPassword()">Send new password to candidate</button>
     </ion-item>
 
-    <ion-item-divider color="light">Status: {{ candidate.candidate_status }}</ion-item-divider>
+    <ion-item-divider color="light">Store Assignment</ion-item-divider>
 
     <ion-item *ngIf="candidate.store_id">
       <h5>Currently assigned work at</h5>
       <p>{{ candidate.store_name }} @ {{ candidate.company_name }}</p>
     </ion-item>
-    <ion-item *ngIf="!candidate.store_id">
-      <button ion-button full (click)="assignToStoreButtonClicked()">Assign Candidate to Store</button>
-    </ion-item>
+
+    <select-search-input *ngIf="!candidate.store_id"
+      placeholder="Assign to work at store"
+      [(ngModel)]="candidate.store_id"
+      (ngModelChange)="assignCandidateToStore($event)"
+      [collection]="stores"
+      valueAttr="store_id"
+      labelAttr="store_name">
+    </select-search-input>
+
     <ion-item *ngIf="candidate.store_id">
-      <button ion-button full color="danger" (click)="unassignCandidateFromStore(candidate.candidate_id)">Unassign candidate from {{ candidate.store_name }}</button>
+      <button ion-button full color="danger" (click)="unassignCandidateFromStore()">Unassign candidate from {{ candidate.store_name }}</button>
     </ion-item>
+
+
     <ion-item>
       <h5>Hourly Rate</h5>
       <p>{{ candidate.candidate_hourly_rate }}</p>

@@ -129,30 +129,34 @@ export class CandidateService {
   }
 
   /**
-   * Delete
+   * Removes Candidate from Assigned store
    * @param {any} candidate_id
    * @returns {Observable<any>}
    */
-  unAssignCandidate(candidate_id: any): Observable<any> { 
-   let url = `${this._candidateEndpoint}/unassign/${candidate_id}`;
+  removeFromAssignedStore(candidate: Candidate): Observable<any> { 
+   let url = `${this._candidateEndpoint}/unassign/${candidate.candidate_id}`;
       return this._authhttp.delete(url);
   }
 
-
   /**
-   * PATCH
-   * @param {number} candidate_id
+   * Assign candidate to store
+   * @param {Candidate} candidate
    * @param {number} store_id
    * @returns {Observable<any>}
    */
-  assignCandidate(candidate_id: number,store_id:number): Observable<any> {
+  assignCandidateToStore(candidate: Candidate, store_id:number): Observable<any> {
     let params = {
       "store_id": store_id
     };
-    let url = `${this._candidateEndpoint}/assign/${candidate_id}`;
+    let url = `${this._candidateEndpoint}/assign/${candidate.candidate_id}`;
     return this._authhttp.patch(url, params);
   }
 
+  /**
+   * List candidates by country
+   * @param country_id 
+   * @param page 
+   */
   listByCountry(country_id: number, page: number): Observable<any>{
     let url = this._candidateEndpoint + '/search?country_id=' + country_id + '&page=' + page;
     return this._authhttp.getRaw(url);

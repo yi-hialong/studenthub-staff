@@ -33,6 +33,7 @@ export class DefaultPage {
     this.statisticService.get().subscribe(response => {
 		this.statistics = response;
     this._events.publish('navigation:expiredIdCard');
+    this._events.publish('navigation:printIdCard',this.statistics.id_need_generated.length);
 	},
     error => {},
     () => {loader.dismiss();}

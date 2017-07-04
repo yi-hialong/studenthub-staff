@@ -23,6 +23,7 @@ export class NavigationPage {
   rootPage: any = DefaultPage;
 
   public expiredIdCount: number = 5;
+  public printIdCount: number = 0;
 
   @ViewChild('loggedInContent') nav: NavController
 
@@ -42,6 +43,11 @@ export class NavigationPage {
       // Check for network connection
       this._events.subscribe('navigation:expiredIdCard', (userEventData) => {
         this.updateExpiredIdCount();
+      });
+      
+      
+      this._events.subscribe('navigation:printIdCard', (userEventData) => {
+        this.printIdCount = userEventData;
       });
   }
 

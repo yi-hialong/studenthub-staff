@@ -166,6 +166,7 @@ export class CandidateFormPage {
         let data = { 'refresh': true };
         this._viewCtrl.dismiss(data);
         
+        //open view page 
         this.navCtrl.push(CandidateViewPage, {
           'model': jsonResponse.candidate
         });

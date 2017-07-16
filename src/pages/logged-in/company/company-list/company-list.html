@@ -13,6 +13,10 @@
     <button ion-item *ngFor="let company of companies" (click)="rowSelected(company)">
       {{ company.company_name }}
 
+      <ion-badge item-right *ngIf="company.total_candidates > 0">
+        {{ company.total_candidates }} candidates
+      </ion-badge>
+
       <ion-badge item-right *ngIf="company.subcompanies.length > 0">
         {{ company.subcompanies.length }} sub-companies
       </ion-badge>
@@ -20,5 +24,14 @@
         {{ company.stores.length }} stores
       </ion-badge>
     </button>
-</ion-list>
+  </ion-list>
+
+  <ion-row text-center>
+    <div class="pagination-wrapper">
+      <button *ngFor="let page of pages" ion-button small color="{{ pageLinkColor(page) }}" (click)="loadData(page)">
+        {{ page }}
+      </button>
+    </div>
+  </ion-row>
+
 </ion-content>

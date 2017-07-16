@@ -1,33 +1,38 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Deploy } from '@ionic/cloud-angular';
-import { Platform, Events, ToastController } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { Platform, Events, ToastController, AlertController } from 'ionic-angular';
+
+// Native Components
+import { StatusBar } from '@ionic-native/status-bar';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 import { LoginPage } from '../pages/start-pages/login/login';
 import { NavigationPage } from '../pages/logged-in/navigation/navigation';
 
 import { AuthService } from '../providers/auth.service';
 
-
 @Component({
   templateUrl: 'app.html'
 })
 export class MyApp implements OnInit {
   rootPage;
-
+  
   constructor(
       public deploy: Deploy,
       private _platform: Platform,
       private _events: Events,
       private _toastCtrl: ToastController,
+      private _alertCtrl: AlertController,
       private _auth: AuthService,
-      private _zone: NgZone
+      private _zone: NgZone,
+      statusBar: StatusBar, 
+      splashScreen: SplashScreen
   ) {
     this._platform.ready().then(() => {
       // Native functions
       if (this._platform.is('cordova') && this._platform.is('mobile')) {
-        StatusBar.styleDefault();
-        Splashscreen.hide();
+        statusBar.styleDefault();
+        splashScreen.hide();
 
         // Check for App update via Ionic Deploy
         this._checkForUpdate();
@@ -42,6 +47,17 @@ export class MyApp implements OnInit {
    * Using Ng2 Lifecycle hooks because view lifecycle events don't trigger for Bootstrapped MyApp Component
    */
   ngOnInit(){
+
+      // Check for network connection
+      this._events.subscribe('internet:offline', (userEventData) => {
+        let alert = this._alertCtrl.create({
+          title: 'No Internet Connection',
+          subTitle: 'Sorry, no Internet connectivity detected. Please reconnect and try again.',
+          buttons: ['Dismiss']
+        });
+        alert.present();
+      });
+
       // On Login Event, set root to Internal app page
       this._events.subscribe('user:login', (userEventData) => {
         this._zone.run(() => {

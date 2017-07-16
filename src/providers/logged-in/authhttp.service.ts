@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
-import { Platform, Events } from 'ionic-angular';
+import { Http, Headers, Response, ResponseContentType } from '@angular/http';
+import { Platform, Events, AlertController } from 'ionic-angular';
+
+import { saveAs } from 'file-saver';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/empty';
@@ -23,8 +25,73 @@ export class AuthHttpService {
     private _auth: AuthService,
     private _config: ConfigService,
     private _platform: Platform,
-    private _events: Events
+    private _events: Events,
+    private _alertCtrl: AlertController
     ) {}
+
+  /**
+  * Download card zip containing employer images and QR images 
+  * @param {string} endpointUrl
+  * @param {string} filename
+  * @returns {Observable<any>}
+  */
+  generateCards(endpointUrl: string, params: any, filename: string): Observable<any> {
+    const url = this._config.apiBaseUrl + endpointUrl;
+    const bearerToken = this._auth.getAccessToken();
+
+    return this._http.post(url, params, {
+      responseType: ResponseContentType.Blob,
+      headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearerToken })
+    })
+    .catch((error) => {
+      let errMsg = (error.message) ? error.message :
+          error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+
+      if (error.status === 400) {
+          let prompt = this._alertCtrl.create({
+            message: 'Invalid Candidate ID',
+            buttons: ["Ok"]
+          });
+          prompt.present();
+          return Observable.empty<Response>();
+      }
+
+      if (error.status === 500) {
+          let prompt = this._alertCtrl.create({
+            message: 'Cannot create a zip file',
+            buttons: ["Ok"]
+          });
+          prompt.present();
+          return Observable.empty<Response>();
+      }
+
+      alert("Error: "+errMsg);
+
+      return Observable.throw(errMsg);
+    })
+    .map(
+      (response) => { // download file
+
+          var blob = new Blob([response.blob()], { type: 'application/zip' });
+          //file name to dowanload/generate invoice 
+          saveAs(blob, filename);
+      });
+  } 
+
+  /**
+   * Requests via GET verb
+   * @param {string} endpointUrl
+   * @returns {Observable<any>}
+   */
+  getRaw(endpointUrl: string): Observable<any> {
+    const url = this._config.apiBaseUrl + endpointUrl;
+    return this._http.get(url, { headers: this._buildAuthHeaders() })
+      .catch((err) => this._handleError(err))
+      .take(1)
+      .map((res: Response) => {
+        return res;
+      });
+  }
 
   /**
    * Requests via GET verb
@@ -110,13 +177,31 @@ export class AuthHttpService {
       let errMsg = (error.message) ? error.message :
           error.status ? `${error.status} - ${error.statusText}` : 'Server error';
 
+      if (error.status === 400) {
+          let prompt = this._alertCtrl.create({
+            message: 'Bad Request Format',
+            buttons: ["Ok"]
+          });
+          prompt.present();
+          return Observable.empty<Response>();
+      }
+
+      if (error.status === 500) {
+          let prompt = this._alertCtrl.create({
+            message: 'Internal server error',
+            buttons: ["Ok"]
+          });
+          prompt.present();
+          return Observable.empty<Response>();
+      }
+
       // Handle Bad Requests
       // This error usually appears when agent attempts to handle an 
       // account that he's been removed from assigning
-      if (error.status === 400) {
+      /*if (error.status === 400) {
           this._events.publish("accountAssignment:removed");
           return Observable.empty<Response>();
-      }
+      }*/
 
       // Handle No Internet Connection Error
       if (error.status == 0) {

@@ -241,4 +241,3 @@ export class CandidateFormPage {
     this.maxBirthDate = new Date((yyyy-16), mm).toISOString();
   }
 }
- 

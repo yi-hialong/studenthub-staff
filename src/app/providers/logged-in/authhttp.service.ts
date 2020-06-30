@@ -35,7 +35,10 @@ export class AuthhttpService {
 
     return this._http.post(url, params, {
       responseType: 'blob', //ResponseContentType.Blob,  https://github.com/angular/angular/issues/18654#issuecomment-321947661
-      headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearerToken })
+      headers: new HttpHeaders({
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': 'Bearer ' + bearerToken
+      })
     }).pipe(
       // retryWhen(genericRetryStrategy()),
       catchError((err) => {
@@ -47,50 +50,8 @@ export class AuthhttpService {
         // file name to dowanload/generate invoice
         saveAs(blob, filename);
 
-        // const blob = new Blob([response.body], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-        // // file name to download/generate invoice
-        // saveAs(blob, filename);
       })
     );
-    // }).pipe(
-    //   catchError((async (error) => {
-    //     let errMsg = (error.message) ? error.message :
-    //       error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-    //
-    //     if (error.status === 400) {
-    //       let prompt = await this._alertCtrl.create({
-    //         message: 'Invalid Candidate ID',
-    //         buttons: ["Ok"]
-    //       });
-    //       prompt.present();
-    //       return EMPTY
-    //     }
-    //
-    //     if (error.status === 500) {
-    //       let prompt = await this._alertCtrl.create({
-    //         message: 'Cannot create a zip file',
-    //         buttons: ["Ok"]
-    //       });
-    //       prompt.present();
-    //       return EMPTY;
-    //     }
-    //
-    //     alert("Error: "+errMsg);
-    //
-    //     return Observable.throw(errMsg);
-    //   }),
-    //
-    //     // take(1),
-    //     map((response) => {
-    //       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    //       // file name to dowanload/generate invoice
-    //       saveAs(blob, filename);
-    //
-    //       // const blob = new Blob([response.body], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-    //       // // file name to download/generate invoice
-    //       // saveAs(blob, filename);
-    //     })
-    //   )
   }
 
   /**

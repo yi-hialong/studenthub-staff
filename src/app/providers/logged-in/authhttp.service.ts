@@ -9,6 +9,7 @@ import { genericRetryStrategy } from '../../util/genericRetryStrategy';
 import {EventService} from "../event.service";
 import {AuthService} from "../auth.service";
 import {Headers, Response, ResponseContentType, saveAs} from 'file-saver';
+import {AlertController} from "@ionic/angular";
 
 @Injectable({
   providedIn: 'root'
@@ -18,59 +19,80 @@ export class AuthhttpService {
   constructor(
     private _http: HttpClient,
     public _auth: AuthService,
+    public _alertCtrl: AlertController,
     public eventService: EventService
   ) { }
 
-
   /**
    * Download card zip containing employer images and QR images
-   * @param {string} endpointUrl
-   * @param {string} filename
-   * @returns {Observable<any>}
+   * @param endpointUrl
+   * @param params
+   * @param filename
    */
-  // generateCards(endpointUrl: string, params: any, filename: string): Observable<any> {
-  //   const url = this._config.apiBaseUrl + endpointUrl;
-  //   const bearerToken = this._auth.getAccessToken();
-  //
-  //   return this._http.post(url, params, {
-  //     responseType: ResponseContentType.Blob,
-  //     headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearerToken })
-  //   })
-  //     .catch((error) => {
-  //       let errMsg = (error.message) ? error.message :
-  //         error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-  //
-  //       if (error.status === 400) {
-  //         let prompt = this._alertCtrl.create({
-  //           message: 'Invalid Candidate ID',
-  //           buttons: ["Ok"]
-  //         });
-  //         prompt.present();
-  //         return Observable.empty<Response>();
-  //       }
-  //
-  //       if (error.status === 500) {
-  //         let prompt = this._alertCtrl.create({
-  //           message: 'Cannot create a zip file',
-  //           buttons: ["Ok"]
-  //         });
-  //         prompt.present();
-  //         return Observable.empty<Response>();
-  //       }
-  //
-  //       alert("Error: "+errMsg);
-  //
-  //       return Observable.throw(errMsg);
-  //     })
-  //     .map(
-  //       (response) => { // download file
-  //
-  //         var blob = new Blob([response.blob()], { type: 'application/zip' });
-  //         //file name to dowanload/generate invoice
-  //         saveAs(blob, filename);
-  //       });
-  // }
-  //
+  generateCards(endpointUrl: string, params: any, filename: string): Observable<any> {
+    const url = environment.apiEndpoint + endpointUrl;
+    const bearerToken = this._auth.getAccessToken();
+
+    return this._http.post(url, params, {
+      responseType: ResponseContentType.Blob,
+      headers: new Headers({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + bearerToken })
+    }).pipe(
+      // retryWhen(genericRetryStrategy()),
+      catchError((err) => {
+        return this._handleError(err);
+      }),
+      // take(1),
+      map((response) => {
+        const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        // file name to dowanload/generate invoice
+        saveAs(blob, filename);
+
+        // const blob = new Blob([response.body], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+        // // file name to download/generate invoice
+        // saveAs(blob, filename);
+      })
+    );
+    // }).pipe(
+    //   catchError((async (error) => {
+    //     let errMsg = (error.message) ? error.message :
+    //       error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+    //
+    //     if (error.status === 400) {
+    //       let prompt = await this._alertCtrl.create({
+    //         message: 'Invalid Candidate ID',
+    //         buttons: ["Ok"]
+    //       });
+    //       prompt.present();
+    //       return EMPTY
+    //     }
+    //
+    //     if (error.status === 500) {
+    //       let prompt = await this._alertCtrl.create({
+    //         message: 'Cannot create a zip file',
+    //         buttons: ["Ok"]
+    //       });
+    //       prompt.present();
+    //       return EMPTY;
+    //     }
+    //
+    //     alert("Error: "+errMsg);
+    //
+    //     return Observable.throw(errMsg);
+    //   }),
+    //
+    //     // take(1),
+    //     map((response) => {
+    //       const blob = new Blob([response], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //       // file name to dowanload/generate invoice
+    //       saveAs(blob, filename);
+    //
+    //       // const blob = new Blob([response.body], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+    //       // // file name to download/generate invoice
+    //       // saveAs(blob, filename);
+    //     })
+    //   )
+  }
+
   /**
    * Requests via GET verb
    * @param {string} endpointUrl

@@ -45,4 +45,5 @@ export class EventService {
 
   public expiredIdCard$ = new Subject();
   public printIdCard$ = new Subject();
+  // navigation:expiredIdCard
 }

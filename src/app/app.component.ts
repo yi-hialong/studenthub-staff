@@ -9,6 +9,7 @@ import {AuthService} from "./providers/auth.service";
 import {environment} from "../../../payroll-company/src/environments/environment";
 import {concat, interval} from "rxjs";
 import {first} from "rxjs/operators";
+import {CandidateIdCardService} from "./providers/logged-in/candidate.id.card.service";
 
 const { SplashScreen } = Plugins;
 
@@ -21,7 +22,7 @@ export class AppComponent implements OnInit {
 
   public updatesAvailable: boolean = false;
   public expiredIdCount: number = 5;
-  public printIdCount: number = 0;
+  public printIdCount:any = 0;
 
   constructor(
     public updates: SwUpdate,
@@ -30,7 +31,8 @@ export class AppComponent implements OnInit {
     private eventService: EventService,
     private _alertCtrl: AlertController,
     private navCtrl: NavController,
-    public auth: AuthService
+    public auth: AuthService,
+    public candidateIdCardService: CandidateIdCardService
   ) {
     this.initializeApp();
   }
@@ -75,24 +77,21 @@ export class AppComponent implements OnInit {
       }
     });
 
-    // Check for network connection
-    // this._events.subscribe('navigation:expiredIdCard', (userEventData) => {
-    //   this.updateExpiredIdCount();
-    // });
-    //
-    //
-    // this._events.subscribe('navigation:printIdCard', (userEventData) => {
-    //   this.printIdCount = userEventData;
-    // });
+    this.eventService.expiredIdCard$.subscribe((userEventData) => {
+      this.updateExpiredIdCount();
+    });
+    this.eventService.printIdCard$.subscribe((userEventData) => {
+      this.printIdCount = userEventData;
+    });
   }
 
   /**
    * update expired count
    */
   updateExpiredIdCount() {
-    // this.candidateIdCardService.totalExpiredIds().subscribe(result => {
-    //   this.expiredIdCount = result.total;
-    // });
+    this.candidateIdCardService.totalExpiredIds().subscribe(result => {
+      this.expiredIdCount = result.total;
+    });
   }
 
   /**

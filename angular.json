@@ -58,6 +58,7 @@
                   "with": "./src/environments/environment.dev.ts"
                 }
               ],
+              "aot": true,
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
             },
@@ -67,7 +68,8 @@
                   "replace": "./src/environments/environment.ts",
                   "with": "./src/environments/environment.dev.mobile.ts"
                 }
-              ]
+              ],
+              "aot": true
             },
             "khalid": {
               "fileReplacements": [

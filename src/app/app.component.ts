@@ -1,15 +1,15 @@
 import { Component, OnInit, ApplicationRef } from '@angular/core';
-import {AlertController, NavController, Platform} from '@ionic/angular';
+import { AlertController, NavController, Platform } from '@ionic/angular';
 import { Plugins } from '@capacitor/core';
 import { SwUpdate } from '@angular/service-worker';
-
+import { concat, interval } from "rxjs";
+import { first } from "rxjs/operators";
+import { environment } from 'src/environments/environment';
 //services
-import {EventService} from "./providers/event.service";
-import {AuthService} from "./providers/auth.service";
-import {environment} from "../../../payroll-company/src/environments/environment";
-import {concat, interval} from "rxjs";
-import {first} from "rxjs/operators";
-import {CandidateIdCardService} from "./providers/logged-in/candidate.id.card.service";
+import { EventService } from "./providers/event.service";
+import { AuthService } from "./providers/auth.service";
+import { CandidateIdCardService } from "./providers/logged-in/candidate.id.card.service";
+
 
 const { SplashScreen } = Plugins;
 
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
 
   public updatesAvailable: boolean = false;
   public expiredIdCount: number = 5;
-  public printIdCount:any = 0;
+  public printIdCount: any = 0;
 
   constructor(
     public updates: SwUpdate,
@@ -155,7 +155,7 @@ export class AppComponent implements OnInit {
   }
 
 
-  logout(){
+  logout() {
     this.auth.logout();
   }
 }

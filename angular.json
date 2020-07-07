@@ -59,7 +59,7 @@
                 }
               ],
               "serviceWorker": true,
-              "ngswConfigPath": "./src/ngsw-config.json"
+              "ngswConfigPath": "ngsw-config.json"
             },
             "dev-mobile": {
               "fileReplacements": [
@@ -128,7 +128,9 @@
                   "maximumWarning": "2mb",
                   "maximumError": "5mb"
                 }
-              ]
+              ],
+              "serviceWorker": true,
+              "ngswConfigPath": "ngsw-config.json"
             },
             "ci": {
               "progress": false

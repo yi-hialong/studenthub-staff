@@ -34,7 +34,8 @@ export class LoginPage implements OnInit {
       password: ["", Validators.required]
     });
   }
-  ngOnInit() {}
+  ngOnInit() {
+  }
 
   /**
    * Attempts to login with the provided email and password

@@ -46,9 +46,8 @@ export class CandidateViewPage implements OnInit {
     if (state.model) {
       this.candidate = state.model;
     } else  {
-      this.candidate = state.model;
+      this.loadCandidateDetail();
     }
-    this.loadCandidateDetail();
     this.loadWorkHistoryData();
 
     this.loadStoreData();
@@ -93,10 +92,10 @@ export class CandidateViewPage implements OnInit {
 
     this.candidateService.assignCandidateToStore(this.candidate, store_id).subscribe(async response => {
       this.assigning = false;
-
       if (response.operation == 'success') {
         this.candidate = response.candidate_detail;
       } else {
+        this.candidate.store_id = null;
         const alert = await this.alertCtrl.create({
           message: this._processResponseMessage(response),
           buttons: ['Ok']

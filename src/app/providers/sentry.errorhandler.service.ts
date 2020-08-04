@@ -71,7 +71,6 @@ export class SentryErrorhandlerService implements ErrorHandler {
       console.error(extractedError);
       // When in development mode, log the error to console for immediate feedback
       // Optionally show user dialog to provide details on what happened.
-      Sentry.showReportDialog({ eventId });
     }
   }
 }

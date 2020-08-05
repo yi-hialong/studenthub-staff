@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController, NavController, ToastController } from '@ionic/angular';
+import {AlertController, ModalController, NavController, ToastController} from '@ionic/angular';
 import { CustomValidator } from 'src/app/validators/custom.validator';
 // service
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
@@ -39,6 +39,7 @@ export class CandidateFormPage implements OnInit {
     public universityService: UniversityService,
     public countryService: CountryService,
     private _fb: FormBuilder,
+    private modalCtrl: ModalController,
     private _alertCtrl: AlertController,
     private _toastCtrl: ToastController,
   ) {
@@ -93,6 +94,7 @@ export class CandidateFormPage implements OnInit {
     this.model.candidate_personal_photo = this.form.value.photo;
     this.model.candidate_civil_photo_front = this.form.value.civilfront;
     this.model.candidate_civil_photo_back = this.form.value.civilback;
+    this.model.candidate_objective = this.form.value.objective;
   }
 
   /**
@@ -225,7 +227,10 @@ export class CandidateFormPage implements OnInit {
         civilfront: ['', Validators.required],
         civilback: ['', Validators.required],
         expiry_date: ['', Validators.required],
-        hourly_rate: ['', Validators.required]
+        hourly_rate: ['', Validators.required],
+        objective: ['', Validators.required],
+        gender: ['', Validators.required],
+        license: ['', Validators.required]
       });
     } else { // Show Update Form
       this.operation = 'Update';
@@ -244,8 +249,45 @@ export class CandidateFormPage implements OnInit {
         civilfront: [this.model.candidate_civil_photo_front, Validators.required],
         civilback: [this.model.candidate_civil_photo_back, Validators.required],
         expiry_date: [this.model.candidate_civil_expiry_date, Validators.required],
-        hourly_rate: [this.model.candidate_hourly_rate, Validators.required]
+        hourly_rate: [this.model.candidate_hourly_rate, Validators.required],
+        objective: [this.model.candidate_objective, Validators.required],
+        gender: [this.model.candidate_gender, Validators.required],
+        license: [this.model.candidate_driving_license, Validators.required]
       });
     }
+  }
+
+  setGenderOption(value) {
+    this.form.controls.gender.setValue(value);
+    this.form.controls.gender.markAsDirty();
+    this.model.candidate_gender = value;
+  }
+
+  setLicenseOption(value) {
+    this.form.controls.license.setValue(value);
+    this.form.controls.license.markAsDirty();
+    this.model.candidate_driving_license = value;
+  }
+
+  async updateSkills() {
+
+    const modal = await this.modalCtrl.create({
+      component: SkillFormPage,
+      componentProps: {
+        candidate: this.model,
+      }
+    });
+    modal.present();
+  }
+
+  async updateExperiences() {
+
+    const modal = await this.modalCtrl.create({
+      component: ExperienceFormPage,
+      componentProps: {
+        candidate: this.model,
+      }
+    });
+    modal.present();
   }
 }

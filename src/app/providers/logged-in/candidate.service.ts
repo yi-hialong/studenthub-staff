@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
+import {Observable} from 'rxjs';
 
-//services
-import {AuthhttpService} from "./authhttp.service";
+// services
+import {AuthhttpService} from './authhttp.service';
 
-//model
-import {Candidate} from "src/app/models/candidate";
-import {Country} from "src/app/models/country";
+// model
+import {Candidate} from 'src/app/models/candidate';
+import {Country} from 'src/app/models/country';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CandidateService {
 
-  private _candidateEndpoint: string = "/candidates";
+  private _candidateEndpoint = '/candidates';
 
   constructor(private _authhttp: AuthhttpService) { }
 
@@ -21,7 +21,7 @@ export class CandidateService {
    * candidate detail
    * @returns {Observable<any>}
    */
-  detail(id:number): Observable<any> {
+  detail(id: number): Observable<any> {
     return this._authhttp.get(this._candidateEndpoint + '/detail/' + id);
   }
 
@@ -29,8 +29,8 @@ export class CandidateService {
    * candidate salary transfer list
    * @returns {Observable<any>}
    */
-  transfers(id:number): Observable<any> {
-    let url = this._candidateEndpoint + '/transfers/' + id;
+  transfers(id: number): Observable<any> {
+    const url = this._candidateEndpoint + '/transfers/' + id;
     return this._authhttp.get(url);
   }
 
@@ -39,7 +39,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   list(): Observable<any> {
-    let url = this._candidateEndpoint;
+    const url = this._candidateEndpoint;
     return this._authhttp.getRaw(url);
   }
 
@@ -48,7 +48,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listAssigned(candidate_name: string, page: number): Observable<any> {
-    let url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page;
+    const url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page;
     return this._authhttp.getRaw(url);
   }
 
@@ -57,7 +57,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listNotAssigned(candidate_name: string, page: number): Observable<any> {
-    let url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page;
+    const url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page;
     return this._authhttp.getRaw(url);
   }
 
@@ -67,29 +67,33 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   create(model: Candidate): Observable<any> {
-    let postUrl = `${this._candidateEndpoint}`;
-    let params = {
-      "candidate_id": model.candidate_id,
-      "store_id": model.store_id,
-      "bank_id": model.bank_id,
-      "university_id": model.university_id,
-      "country_id": model.country_id,
-      "bank_account_name": model.bank_account_name,
-      "iban": model.candidate_iban,
-      "name": model.candidate_name,
-      "name_ar": model.candidate_name_ar,
-      "personal_photo": model.candidate_personal_photo,
-      "email": model.candidate_email,
-      "phone": model.candidate_phone,
-      "birth_date": model.candidate_birth_date,
-      "civil_id": model.candidate_civil_id,
-      "expiry_date": model.candidate_civil_expiry_date,
-      "photo_front": model.candidate_civil_photo_front,
-      "photo_back": model.candidate_civil_photo_back,
-      "hourly_rate": model.candidate_hourly_rate,
-      "candidate_status": model.candidate_status
+    const postUrl = `${this._candidateEndpoint}`;
+    const params = {
+      candidate_id: model.candidate_id,
+      store_id: model.store_id,
+      bank_id: model.bank_id,
+      university_id: model.university_id,
+      country_id: model.country_id,
+      bank_account_name: model.bank_account_name,
+      iban: model.candidate_iban,
+      name: model.candidate_name,
+      name_ar: model.candidate_name_ar,
+      personal_photo: model.candidate_personal_photo,
+      email: model.candidate_email,
+      phone: model.candidate_phone,
+      birth_date: model.candidate_birth_date,
+      civil_id: model.candidate_civil_id,
+      expiry_date: model.candidate_civil_expiry_date,
+      photo_front: model.candidate_civil_photo_front,
+      photo_back: model.candidate_civil_photo_back,
+      hourly_rate: model.candidate_hourly_rate,
+      candidate_status: model.candidate_status,
+      candidate_objective: model.candidate_objective,
+      candidate_gender: model.candidate_gender,
+      candidate_driving_license: model.candidate_driving_license,
+      skill: model.skill,
+      experience: model.experience,
     };
-
     return this._authhttp.post(postUrl, params);
   }
 
@@ -99,27 +103,32 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   update(model: Candidate): Observable<any> {
-    let url = `${this._candidateEndpoint}/${model.candidate_id}`;
-    let params = {
-      "candidate_id": model.candidate_id,
-      "store_id": model.store_id,
-      "university_id": model.university_id,
-      "country_id": model.country_id,
-      "bank_id": model.bank_id,
-      "bank_account_name": model.bank_account_name,
-      "iban": model.candidate_iban,
-      "name": model.candidate_name,
-      "name_ar": model.candidate_name_ar,
-      "personal_photo": model.candidate_personal_photo,
-      "email": model.candidate_email,
-      "phone": model.candidate_phone,
-      "birth_date": model.candidate_birth_date,
-      "civil_id": model.candidate_civil_id,
-      "expiry_date": model.candidate_civil_expiry_date,
-      "photo_front": model.candidate_civil_photo_front,
-      "photo_back": model.candidate_civil_photo_back,
-      "hourly_rate": model.candidate_hourly_rate,
-      "candidate_status": model.candidate_status
+    const url = `${this._candidateEndpoint}/${model.candidate_id}`;
+    const params = {
+      candidate_id: model.candidate_id,
+      store_id: model.store_id,
+      university_id: model.university_id,
+      country_id: model.country_id,
+      bank_id: model.bank_id,
+      bank_account_name: model.bank_account_name,
+      iban: model.candidate_iban,
+      name: model.candidate_name,
+      name_ar: model.candidate_name_ar,
+      personal_photo: model.candidate_personal_photo,
+      email: model.candidate_email,
+      phone: model.candidate_phone,
+      birth_date: model.candidate_birth_date,
+      civil_id: model.candidate_civil_id,
+      expiry_date: model.candidate_civil_expiry_date,
+      photo_front: model.candidate_civil_photo_front,
+      photo_back: model.candidate_civil_photo_back,
+      hourly_rate: model.candidate_hourly_rate,
+      candidate_status: model.candidate_status,
+      candidate_objective: model.candidate_objective,
+      candidate_gender: model.candidate_gender,
+      candidate_driving_license: model.candidate_driving_license,
+      skill: model.skill,
+      experience: model.experience,
     };
 
     return this._authhttp.patch(url, params);
@@ -131,7 +140,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   resetPassword(model: Candidate): Observable<any> {
-    let url = `${this._candidateEndpoint}/reset-password/${model.candidate_id}`;
+    const url = `${this._candidateEndpoint}/reset-password/${model.candidate_id}`;
     return this._authhttp.patch(url, {});
   }
 
@@ -141,7 +150,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   delete(model: Candidate): Observable<any> {
-    let url = `${this._candidateEndpoint}/${model.candidate_id}`;
+    const url = `${this._candidateEndpoint}/${model.candidate_id}`;
     return this._authhttp.delete(url);
   }
 
@@ -151,7 +160,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   removeFromAssignedStore(candidate: Candidate): Observable<any> {
-    let url = `${this._candidateEndpoint}/unassign/${candidate.candidate_id}`;
+    const url = `${this._candidateEndpoint}/unassign/${candidate.candidate_id}`;
     return this._authhttp.delete(url);
   }
 
@@ -161,11 +170,11 @@ export class CandidateService {
    * @param {number} store_id
    * @returns {Observable<any>}
    */
-  assignCandidateToStore(candidate: Candidate, store_id:number): Observable<any> {
-    let params = {
-      "store_id": store_id
+  assignCandidateToStore(candidate: Candidate, store_id: number): Observable<any> {
+    const params = {
+      store_id: store_id
     };
-    let url = `${this._candidateEndpoint}/assign/${candidate.candidate_id}`;
+    const url = `${this._candidateEndpoint}/assign/${candidate.candidate_id}`;
     return this._authhttp.patch(url, params);
   }
 
@@ -175,7 +184,7 @@ export class CandidateService {
    * @param page
    */
   listByCountry(country: Country, page: number): Observable<any>{
-    let url = this._candidateEndpoint + '/search?country_id=' + country.country_id + '&page=' + page;
+    const url = this._candidateEndpoint + '/search?country_id=' + country.country_id + '&page=' + page;
     return this._authhttp.getRaw(url);
   }
 
@@ -184,7 +193,7 @@ export class CandidateService {
    * @param candidate
    */
   workHistory(candidate_id): Observable<any> {
-    let url = this._candidateEndpoint +'/work-history/'+ candidate_id;
+    const url = this._candidateEndpoint + '/work-history/' + candidate_id;
     return this._authhttp.get(url);
   }
 }

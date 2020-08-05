@@ -100,6 +100,30 @@
     </ion-label>
   </ion-item>
 
+  <ion-item>
+    <ion-label>
+      <h5>Gender</h5>
+      <p *ngIf="candidate.candidate_gender == 1">Male</p>
+      <p *ngIf="candidate.candidate_gender == 2">Female</p>
+      <p *ngIf="candidate.candidate_gender == 3">Other</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>
+      <h5>Objective</h5>
+      <p *ngIf="candidate.candidate_objective">{{ candidate.candidate_objective }}</p>
+    </ion-label>
+  </ion-item>
+
+  <ion-item>
+    <ion-label>
+      <h5>Driving License Available?</h5>
+      <p *ngIf="candidate.candidate_driving_license == 1">Yes</p>
+      <p *ngIf="candidate.candidate_driving_license == 2">No</p>
+    </ion-label>
+  </ion-item>
+
   <ion-item-divider color="light">Civil ID</ion-item-divider>
   <ion-item>
     <ion-label>

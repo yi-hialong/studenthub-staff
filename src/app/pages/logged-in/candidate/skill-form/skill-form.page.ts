@@ -33,7 +33,7 @@ export class SkillFormPage implements OnInit {
 
   // add skill in temp
   addToSkillList(skills) {
-    if (skills.length > 0) {
+    if (skills && skills.length > 0) {
       skills.map((data, index) => {
         // initializing skill list and loop count
 

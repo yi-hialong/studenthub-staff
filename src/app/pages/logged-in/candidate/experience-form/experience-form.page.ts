@@ -27,12 +27,11 @@ export class ExperienceFormPage implements OnInit {
 
   ngOnInit() {
     this.addToExperienceList(this.candidate.candidateExperiences);
-    // this.addToExperienceList(JSON.parse(JSON.stringify(this.candidate.candidateExperiences)));
   }
 
   // add experience in temp
   addToExperienceList(experiences) {
-    if (experiences.length > 0) {
+    if (experiences && experiences.length > 0) {
       experiences.map((data, index) => {
         // initializing experience list and loop count
 

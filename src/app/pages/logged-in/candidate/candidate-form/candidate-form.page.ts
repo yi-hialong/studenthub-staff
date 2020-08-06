@@ -106,7 +106,9 @@ export class CandidateFormPage implements OnInit {
   async save() {
 
     this.saving = true;
+    
     this.updateModelDataFromForm();
+
     let action;
     if (!this.model.candidate_id) {
       // Create
@@ -121,14 +123,6 @@ export class CandidateFormPage implements OnInit {
 
       // On Success
       if (jsonResponse.operation == 'success') {
-        // Fix photo folder path after upload
-        if (this.model.candidate_personal_photo && !this.model.candidate_personal_photo.includes('photos/')) {
-          this.model.candidate_personal_photo = `photos/${this.model.candidate_personal_photo}`;
-        }
-
-        // Close the page
-        const data = { refresh: true };
-        // this._viewCtrl.dismiss(data);
 
         // open view page
         this.navCtrl.navigateForward('candidate-view/' + jsonResponse.candidate.candidate_id, {

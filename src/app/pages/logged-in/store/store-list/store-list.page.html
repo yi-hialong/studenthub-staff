@@ -11,7 +11,7 @@
 <ion-content>
   <loading-modal [loading]="loading" type="text-list"></loading-modal>
 
-  <section *ngIf="!loading && company && company.company_email">
+  <section *ngIf="!loading && company">
     <ion-item-divider color="light">
       <ion-label>
         Contact
@@ -21,7 +21,7 @@
     <ion-item href='mailto:{{ company.company_email }}'>
       <ion-label>
         <ion-icon name="mail-outline" slot="start"></ion-icon>
-        {{ company.company_email }}
+        <span *ngIf="company.company_email">{{ company.company_email }}</span>
       </ion-label>
     </ion-item>
 

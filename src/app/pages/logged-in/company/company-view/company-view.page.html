@@ -138,7 +138,33 @@
         </ion-item>
       </ion-list>
     </section>
+
+    <!-- Brand List -->
+
+    <section>
+
+      <ion-item-divider color="light">
+        <ion-label>
+          Brands
+        </ion-label>
+      </ion-item-divider>
+
+      <ion-list> 
+          <ion-item tappable *ngFor="let brand of brands">
+            <ion-thumbnail slot="start">
+              <ion-img *ngIf="brand.brand_logo" [src]="awsService.cloudinaryUrl + 'company-brand/' + brand.brand_logo">
+              </ion-img>
+              <ion-img *ngIf="!brand.brand_logo" src="assets/images/placeholder.png"></ion-img>
+            </ion-thumbnail>
+            <ion-label>
+              {{ brand.brand_name_en }}
+            </ion-label>
+          </ion-item>
+      </ion-list>
+    </section>
+
   </ion-list>
 
   <loading-modal [loading]="loading" type="university-view"></loading-modal>
+
 </ion-content>

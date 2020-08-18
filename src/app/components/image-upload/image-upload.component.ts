@@ -61,7 +61,7 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
 
   ngOnInit() {
     if (this.prefix == 'photo') {
-      this.bucketUrl = this._awsService.cloudinaryUrl;
+      this.bucketUrl = this._awsService.cloudinaryUrl + 'candidate-photo/';
     }
   }
 

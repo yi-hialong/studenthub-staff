@@ -278,6 +278,7 @@ export class CandidateFormPage implements OnInit {
       }
     });
     modal.present();
+    
     const { data } = await modal.onWillDismiss();
 
     if (data.skills) {

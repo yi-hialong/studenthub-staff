@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Company } from 'src/app/models/company';
-import { Store } from 'src/app/models/store';
-import { ToastController, AlertController, ModalController, Platform } from '@ionic/angular';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Platform } from '@ionic/angular';
+//services
 import { StoreService } from 'src/app/providers/logged-in/store.service';
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
-import { Router, ActivatedRoute } from '@angular/router';
+import { AwsService } from 'src/app/providers/aws.service';
+//services
+import { Company } from 'src/app/models/company';
+import { Store } from 'src/app/models/store';
+import { Brand } from 'src/app/models/brand';
 
 
 @Component({
@@ -20,6 +24,8 @@ export class CompanyViewPage implements OnInit {
   public subCompanies: Company[] = [];
   public stores: Store[] = [];
 
+  public brands: Brand[] = [];
+
   public deleting = false;
   public loading = false;
   public sendingNewPassword = false;
@@ -27,12 +33,10 @@ export class CompanyViewPage implements OnInit {
   constructor(
     public platform: Platform,
     public router: Router,
-    public activatedRoute: ActivatedRoute,
-    private _modalCtrl: ModalController,
-    private _alertCtrl: AlertController,
+    public activatedRoute: ActivatedRoute, 
     public companyService: CompanyService,
     public storeService: StoreService,
-    private _toastCtrl: ToastController
+    public awsService: AwsService
   ) { }
 
   ngOnInit() {
@@ -71,6 +75,9 @@ export class CompanyViewPage implements OnInit {
 
       this.subCompanies = response.subCompanies;
       this.stores = response.stores;
+
+      this.brands = response.brands;
+
     }, () => {
       this.loading = false;
       this.deleting = false;

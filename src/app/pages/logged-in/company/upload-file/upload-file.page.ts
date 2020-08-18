@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild, ElementRef, OnDestroy} from '@angular/core';
+import {Component, OnInit, ViewChild, ElementRef, OnDestroy, Input} from '@angular/core';
 import { Subscription } from 'rxjs';
 import {AlertController, ModalController, Platform, ToastController} from '@ionic/angular';
 
@@ -21,7 +21,7 @@ export class UploadFilePage implements OnInit, OnDestroy {
 
   public fileModel: File = new File();
   public company;
-
+  @Input() file;
   public progress = null;
   public form: FormGroup;
   public loading = false;
@@ -46,9 +46,7 @@ export class UploadFilePage implements OnInit, OnDestroy {
     public sentryService: SentryErrorhandlerService,
     public filepickerService: FilepickerService,
     public awsService: AwsService
-  ) {
-
-  }
+  ) { }
 
   ngOnInit() {
     this._initForm();

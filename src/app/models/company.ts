@@ -15,6 +15,7 @@ export class Company{
     total_candidates: number;
     company_hourly_rate: number;
     company_bonus_commission: number;
+    company_followup: any;
     currency_pref: number;
     subcompanies: Company[];
     subCompanies: Company[];

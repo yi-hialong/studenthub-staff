@@ -96,7 +96,16 @@ export class CompanyViewPage implements OnInit {
     });
   }
 
-   /**
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (date)
+      return new Date(date.replace(/-/g, '/'));
+  }
+
+  /**
    * Load company detail page when its selected from the list
    * @param model
    */

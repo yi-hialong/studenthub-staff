@@ -64,6 +64,15 @@ export class StoreListPage implements OnInit {
     });
   }
 
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (date)
+      return new Date(date.replace(/-/g, '/'));
+  }
+  
   async onContactSelected(companyContact) {
     const modal = await this.modalCtrl.create({
       component: CompanyContactFormPage,

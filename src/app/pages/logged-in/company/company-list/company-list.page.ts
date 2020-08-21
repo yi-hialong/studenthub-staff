@@ -135,6 +135,14 @@ export class CompanyListPage implements OnInit {
     }
   }
 
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (date)
+      return new Date(date.replace(/-/g, '/'));
+  }
 
   async uploadDocument() {
     const modal = await this.modalCtrl.create({

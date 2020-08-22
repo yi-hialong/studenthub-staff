@@ -16,6 +16,7 @@ import { CandidateService } from 'src/app/providers/logged-in/candidate.service'
 export class CandidateComponent implements OnInit {
 
   @Input() candidate: Candidate;
+  @Input() type: any = null;
 
   @Output() refresh: EventEmitter<any> = new EventEmitter();
 
@@ -100,7 +101,6 @@ export class CandidateComponent implements OnInit {
    */
   loadLogo(candidate) {
     return candidate.candidate_personal_photo = null;
-    // return candidate.candidate_personal_photo_thumb = null;
   }
 
   /**

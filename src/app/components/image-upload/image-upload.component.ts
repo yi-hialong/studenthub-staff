@@ -56,12 +56,12 @@ export class ImageUploadComponent implements ControlValueAccessor, OnInit {
     this._bucketUrlTemporary = this._awsService.bucketUrl;
 
     // By Default, use the permanent bucket url
-    this.bucketUrl = this._bucketUrlPermanent + 'photos/';
+    this.bucketUrl = this._bucketUrlPermanent;
   }
 
   ngOnInit() {
     if (this.prefix == 'photo') {
-      this.bucketUrl = this._awsService.cloudinaryUrl;
+      this.bucketUrl = this._awsService.cloudinaryUrl + 'candidate-photo/';
     }
   }
 

@@ -1,11 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { Company } from 'src/app/models/company';
-import { Store } from 'src/app/models/store';
-import { ToastController, AlertController, ModalController, Platform } from '@ionic/angular';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Platform, ModalController, AlertController } from '@ionic/angular';
+//services
 import { StoreService } from 'src/app/providers/logged-in/store.service';
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
-import { Router, ActivatedRoute } from '@angular/router';
-import {UploadFilePage} from "../upload-file/upload-file.page";
+import { CompanyContactService } from 'src/app/providers/logged-in/company-contact.service';
+import { AwsService } from 'src/app/providers/aws.service';
+import { AuthService } from 'src/app/providers/auth.service';
+//models
+import { CompanyContact } from 'src/app/models/company-contact';
+import { Company } from 'src/app/models/company';
+import { Store } from 'src/app/models/store';
+import { Brand } from 'src/app/models/brand'; 
+//pages
+import { UploadFilePage } from "../upload-file/upload-file.page";
+import { CompanyContactFormPage } from '../company-contact-form/company-contact-form.page';
 
 
 @Component({
@@ -21,19 +30,25 @@ export class CompanyViewPage implements OnInit {
   public subCompanies: Company[] = [];
   public stores: Store[] = [];
 
+  public companyContacts: CompanyContact[] = [];
+
+  public brands: Brand[] = [];
+
   public deleting = false;
   public loading = false;
   public sendingNewPassword = false;
 
   constructor(
     public platform: Platform,
+    public modalCtrl: ModalController,
+    public alertCtrl: AlertController,
     public router: Router,
-    public activatedRoute: ActivatedRoute,
-    private _modalCtrl: ModalController,
-    private _alertCtrl: AlertController,
+    public activatedRoute: ActivatedRoute, 
     public companyService: CompanyService,
+    public authService: AuthService,
+    public companyContactService: CompanyContactService,
     public storeService: StoreService,
-    private _toastCtrl: ToastController
+    public awsService: AwsService
   ) { }
 
   ngOnInit() {
@@ -45,8 +60,8 @@ export class CompanyViewPage implements OnInit {
 
     this.company_id = this.activatedRoute.snapshot.paramMap.get('company_id');
 
-
     this.loadData();
+    this.loadContacts();
   }
 
   /**
@@ -72,13 +87,25 @@ export class CompanyViewPage implements OnInit {
 
       this.subCompanies = response.subCompanies;
       this.stores = response.stores;
+
+      this.brands = response.brands;
+
     }, () => {
       this.loading = false;
       this.deleting = false;
     });
   }
 
-   /**
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (date)
+      return new Date(date.replace(/-/g, '/'));
+  }
+
+  /**
    * Load company detail page when its selected from the list
    * @param model
    */
@@ -102,6 +129,76 @@ export class CompanyViewPage implements OnInit {
     });
   }
 
+  loadContacts() {
+    this.companyContactService.companyContacts(this.company_id).subscribe(data => {
+      this.companyContacts = data;
+    });
+  }
+
+  async onContactSelected(companyContact) {
+    const modal = await this.modalCtrl.create({
+      component: CompanyContactFormPage,
+      componentProps: { 
+        model: companyContact
+      }
+    });
+
+    // Refresh List if required
+    modal.onDidDismiss().then(e => {
+      if (e && e.data && e.data.refresh) {
+        this.loadContacts();
+      }
+    });
+    modal.present();
+  }
+
+  async addCompanyContact() {
+
+    let companyContact = new CompanyContact;
+    companyContact.company_id = this.company_id;
+    
+    const modal = await this.modalCtrl.create({
+      component: CompanyContactFormPage,
+      componentProps: { 
+        model: companyContact
+      }
+    });
+
+    // Refresh List if required
+    modal.onDidDismiss().then(e => {
+      if (e && e.data && e.data.refresh) {
+        this.loadContacts();
+      }
+    });
+    modal.present();
+  }
+
+  doNothing(event) {
+    event.stopPropagation();
+  }
+
+  async deleteContact(event, companyContact) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.companyContactService.delete(companyContact).subscribe(async response => {
+
+      if (response.operation == 'success')
+      {
+        this.companyContacts = this.companyContacts.filter(e => e.contact_uuid != companyContact.contact_uuid);
+      }
+      else
+      {
+        const prompt = await this.alertCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          buttons: ['Ok']
+        });
+        prompt.present();
+      }
+    });
+  }
+
   /**
    * view detail
    */
@@ -114,7 +211,7 @@ export class CompanyViewPage implements OnInit {
   }
 
   async uploadDocument() {
-    const modal = await this._modalCtrl.create({
+    const modal = await this.modalCtrl.create({
       component: UploadFilePage,
       componentProps: {
         company: this.company,

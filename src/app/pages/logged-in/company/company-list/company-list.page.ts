@@ -54,15 +54,6 @@ export class CompanyListPage implements OnInit {
     }
   }
 
-  pageLinkColor(page: number) {
-
-    if (page == this.currentPage) {
-      return 'light';
-    }
-
-    return '';
-  }
-
   async loadCompanyList(page: number){
     // Load list of companies
     this.loading = true;
@@ -71,18 +62,6 @@ export class CompanyListPage implements OnInit {
 
         this.pageCount = response.headers.get('X-Pagination-Page-Count');
         this.currentPage = response.headers.get('X-Pagination-Current-Page');
-
-        this.pages = [];
-
-        for (let i = 1; i <= this.pageCount; i++){
-          this.pages.push(i);
-        }
-
-        // hide if no page = 1
-
-        if (this.pageCount == 1) {
-          this.pages = [];
-        }
 
         this.companies = response.body;
         this.loadCompaniesSegmentData();
@@ -156,6 +135,14 @@ export class CompanyListPage implements OnInit {
     }
   }
 
+  /**
+   * Make date readable by Safari
+   * @param date
+   */
+  toDate(date) {
+    if (date)
+      return new Date(date.replace(/-/g, '/'));
+  }
 
   async uploadDocument() {
     const modal = await this.modalCtrl.create({
@@ -170,5 +157,31 @@ export class CompanyListPage implements OnInit {
     if (data && data.refresh) {
       this.viewDetail(false);
     }
+  }
+
+  loadLogo($event, company) {
+    company.company_logo = null;
+  }
+
+
+  doInfinite(event) {
+
+    this.loading = true;
+    this.currentPage++;
+
+    this.companyService.list(this.currentPage).subscribe(response => {
+
+        this.pageCount = response.headers.get('X-Pagination-Page-Count');
+        this.currentPage = response.headers.get('X-Pagination-Current-Page');
+
+        this.companies = this.companies.concat(response.body);
+        this.loadCompaniesSegmentData();
+      },
+      error => {},
+      () => {
+        this.loading = false;
+        event.target.complete();
+      }
+    );
   }
 }

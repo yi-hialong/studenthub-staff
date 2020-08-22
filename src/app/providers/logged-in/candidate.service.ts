@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from "rxjs";
 //services
-import { AuthhttpService } from "./authhttp.service";
+import { AuthHttpService } from "./authhttp.service";
 //model
 import { Candidate } from "src/app/models/candidate";
 import { Country } from "src/app/models/country";
@@ -16,14 +16,14 @@ export class CandidateService {
 
   private _candidateEndpoint: string = "/candidates";
 
-  constructor(private _authhttp: AuthhttpService) { }
+  constructor(private _authhttp: AuthHttpService) { }
 
   /**
    * candidate detail
    * @returns {Observable<any>}
    */
   detail(id: number): Observable<any> {
-    return this._authhttp.get(this._candidateEndpoint + '/detail/' + id + '?expand=candidateSkills,candidateExperiences,bank');
+    return this._authhttp.get(this._candidateEndpoint + '/detail/' + id + '?expand=store,company,candidateSkills,candidateExperiences,bank,country,university');
   }
 
   /**
@@ -41,7 +41,7 @@ export class CandidateService {
    */
   list(): Observable<any> {
     const url = this._candidateEndpoint;
-    return this._authhttp.getRaw(url + '?expand=candidateSkills,candidateExperiences');
+    return this._authhttp.getRaw(url + '?expand=store,company,candidateSkills,candidateExperiences');
   }
 
   /**
@@ -49,7 +49,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listAssigned(candidate_name: string, page: number, incompleteProfile = 0, withoutBank = 0): Observable<any> {
-    const url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile  + '&without_bank=' + withoutBank + '&expand=candidateSkills,candidateExperiences';
+    const url = this._candidateEndpoint + '/assigned?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile  + '&without_bank=' + withoutBank + '&expand=store,company,candidateSkills,candidateExperiences';
     return this._authhttp.getRaw(url);
   }
 
@@ -58,7 +58,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listAssignedWithoutBank(candidate_name: string, page: number, incompleteProfile = 0, withoutBank = 0): Observable<any> {
-    const url = this._candidateEndpoint + '/assigned-without-bank?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile  + '&without_bank=' + withoutBank + '&expand=candidate,candidate.candidateSkills,candidate.candidateExperiences';
+    const url = this._candidateEndpoint + '/assigned-without-bank?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile  + '&without_bank=' + withoutBank + '&expand=store,company,candidate,candidate.candidateSkills,candidate.candidateExperiences';
     return this._authhttp.getRaw(url);
   }
 
@@ -67,7 +67,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listNotAssignedWithoutBank(candidate_name: string, page: number, incompleteProfile = 0, withoutBank = 0): Observable<any> {
-    const url = this._candidateEndpoint + '/not-assigned-without-bank?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile + '&expand=candidate,candidate.candidateSkills,candidate.candidateExperiences';
+    const url = this._candidateEndpoint + '/not-assigned-without-bank?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile + '&expand=store,company,candidate,candidate.candidateSkills,candidate.candidateExperiences';
     return this._authhttp.getRaw(url);
   }
 
@@ -76,7 +76,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listNotAssigned(candidate_name: string, page: number, incompleteProfile = 0, withoutBank = 0): Observable<any> {
-    const url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile + '&without_bank=' + withoutBank + '&expand=candidateSkills,candidateExperiences';
+    const url = this._candidateEndpoint + '/not-assigned?candidate_name=' + candidate_name + '&page=' + page + '&incomplete_profile=' + incompleteProfile + '&without_bank=' + withoutBank + '&expand=store,company,candidateSkills,candidateExperiences';
     return this._authhttp.getRaw(url);
   }
 
@@ -156,8 +156,8 @@ export class CandidateService {
   }
 
   /**
-   * update job search status 
-   * @param params 
+   * update job search status
+   * @param params
    */
   updateJobSearchStatus(params) : Observable<any> {
     const url = `${this._candidateEndpoint}/job-search-status`;
@@ -217,7 +217,7 @@ export class CandidateService {
    * @param page
    */
   listByCountry(country: Country, page: number): Observable<any> {
-    const url = this._candidateEndpoint + '/search?country_id=' + country.country_id + '&page=' + page;
+    const url = this._candidateEndpoint + '/search?expand=store,company&country_id=' + country.country_id + '&page=' + page;
     return this._authhttp.getRaw(url);
   }
 
@@ -228,5 +228,31 @@ export class CandidateService {
   workHistory(candidate_id): Observable<any> {
     const url = this._candidateEndpoint + '/work-history/' + candidate_id;
     return this._authhttp.get(url);
+  }
+
+  /**
+   * List of all candidate to review changes
+   * @returns {Observable<any>}
+   */
+  listToReview(page: number): Observable<any>{
+    let url = this._candidateEndpoint + '/search?expand=store,company&by=review&review=0&page=' + page;
+    return this._authhttp.getRaw(url);
+  }
+
+  /**
+   * No. of all candidate to review changes
+   * @returns {Observable<any>}
+   */
+  totalToReview(): Observable<any>{
+    return this._authhttp.get(this._candidateEndpoint + '/total-to-review');
+  }
+
+  /**
+   * approve candidate
+   * @param {Candidate} model
+   * @returns {Observable<any>}
+   */
+  approve(model: Candidate): Observable<any>{
+    return this._authhttp.patch(`${this._candidateEndpoint}/approve/${model.candidate_id}`, {});
   }
 }

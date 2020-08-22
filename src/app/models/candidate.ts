@@ -28,9 +28,9 @@ export class Candidate {
     candidate_hourly_rate: string;
     candidate_status: string;
     approved: number;
+    isProfileCompleted: any;
     candidate_job_search_status: any;
     age: string;
-    candidate_personal_photo_thumb: string;
     candidate_objective: string;
     candidate_gender: any;
     candidate_driving_license: any;

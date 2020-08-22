@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController, ToastController } from '@ionic/angular';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 // models
 import { Store } from 'src/app/models/store';
 import { Candidate } from 'src/app/models/candidate';
@@ -8,6 +8,8 @@ import { Candidate } from 'src/app/models/candidate';
 import { StoreService } from 'src/app/providers/logged-in/store.service';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 import { AwsService } from 'src/app/providers/aws.service';
+import {EventService} from "../../../../providers/event.service";
+import {AuthService} from "../../../../providers/auth.service";
 
 
 @Component({
@@ -31,23 +33,30 @@ export class CandidateViewPage implements OnInit {
   public assigning: boolean = false;
   public unassinging: boolean = false;
   public loading: boolean = false;
+  public approving: boolean = false;
 
   public updatingJobSearchStatus: boolean = false;
 
   constructor(
     public navCtrl: NavController,
+    public router: Router,
     public activatedRoute: ActivatedRoute,
     public alertCtrl: AlertController,
     public storeService: StoreService,
     public candidateService: CandidateService,
     public aws: AwsService,
     public toastCtrl: ToastController,
+    public eventService: EventService,
+    public authService: AuthService,
   ) {
     this.candidate_id = this.activatedRoute.snapshot.paramMap.get('id');
   }
 
   ngOnInit() {
-    const state = window.history.state;
+
+  }
+  ionViewDidEnter() {
+    // const state = window.history.state;
     // if (state.model) {
     //   this.candidate = state.model;
     // } else  {
@@ -273,6 +282,36 @@ export class CandidateViewPage implements OnInit {
    */
   loadLogo($event, candidate) {
     candidate.candidate_personal_photo = null;
-    return candidate.candidate_personal_photo_thumb = null;
+  }
+
+  /**
+   * Approve the provided model
+   */
+  async approve(candidate: Candidate) {
+
+    this.approving = true;
+
+    this.candidateService.approve(candidate).subscribe(response => {
+
+      this.approving = false;
+
+      if(response.operation == 'error') {
+
+        this.toastCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          duration: 3000
+        }).then( toast => {
+          toast.present();
+        });
+
+      } else {
+        this.candidate.approved = 1;
+        // update review count
+        this.eventService.reviewRequired$.next();
+
+        // back to listing
+        // this.router.navigate(['/candidate-review-list']);
+      }
+    });
   }
 }

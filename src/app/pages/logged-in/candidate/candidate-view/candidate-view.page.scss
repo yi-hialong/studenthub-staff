@@ -1,7 +1,7 @@
-.sub-span {
-  float: left;
-  padding: 6px;
-  border: 1px solid;
-  margin: 5px;
-  border-radius: 15px;
+.pending ion-label {
+  border-left: 6px solid red;
+  padding-left: 9px;
+}
+.pending-image ion-avatar{
+  border: 3px solid red;
 }

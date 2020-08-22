@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import {AuthhttpService} from "./authhttp.service";
-import {Observable} from "rxjs";
+import {AuthHttpService} from './authhttp.service';
+import {Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BankService {
 
-  private _bankEndpoint: string = "/banks";
+  private _bankEndpoint = '/banks';
 
-  constructor(private _authhttp: AuthhttpService) { }
+  constructor(private _authhttp: AuthHttpService) { }
   /**
    * List of all banks without pagination
    * @returns {Observable<any>}

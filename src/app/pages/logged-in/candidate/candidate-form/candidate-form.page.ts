@@ -275,9 +275,11 @@ export class CandidateFormPage implements OnInit {
       component: SkillFormPage,
       componentProps: {
         candidate: this.model,
+        skillList: (this.form.value.skills) ? this.form.value.skills.split(',') : []
       }
     });
     modal.present();
+
     const { data } = await modal.onWillDismiss();
 
     if (data && data.skills) {
@@ -293,6 +295,7 @@ export class CandidateFormPage implements OnInit {
       component: ExperienceFormPage,
       componentProps: {
         candidate: this.model,
+        experienceList: (this.form.value.experiences) ? this.form.value.experiences.split(',') : []
       }
     });
     modal.present();

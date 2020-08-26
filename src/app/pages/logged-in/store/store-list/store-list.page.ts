@@ -410,20 +410,55 @@ export class StoreListPage implements OnInit {
     }
   }
 
-  /**
-   * removing request
-   * @param event
-   * @param request
-   */
-  async remoteRequest(event, request) {
+  startRequest(event, request) {
 
     event.preventDefault();
     event.stopPropagation();
 
-    this.requestService.delete(request).subscribe(async response => {
+    this.requestService.start(request).subscribe(async response => {
 
       if (response.operation == 'success') {
-        this.loadCompany();
+        request.request_status = 'started';
+      } else {
+        this.toastCtrl.create({
+          message: response.message,
+          buttons: ['Ok']
+        }).then(prompt => {
+          prompt.present();
+        });
+      }
+    });
+  }
+
+  cancelledRequest(event, request) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.requestService.cancel(request).subscribe(async response => {
+
+      if (response.operation == 'success') {
+        request.request_status = 'cancelled';
+      } else {
+        this.toastCtrl.create({
+          message: response.message,
+          buttons: ['Ok']
+        }).then(prompt => {
+          prompt.present();
+        });
+      }
+    });
+  }
+
+  deliveredRequest(event, request) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.requestService.deliver(request).subscribe(async response => {
+
+      if (response.operation == 'success') {
+        request.request_status = 'delivered';
       } else {
         this.toastCtrl.create({
           message: response.message,

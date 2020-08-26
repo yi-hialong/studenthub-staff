@@ -31,6 +31,33 @@ export class CompanyRequestService {
   }
 
   /**
+   * start request
+   * @param model
+   */
+  start(model: Request): Observable<any> {
+    const url = `${this.companyRequestEndpoint}/start/${model.request_uuid}`;
+    return this.authhttp.patch(url, {});
+  }
+
+  /**
+   * cancel request
+   * @param model
+   */
+  cancel(model: Request): Observable<any> {
+    const url = `${this.companyRequestEndpoint}/cancel/${model.request_uuid}`;
+    return this.authhttp.patch(url, {});
+  }
+
+  /**
+   * deliver request
+   * @param model
+   */
+  deliver(model: Request): Observable<any> {
+    const url = `${this.companyRequestEndpoint}/deliver/${model.request_uuid}`;
+    return this.authhttp.patch(url, {});
+  }
+  
+  /**
    * update request
    * @param model
    */

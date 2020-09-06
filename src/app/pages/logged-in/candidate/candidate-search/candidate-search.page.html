@@ -4,15 +4,13 @@
       <ion-back-button defaultHref="/"></ion-back-button>
     </ion-buttons>
 
-    <!--
     <ion-buttons slot="end" class="mobile-only">
       <ion-button fill="clear" (click)="openFilter()" class="btn-filter skip-hover">
         <span>
           <img src="assets/images/ic-filter.svg"> {{ "Filter" | translate }}
         </span>
       </ion-button>
-    </ion-buttons>-->
-
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -22,14 +20,14 @@
 
   <ion-grid *ngIf="!instantSearchConfig" class="dummy">
     <ion-row>
-      <ion-col size-md="4" size-lg="4" class="desktop-only">
+      <ion-col  size-xs="0" size-sm="0" size-md="4" size-lg="4" class="desktop-only">
         <div class="filter-wrapper">
           <loading-modal [attr.dir]="translateService.direction()" [loading]="true" type="candidate-filter">
           </loading-modal>
         </div>
       </ion-col>
 
-      <ion-col size-sm="12" size-md="8" size-lg="8" class="employer-list-wrapper">
+      <ion-col  size-xs="12" size-sm="12" size-md="8" size-lg="8" class="employer-list-wrapper">
         <div class="cv-list">
           <div class="list-header">
             <div class="applied-filters-skeleton">
@@ -52,13 +50,13 @@
   <instant-search #instantSearch *ngIf="instantSearchConfig" [config]="instantSearchConfig" [searchParameters]="searchParameters">
     <ion-grid>
       <ion-row>
-        <ion-col size-sm="0" size-md="4" size-lg="4" class="desktop-only">
+        <ion-col size-xs="0" size-sm="0" size-md="0" size-lg="4" size-xl="4" class="desktop-only">
           <div class="filter-wrapper">
             <candidate-filter [class.hidden]="loading && !nbHits"></candidate-filter>
             <loading-modal [loading]="loading && !nbHits" type="candidate-filter"></loading-modal>
           </div>
         </ion-col>
-        <ion-col size-sm="12" size-md="8" size-lg="8" class="employer-list-wrapper">
+        <ion-col  size-xs="12" size-sm="12" size-md="12" size-lg="8" size-xl="8" class="employer-list-wrapper">
 
           <is-infinite-hits class="cv-list">
             <ng-template let-results="results" let-showMore="showMore" let-hits="hits">

@@ -387,29 +387,27 @@
 
     <!--  Documents-->
     <section *ngIf="company">
-    <ion-item>
-      <ion-button expand="full" color="danger" (click)="uploadDocument()">
-        <span>Upload Document</span>
-      </ion-button>
-    </ion-item>
-
-    <div *ngIf="company.files && company.files.length > 0">
       <ion-item-divider color="light">
         <ion-label>
           Uploaded Document
         </ion-label>
       </ion-item-divider>
-
-      <ion-item *ngFor="let file of company.files">
-        <ion-label>
-          <a target="_blank" (click)="$event.stopPropagation()"
-             href="{{ aws.permanentBucketUrl }}{{ file.file_s3_path }}">
-            {{file.file_title}}
-          </a>
-          <p>{{file.file_description}}</p>
-        </ion-label>
+      <div *ngIf="company.files && company.files.length > 0">
+        <ion-item *ngFor="let file of company.files">
+          <ion-label>
+            <a target="_blank" (click)="$event.stopPropagation()"
+               href="{{ aws.permanentBucketUrl }}{{ file.file_s3_path }}">
+              {{file.file_title}}
+            </a>
+            <p>{{file.file_description}}</p>
+          </ion-label>
+        </ion-item>
+      </div>
+      <ion-item>
+        <ion-button expand="full" color="danger" (click)="uploadDocument()">
+          <span>Upload Document</span>
+        </ion-button>
       </ion-item>
-    </div>
   </section>
 
     <!-- Brand List -->

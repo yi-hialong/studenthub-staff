@@ -28,6 +28,7 @@ import { EventService } from "src/app/providers/event.service";
 import { BrandService } from "src/app/providers/logged-in/brand.service";
 import {MallService} from "../../../../providers/logged-in/mall.service";
 import {Mall} from "../../../../models/mall";
+import {UploadFilePage} from "../../company/upload-file/upload-file.page";
 
 
 @Component({
@@ -70,6 +71,7 @@ export class StoreListPage implements OnInit {
     public mallService: MallService
   ) {
     this.company_id = this.activatedRoute.snapshot.paramMap.get('id');
+    console.log(this.company_id);
   }
 
   ngOnInit() {
@@ -745,5 +747,29 @@ export class StoreListPage implements OnInit {
     this.mallService.fullList().subscribe(response => {
       this.malls = response;
     });
+  }
+
+  async uploadDocument() {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: UploadFilePage,
+      componentProps: {
+        company: this.company,
+      }
+    });
+    modal.present();
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+    });
+
+    const { data } = await modal.onWillDismiss();
+    if (data && data.refresh) {
+      this.loadCompany();
+    }
   }
 }

@@ -272,7 +272,11 @@ export class CompanyViewPage implements OnInit {
     });
   }
 
-  async editBrandSelected($event, brand) {
+  async editBrandSelected(event, brand) {
+    
+    event.preventDefault();
+    event.stopPropagation();
+
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
     const modal = await this.modalCtrl.create({

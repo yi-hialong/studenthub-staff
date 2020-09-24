@@ -28,7 +28,7 @@
   <form [formGroup]="form">
     <ion-list *ngIf="candidatelistData && candidatelistData.length > 0">
       <ion-item *ngFor="let obj of candidatelistData; let i= index" (click)="candidateDetailPage($event, obj)">
-        <ion-label>{{ obj.candidate_name }}</ion-label>
+        <ion-label>{{ obj.candidate_name? obj.candidate_name: obj.candidate_name_ar }}</ion-label>
         <ion-checkbox slot="end" [value]="obj.candidate_id" (ionChange)="onCandidateToggle($event)"></ion-checkbox>
       </ion-item>
     </ion-list>

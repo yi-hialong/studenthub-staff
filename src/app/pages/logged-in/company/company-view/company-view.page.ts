@@ -742,8 +742,19 @@ export class CompanyViewPage implements OnInit {
    * @param inProgress
    * @param profit
    * @param totalCandidates
+   * @param totalCandidatePaid
+   * @param canAvgPayment
    */
-  createBarChart(xAxis, complete, paymentReceived, inProgress, profit, totalCandidates) {
+  createBarChart(
+    xAxis,
+    complete,
+    paymentReceived,
+    inProgress,
+    profit,
+    totalCandidates,
+    totalCandidatePaid,
+    canAvgPayment
+  ) {
     if (this.barChart.nativeElement) {
       this.bars = new Chart(this.barChart.nativeElement, {
         type: 'line',
@@ -762,8 +773,8 @@ export class CompanyViewPage implements OnInit {
               label: 'Received Transfer',
               fill: false,
               data: paymentReceived,
-              backgroundColor: 'yellowgreen',
-              borderColor: 'yellowgreen',
+              backgroundColor: '#8000ff',
+              borderColor: '#8000ff',
               borderWidth: 1
             }, {
               label: 'In Progress Transfer',
@@ -785,6 +796,20 @@ export class CompanyViewPage implements OnInit {
               data: totalCandidates,
               backgroundColor: 'Blue',
               borderColor: 'Blue',
+              borderWidth: 1
+            }, {
+              label: 'Total Candidates Paid',
+              fill: false,
+              data: totalCandidatePaid,
+              // backgroundColor: '#ffff00',
+              borderColor: '#ffbf00',
+              borderWidth: 1
+            }, {
+              label: 'Average Candidates Payment',
+              fill: false,
+              data: canAvgPayment,
+              // backgroundColor: '#ffff00',
+              borderColor: '#F5CAC3',
               borderWidth: 1
             }
           ]
@@ -822,6 +847,7 @@ export class CompanyViewPage implements OnInit {
     const profit = [0];
     const totalCandidates = [0];
     const totalCandidatePaid = [0];
+    const canAvgPayment = [0];
     if (this.company) {
       console.log(this.company.parentTransfers);
       if (this.company.parentTransfers && this.company.parentTransfers.length > 0) {
@@ -829,31 +855,44 @@ export class CompanyViewPage implements OnInit {
           // Complete/payment received/inprogress
 
           if (transfer.transfer_status == 4) {
+            // Complete transfer
             complete.push(transfer.company_total);
           }
 
           if (transfer.transfer_status == 1) {
+            // payment received transfer
             paymentReceived.push(transfer.company_total);
           }
 
           if (transfer.transfer_status == 3) {
+            // Inprogress transfer
             inprogress.push(transfer.company_total);
           }
 
+          // one line for profit
           if (transfer.profit) {
             profit.push(transfer.profit);
           }
+
+          // one line showing candidates count transferred to in that transfer
           if (transfer.totalCandidateTransferTotal) {
             totalCandidates.push(transfer.totalCandidateTransferTotal);
           }
 
+          // one line for total distributed to candidates
+          let totalPaid = 0;
           for (const candidatePaid of transfer.paidTransferCandidates) {
-            totalCandidatePaid.push(candidatePaid);
+            totalPaid += candidatePaid['total_paid'];
           }
+          totalCandidatePaid.push(totalPaid);
 
+          // average payment per candidate
+          canAvgPayment.push((totalPaid / transfer.totalPaid));
+
+          // Horizontal line shows transfer date
           xAxis.push(transfer.transfer_updated_at_unix);
         }
-        this.createBarChart(xAxis, complete, paymentReceived, inprogress, profit, totalCandidates);
+        this.createBarChart(xAxis, complete, paymentReceived, inprogress, profit, totalCandidates, totalCandidatePaid, canAvgPayment);
       }
     }
   }

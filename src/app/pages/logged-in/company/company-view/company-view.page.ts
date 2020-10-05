@@ -768,15 +768,17 @@ export class CompanyViewPage implements OnInit {
     canAvgPayment,
     averageProfitPerCandidate
   ) {
-    console.log(xAxis,
-      complete,
-      paymentReceived,
-      inProgress,
+    console.log(
+      // xAxis,
+      // complete,
+      // paymentReceived,
+      // inProgress,
       profit,
-      totalCandidates,
-      totalCandidatePaid,
-      canAvgPayment,
-      averageProfitPerCandidate);
+      // totalCandidates,
+      // totalCandidatePaid,
+      // canAvgPayment,
+      // averageProfitPerCandidate
+    );
     if (this.statsChart.nativeElement) {
       this.bars = new Chart(this.statsChart.nativeElement, {
         type: 'line',
@@ -874,7 +876,7 @@ export class CompanyViewPage implements OnInit {
             callbacks: {
               label: (context) => {
 
-                // console.log(context);
+                console.log(context);
                 let label = '';
                 // let label = context.label || '';
                 if (context.datasetIndex == 0) {
@@ -899,11 +901,15 @@ export class CompanyViewPage implements OnInit {
                   label += context.label + ': ';
                 }
                 // console.log(context.label);
-                if (!isNaN(context.y)) {
+                // if (!isNaN(context.yLabel)) {
+                //   label += ' KWD ' + context.yLabel;
+                // }
+
+                if (!isNaN(context.yLabel)) {
                   label += new Intl.NumberFormat('en-US', {
                     style: 'currency',
                     currency: 'KWD'
-                  }).format(context.y);
+                  }).format(context.yLabel);
                 }
                 return label;
               }

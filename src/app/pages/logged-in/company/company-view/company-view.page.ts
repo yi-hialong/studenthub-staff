@@ -73,7 +73,6 @@ export class CompanyViewPage implements OnInit {
     public storeService: StoreService,
     public awsService: AwsService
   ) {
-    this.generateColorArray(8);
   }
 
   ngOnInit() {
@@ -758,6 +757,7 @@ export class CompanyViewPage implements OnInit {
    * @param canAvgPayment
    * @param averageProfitPerCandidate
    * @param allTransfers
+   * @param pointBackgroundColors
    */
   createStatsChart(
     xAxis,
@@ -770,64 +770,28 @@ export class CompanyViewPage implements OnInit {
     canAvgPayment,
     averageProfitPerCandidate,
     allTransfers,
-    allTransfersData,
     pointBackgroundColors
   ) {
-    console.log(
-      allTransfers
-      // xAxis,
-      // complete,
-      // paymentReceived,
-      // inProgress,
-      // profit,
-      // totalCandidates,
-      // totalCandidatePaid,
-      // canAvgPayment,
-      // averageProfitPerCandidate
-    );
     if (this.statsChart.nativeElement) {
       this.bars = new Chart(this.statsChart.nativeElement, {
         type: 'line',
         data: {
           // labels: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6', 'S7', 'S8'],
+          // https://stackoverflow.com/questions/28159595/chartjs-different-color-per-data-point
           datasets: [
             {
               label: 'Transfers (' + allTransfers.length + ')',
               display: false,
               data: allTransfers,
               pointBackgroundColor: pointBackgroundColors,
-              pointBorderColor: pointBackgroundColors, // https://stackoverflow.com/questions/28159595/chartjs-different-color-per-data-point
+              pointBorderColor: pointBackgroundColors,
               fill: false,
               backgroundColor: 'rgb(38, 194, 129)',
               borderColor: 'rgb(38, 194, 129)',
               borderWidth: 1
             },
-            // {
-            //   label: 'Completed Transfer (' + complete.length + ')',
-            //   display: false,
-            //   data: complete,
-            //   fill: false,
-            //   backgroundColor: 'rgb(38, 194, 129)',
-            //   borderColor: 'rgb(38, 194, 129)',
-            //   borderWidth: 1
-            // }, {
-            //   label: 'Received Transfer (' + paymentReceived.length + ')',
-            //   fill: false,
-            //   data: paymentReceived,
-            //   backgroundColor: '#8000ff',
-            //   borderColor: '#8000ff',
-            //   borderWidth: 1
-            // }, {
-            //   label: 'In Progress Transfer (' + inProgress.length + ')',
-            //   fill: false,
-            //   data: inProgress,
-            //   backgroundColor: '#387ef5',
-            //   borderColor: '#387ef5',
-            //   borderWidth: 1
-            // },
             {
-              label: 'Profit',
-              // xLabel: 'Profit (' + profit.length + ')',
+              label: 'Profit (' + profit.length + ')',
               fill: false,
               data: profit,
               backgroundColor: 'red',
@@ -893,7 +857,7 @@ export class CompanyViewPage implements OnInit {
             callbacks: {
               label: (context) => {
 
-                console.log(context);
+                // console.log(context);
                 // console.log(this.statsChart);
                 let label = '';
                 // let label = context.label || '';Complete/payment received/inprogress
@@ -920,15 +884,9 @@ export class CompanyViewPage implements OnInit {
                   label += '\nAverage Profit Per Candidate on ' + context.label + '\n';
                 }
 
-                // if (label) {
-                //   label += context.label + ': ';
-                // }
-                // console.log(context.label);
-                // if (!isNaN(context.yLabel)) {
-                //   label += ' KWD ' + context.yLabel;
-                // }
-
-                if (!isNaN(context.yLabel)) {
+                if (context.datasetIndex == 2) {
+                  label += 'are ' + allTransfers[context.index].totalCandidateTransferTotal;
+                } else if (!isNaN(context.yLabel)) {
                   label += new Intl.NumberFormat('en-US', {
                     style: 'currency',
                     currency: 'KWD'
@@ -943,17 +901,9 @@ export class CompanyViewPage implements OnInit {
     }
   }
 
-  generateColorArray(num) {
-    this.colorArray = [];
-    for (let i = 0; i < num; i++) {
-      this.colorArray.push('#' + Math.floor(Math.random() * 16777215).toString(16));
-    }
-  }
-
   loadChartStats() {
-
+    // console.log(this.statsData);
     const allTransfers = [];
-    const allTransfersData = [];
     const complete = [];
     const paymentReceived = [];
     const inprogress = [];
@@ -997,14 +947,14 @@ export class CompanyViewPage implements OnInit {
           }
 
           // one line for total distributed to candidates
-          let totalPaid = 0;
-          for (const candidatePaid of transfer.paidTransferCandidates) {
-            totalPaid += candidatePaid.total_paid;
-          }
-          totalCandidatePaid.push(totalPaid);
+          // let totalPaid = 0;
+          // for (const candidatePaid of transfer.paidTransferCandidates) {
+          //   totalPaid += candidatePaid.total_paid;
+          // }
+          totalCandidatePaid.push(transfer.total);
 
           // average payment per candidate
-          canAvgPayment.push((totalPaid / transfer.totalPaid));
+          canAvgPayment.push((transfer.total / transfer.totalPaid));
 
           // Also average profit per candidate would be nice
           const profits = 0;
@@ -1017,12 +967,13 @@ export class CompanyViewPage implements OnInit {
             x: transfer.transfer_created_at_unix,
             y: transfer.company_total.replace(/,/g, ''),
             id: '1A',
+            transfer_id: transfer.transfer_id,
             total: transfer.company_total,
             status: transfer.transfer_status,
             profit: transfer.profit.replace(/,/g, ''),
             totalCandidateTransferTotal: transfer.totalCandidateTransferTotal,
-            totalCandidatePaid: totalPaid,
-            canAvgPayment: (totalPaid / transfer.totalPaid),
+            totalCandidatePaid: transfer.total,
+            canAvgPayment: (transfer.total / transfer.totalPaid),
             averageProfitPerCandidate: (profits / transfer.paidTransferCandidates.length),
           });
 
@@ -1044,7 +995,7 @@ export class CompanyViewPage implements OnInit {
             inprogress, profit, totalCandidates,
             totalCandidatePaid, canAvgPayment,
             averageProfitPerCandidate,
-            allTransfers, allTransfersData,
+            allTransfers,
             pointBackgroundColors
           );
         }

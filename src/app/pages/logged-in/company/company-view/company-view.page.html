@@ -36,6 +36,9 @@
       <ion-segment-button value="brands">
         <ion-label>Brands</ion-label>
       </ion-segment-button>
+      <ion-segment-button value="malls" *ngIf="company && company.malls && company.malls.length > 0">
+        <ion-label>Malls</ion-label>
+      </ion-segment-button>
       <ion-segment-button value="transfer" *ngIf="company && company.parentTransfers && company.parentTransfers.length > 0">
         <ion-label>Transfer</ion-label>
       </ion-segment-button>
@@ -67,6 +70,9 @@
       <ion-select-option value="brands">
         <ion-label>Brands</ion-label>
       </ion-select-option>
+      <ion-select-option value="malls" *ngIf="company && company.malls && company.malls.length > 0">
+        <ion-label>Malls</ion-label>
+      </ion-select-option>
       <ion-select-option value="transfer" *ngIf="company && company.parentTransfers && company.parentTransfers.length > 0">
         <ion-label>Transfer</ion-label>
       </ion-select-option>
@@ -91,7 +97,6 @@
         <canvas #statsChart></canvas>
       </ion-card-content>
     </ion-card>
-
 
     <div class="ion-text-center ion-padding">
         <img *ngIf="company.company_logo" src="{{ awsService.cloudinaryUrl + company.company_logo }}"
@@ -328,8 +333,8 @@
           <div tabindex="0"></div>
           <ion-label>
             <h5>{{ store.store_name }}</h5>
-            <p *ngIf="store.store_location">
-              <ion-icon name="location-outline"></ion-icon> {{ store.store_location }}
+            <p>
+              <ion-badge *ngIf="store.store_location" class="icon-location"><ion-icon name="location-outline"></ion-icon> {{ store.store_location }}</ion-badge><ion-badge *ngIf="store && store.mall"><ion-icon name="business-outline"></ion-icon> {{ store.mall.mall_name_en }}</ion-badge>
             </p>
           </ion-label>
 
@@ -362,6 +367,25 @@
         </ion-button>
       </ion-item>
 
+    </ion-list>
+
+  </section>
+
+  <!-- malls List -->
+
+  <section *ngIf="segment == 'malls'">
+
+    <ion-list>
+        <ion-item tappable (click)="mallSelected(mall)"  *ngFor="let mall of company.malls">
+          <div tabindex="0"></div>
+          <ion-label>
+            <h5>{{ mall.mall_name_en }}</h5>
+            <p>{{ mall.mall_name_ar }}</p>
+          </ion-label>
+          <ion-badge slot="end">
+            <ion-icon name="person"></ion-icon> {{ mall.candidate_count }}
+          </ion-badge>
+          </ion-item>
     </ion-list>
 
   </section>
@@ -425,21 +449,21 @@
           <div tabindex="0"></div>
           <ion-label>
             <h2>
-              <ion-note>{{ request.request_number_of_employees }}</ion-note> {{ request.request_position_title }} - 
+              <ion-note>{{ request.request_number_of_employees }}</ion-note> {{ request.request_position_title }} -
               <span *ngIf="request.request_position_type == 1">Fulltime</span>
               <span *ngIf="request.request_position_type == 2">Partime</span>
             </h2>
             <p *ngIf="request.request_additional_info">{{ request.request_additional_info }} </p>
 
             <p *ngIf="request.request_feedback">FeedBack: {{ request.request_feedback }} </p>
-            
+
             <p class="date">
-              Created at {{ toDate(request.request_created_datetime) | date}} By 
+              Created at {{ toDate(request.request_created_datetime) | date}} By
               {{ request.requestCreatedBy.staff_name  }}
             </p>
 
             <p class="date" *ngIf="request.request_created_datetime != request.request_updated_datetime">
-              Updated at {{ toDate(request.request_updated_datetime) | date}} By 
+              Updated at {{ toDate(request.request_updated_datetime) | date}} By
               {{ request.requestUpdatedBy.staff_name  }}
             </p>
 
@@ -506,7 +530,7 @@
     <form [formGroup]="noteForm" [class.editor-inactive]="!editorFocused" [class.editor-focused]="editorFocused" *ngIf="noteForm">
       <ion-item lines="none">
         <div tabindex="0"></div>
-        
+
         <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (focus)="onEditorFocus()" (change)="onChange($event)"></ckeditor>
 
       </ion-item>
@@ -523,7 +547,7 @@
           <ion-button color="danger" (click)="cancelAddNote()">
             <span>Cancel</span>
           </ion-button>
-          
+
         </ion-buttons>
       </ion-item>
     </form>

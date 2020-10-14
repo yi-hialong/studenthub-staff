@@ -44,7 +44,7 @@ export class CompanyViewPage implements OnInit {
 
   @ViewChild('ckeditor') ckeditor;
 
-  public editorFocused: boolean = false; 
+  public editorFocused: boolean = false;
 
   public Editor = ClassicEditor;
 
@@ -69,7 +69,7 @@ export class CompanyViewPage implements OnInit {
   public updating = false;
 
   public addingNote: boolean = false;
-  
+
   public sendingNewPassword = false;
   public statsData: any[];
   public segment = 'info';
@@ -325,6 +325,17 @@ export class CompanyViewPage implements OnInit {
       }
     });
   }
+  /**
+   * open brand edit page
+   * @param mall
+   */
+  async mallSelected(mall) {
+    this.router.navigate(['mall-view', mall.mall_uuid], {
+      state: {
+        model: mall
+      }
+    });
+  }
 
   async editBrandSelected(event, brand) {
 
@@ -388,7 +399,7 @@ export class CompanyViewPage implements OnInit {
 
   /**
    * on note editor change
-   * @param event 
+   * @param event
    */
   onChange(event) {
 

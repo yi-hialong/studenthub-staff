@@ -30,6 +30,18 @@
 //@import '~quill/dist/quill.bubble.css';
 //@import '~quill/dist/quill.snow.css';
 
+html,
+body {
+  font-family: 'effra', sans-serif !important;
+  --ion-font-family: 'effra', sans-serif !important;
+
+  ion-label[position="floating"],
+  ion-label[position="stacked"] {
+      transform-origin: left top;
+  //    transform: translate3d(0%, 40%, 0) scale(0.75) !important;
+  }
+}
+
 .hidden {
     display: none;
 }
@@ -80,4 +92,20 @@
   ion-item:last-child {
     display: none;
   }
+}
+
+ion-header.add-border:after {
+  display: inline!important;
+}
+
+.clear-header:after {
+  display: none;
+}
+
+ion-header.add-border:after {
+  display: inline;
+}
+
+.clear-header ion-toolbar {
+  --border-width: 0 !important;
 }

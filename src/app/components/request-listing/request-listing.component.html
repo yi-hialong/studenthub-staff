@@ -1,0 +1,35 @@
+<ion-card [class.pending]="request.request_status == 'pending'">
+  <ion-card-header>
+    <ion-card-title>
+      {{ request.request_position_title }}
+    </ion-card-title>
+
+    <ion-card-subtitle>
+      <span *ngIf="request.request_position_type == 1">Full-time</span>
+      <span *ngIf="request.request_position_type == 2">Part-time</span>
+      for {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
+    </ion-card-subtitle>
+    
+    <p class="time">Requested {{ request.request_created_datetime | timeAgo }} </p>
+
+    <p *ngIf="request.staff">
+      Currently being handled by
+      <span *ngIf="request.staff.staff_id == authService.staff_id">you</span>
+      <span *ngIf="request.staff.staff_id != authService.staff_id">{{ request.staff.staff_name }}</span>
+    </p>
+
+  </ion-card-header>
+  <ion-card-content>
+
+    <p *ngIf="request.request_additional_info" class="txt-additional-info">{{ request.request_additional_info }} </p>
+
+    <div *ngIf="request.lastActivity">
+      <h5>Last Activity</h5>
+
+      <p>“{{ request.lastActivity.activity_detail }}”</p>
+      
+      <p class="time">{{ request.lastActivity.staff.staff_name  }} - {{ request.lastActivity.activity_created_datetime | timeAgo }} </p>
+    </div>
+    
+  </ion-card-content>
+</ion-card>

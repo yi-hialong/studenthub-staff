@@ -1,9 +1,12 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {NavController} from '@ionic/angular';
-
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NavController } from '@ionic/angular';
+import { Request } from 'src/app/models/request';
 // services
-import {EventService} from 'src/app/providers/event.service';
-import {StatisticService} from 'src/app/providers/logged-in/statistic.service';
+import { AuthService } from 'src/app/providers/auth.service';
+import { EventService } from 'src/app/providers/event.service';
+import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
+import { StatisticService } from 'src/app/providers/logged-in/statistic.service';
+
 
 @Component({
   selector: 'app-default',
@@ -12,11 +15,30 @@ import {StatisticService} from 'src/app/providers/logged-in/statistic.service';
 })
 export class DefaultPage implements OnInit {
 
-  public statistics: any;
+  public borderLimit = false;
+  
+  public statistics: {
+    totalPendingRequests: any;
+    totalExpiredCards: any;
+    activeRequests: any;
+    requireFollowup: any;
+    missingBankInfo: any;
+    incompleteAssignedToWork: any;
+    profileApprovalRequire: any;
+  };
+
   public loading = false;
+
+  public pendingRequests: Request[] = [];
+
+  public myRequests: Request[] = [];
+
+  public activeRequests: Request[] = [];
 
   constructor(
     public navCtrl: NavController,
+    public authService: AuthService,
+    public requestService: CompanyRequestService,
     public statisticService: StatisticService,
     private _events: EventService,
   ) { }
@@ -25,21 +47,46 @@ export class DefaultPage implements OnInit {
     this.loadData();
   }
 
+  ionViewDidEnter() {
+    this.loadActiveRequests();
+    this.loadPendingRequests();
+    this.loadMyRequests();
+  }
+
+  loadActiveRequests() {
+    this.requestService.listActiveRequests().subscribe(data => {
+      this.activeRequests = data;
+    });
+  }
+
+  loadPendingRequests() {
+    this.requestService.listPendingRequests().subscribe(data => {
+      this.pendingRequests = data;
+    });
+  }
+
+  loadMyRequests() {
+    this.requestService.listMyRequests().subscribe(data => {
+      this.myRequests = data;
+    });
+  }
+
   /**
    * load current data
    */
   async loadData() {
-    // Load list of country
+   
     this.loading = true;
 
     this.statisticService.get().subscribe(response => {
-        this.statistics = response;
-        this._events.expiredIdCard$.next();
-        this._events.printIdCard$.next(this.statistics.id_need_generated);
-        this._events.reviewRequired$.next(this.statistics.candidate_review_required);
-      },
-      error => {},
-      () => {this.loading = false; }
+      this.statistics = response;
+
+      this._events.expiredIdCard$.next(response.totalExpiredCards);
+
+      this._events.reviewRequired$.next(this.statistics.profileApprovalRequire);
+    },
+      error => { },
+      () => { this.loading = false; }
     );
   }
 
@@ -71,5 +118,20 @@ export class DefaultPage implements OnInit {
     this.navCtrl.navigateForward('candidate-list/not-assigned');
   }
 
+  logScrolling(e) {
+    this.borderLimit = (e.detail.scrollTop > 20) ? true : false;
+  }
 
+  scrollToActive() {
+    let el = document.getElementById('heading-active-request');
+    el.scrollIntoView();
+  }
+
+  /**
+   * scroll to pending request
+   */
+  scrollToPending() {
+    let el = document.getElementById('heading-pending-request');
+    el.scrollIntoView();
+  }
 }

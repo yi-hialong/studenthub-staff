@@ -21,7 +21,7 @@ export class CompanyRequestService {
    */
   list(companyID: number): Observable<any> {
     const url = this.companyRequestEndpoint + '?company_id=' + companyID +
-      '&expand=requestCreatedBy,requestUpdatedBy,contact';
+      '&expand=requestCreatedBy,requestUpdatedBy,contact,requestActivities,requestActivities.staff';
     return this.authhttp.get(url);
   }
 
@@ -31,8 +31,32 @@ export class CompanyRequestService {
    */
   listWithPagination(page: number): Observable<any> {
     const url = this.companyRequestEndpoint + '?page=' + page +
-      '&expand=requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact';
+      '&expand=requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact,requestActivities,requestActivities.staff';
     return this.authhttp.getRaw(url);
+  }
+
+  /**
+   * load pending requests 
+   */
+  listPendingRequests() : Observable<any> {
+    const url = this.companyRequestEndpoint + '/pending?expand=staff,lastActivity,lastActivity.staff,company';
+    return this.authhttp.get(url);
+  }
+  
+  /**
+   * requests managed by current user 
+   */
+  listMyRequests() : Observable<any> {
+    const url = this.companyRequestEndpoint + '/my?expand=staff,lastActivity,lastActivity.staff,company';
+    return this.authhttp.get(url);
+  }
+
+  /**
+   * requests started/active but not by login user
+   */
+  listActiveRequests() : Observable<any> {
+    const url = this.companyRequestEndpoint + '/active?expand=staff,lastActivity,lastActivity.staff,company';
+    return this.authhttp.get(url);
   }
 
   /**
@@ -110,7 +134,16 @@ export class CompanyRequestService {
    */
   view(id): Observable<any> {
     const url = this.companyRequestEndpoint + '/' + id +
-      '?expand=requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact';
+      '?expand=requestCreatedBy,requestUpdatedBy,contact,company,company.companyContact,requestActivities,requestActivities.staff';
     return this.authhttp.get(url);
+  }
+
+  /**
+   * add activity
+   * @param params
+   */
+  addActivity(params) : Observable<any> {
+    let url = this.companyRequestEndpoint + '/add-activity';
+    return this.authhttp.post(url, params);
   }
 }

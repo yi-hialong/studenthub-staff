@@ -1,0 +1,123 @@
+ion-toolbar,
+ion-content {
+    --background: #fafafa;
+}
+
+ion-title,
+ion-header {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+ion-title {
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #000000;
+}
+
+ion-content {
+    --padding-start: 27px;
+    --padding-end: 27px;
+}
+
+h2 {
+    font-size: 24px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.31;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
+  margin-top: 0;
+  margin-bottom: 0px;
+}
+
+.sub-title {
+    font-size: 16px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.65;
+  letter-spacing: normal;
+  text-align: left;
+  color: #000000;
+  margin-top: 10px;
+  margin-bottom: 14px;
+}
+
+ion-card.danger {
+    background-color: #eb5757;
+    color: #ffffff;            
+}
+
+ion-card.stats {
+    border-radius: 5px;
+    margin: 0 0 9px 0;
+    --box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+    
+    ion-card-content {
+        padding-inline-start: 0;
+        display: flex;
+
+        .count {
+            width: 76px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.65;
+            letter-spacing: normal;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+        }
+
+        .success {
+            color: #eb5757;
+        }
+
+        .warning {
+            color: #f2994a;
+        }
+
+        .message {
+            font-size: 14px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.65;
+            letter-spacing: normal;
+            text-align: left;
+            width: calc(100% - 92px);
+        }
+    }
+}
+
+#heading-pending-request {
+    margin-top: 43px;
+    margin-bottom: 16px;
+}
+
+.heading-request {
+    font-size: 24px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: left;
+    color: #000;
+    margin-top: 40px;
+    margin-bottom: 31px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+

@@ -289,6 +289,14 @@ const routes: Routes = [
       name: 'RequestFormPage',
     }
   },
+  {
+    path: 'request-view',
+    loadChildren: () => import('./pages/logged-in/company/company-request-view/company-request-view.module').then(m => m.CompanyRequestViewPageModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'CompanyRequestViewPage',
+    }
+  },
   // {
   //   path: 'all-company-list',
   //   loadChildren: () => import('./pages/logged-in/company/company-request-list/all-company-list/all-company-list.module').then(m => m.AllCompanyListPageModule),

@@ -33,15 +33,15 @@
             </ion-item>
           </ion-menu-toggle>
 
-          <ion-list-header>Candidate Management</ion-list-header>
-
           <ion-menu-toggle auto-hide="false">
             <ion-item routerDirection="root" routerLink="/default" routerLinkActive="active" detail="false">
               <div tabindex="0"></div>
               <ion-icon name="stats-chart-outline" slot="start"></ion-icon>
-              <ion-label>Summary</ion-label>
+              <ion-label>Dashboard</ion-label>
             </ion-item>
           </ion-menu-toggle>
+
+          <ion-list-header>Candidate Management</ion-list-header>
 
           <ion-menu-toggle auto-hide="false">
             <ion-item routerDirection="root" routerLink="/candidate-list" routerLinkActive="active" detail="false">
@@ -126,7 +126,7 @@
             </ion-item>
           </ion-menu-toggle>
 
-          <ion-menu-toggle auto-hide="false" *ngIf="companyFollowUp > 0">
+          <ion-menu-toggle auto-hide="false">
             <ion-item routerDirection="root" routerLink="/company-request-list" routerLinkActive="active" detail="false">
               <div tabindex="0"></div>
               <ion-icon slot="start"  name="hand-left-outline"></ion-icon>

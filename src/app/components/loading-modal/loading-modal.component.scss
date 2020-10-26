@@ -187,3 +187,23 @@
     border-radius: 15px;
   }
 }
+
+.request-detail {
+  .title {
+    height: 12px;
+    margin: 0 0 10px 0;
+    max-width: 100px;
+  }
+
+  .sub-title {
+    height: 14px;
+    margin: 0 0 10px 0;
+    max-width: 150px;
+  }
+
+  .message {
+    height: 12px;
+    margin: 0;
+    max-width: 260px;
+  }
+}

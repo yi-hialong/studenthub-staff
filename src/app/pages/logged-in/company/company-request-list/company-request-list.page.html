@@ -12,7 +12,7 @@
 
   <ion-list>
     <ion-item-sliding  [disabled]="platform.width() > 768" *ngFor="let request of requests">
-      <ion-item tappable (click)="editRequest($event, request)">
+      <ion-item tappable (click)="viewRequest($event, request)">
         <div tabindex="0"></div>
         <ion-label>
           <h2>
@@ -48,6 +48,13 @@
           </ion-button>
         </ion-buttons>
 
+        <ion-buttons slot="end" *ngIf="platform.width() > 768 && request.request_status == 'pending'">
+          <ion-button (click)="editRequest($event, request)">
+            <ion-icon slot="start" name="play-outline"></ion-icon>
+            Edit Request
+          </ion-button>
+        </ion-buttons>
+
         <ion-buttons slot="end" *ngIf="platform.width() > 768 && request.request_status == 'started'">
           <ion-button (click)="deliveredRequest($event, request)">
             <ion-icon slot="start" name="checkmark-outline"></ion-icon>
@@ -63,10 +70,18 @@
 
       </ion-item>
       <ion-item-options side="end">
-        <ion-button (click)="startRequest($event, request)" *ngIf="request.request_status == 'pending'">
+
+        <ion-buttons slot="end" *ngIf=" request.request_status == 'pending'">
+        <ion-button fill="clear" (click)="startRequest($event, request)">
           <ion-icon slot="start" name="play-outline"></ion-icon>
           Start working on this request
         </ion-button>
+
+          <ion-button (click)="editRequest($event, request)">
+            <ion-icon slot="start" name="play-outline"></ion-icon>
+            Edit Request
+          </ion-button>
+        </ion-buttons>
 
         <ion-button (click)="deliveredRequest($event, request)" *ngIf="request.request_status == 'started'">
           <ion-icon slot="start" name="checkmark-outline"></ion-icon>

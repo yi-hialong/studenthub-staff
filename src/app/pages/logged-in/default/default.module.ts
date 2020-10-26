@@ -8,6 +8,7 @@ import { DefaultPageRoutingModule } from './default-routing.module';
 
 import { DefaultPage } from './default.page';
 import {LoadingModalModule} from "../../../components/loading-modal/loading-modal.module";
+import { RequestListingModule } from 'src/app/components/request-listing/request-listing.module';
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import {LoadingModalModule} from "../../../components/loading-modal/loading-moda
         FormsModule,
         IonicModule,
         DefaultPageRoutingModule,
+        RequestListingModule,
         LoadingModalModule
     ],
   declarations: [DefaultPage]

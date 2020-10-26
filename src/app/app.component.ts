@@ -33,8 +33,6 @@ export class AppComponent implements OnInit {
 
   public candidateBankInfo = null;
 
-  public printIdCount: any = 0;
-
   public companyFollowUp: any = 0;
 
   constructor(
@@ -138,12 +136,10 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.eventService.expiredIdCard$.subscribe((userEventData) => {
-      this.updateExpiredIdCount();
-    });
-    this.eventService.printIdCard$.subscribe((userEventData) => {
-      this.printIdCount = userEventData;
-    });
+    this.eventService.expiredIdCard$.subscribe((userEventData: number) => {
+      this.expiredIdCount = userEventData;
+    }); 
+
     this.eventService.reviewRequired$.subscribe((userEventData) => {
       this.loadStats();
     });
@@ -243,12 +239,13 @@ export class AppComponent implements OnInit {
   async loadStats() {
 
     this.statisticService.get().subscribe(response => {
-      this.eventService.expiredIdCard$.next();
-      this.eventService.printIdCard$.next(response.id_need_generated);
-      this.assignedIncompleteCandidates = response.candidates_assigned_incomplete_profile;
-      this.candidateBankInfo = response.candidate_without_bank;
-      this.totalCandidateToReview = response.candidate_review_required;
-      this.companyFollowUp = response.company_follow_up;
+     
+      this.expiredIdCount = response.totalExpiredCards;
+
+      this.assignedIncompleteCandidates = response.incompleteAssignedToWork;
+      this.candidateBankInfo = response.missingBankInfo;
+      this.totalCandidateToReview = response.profileApprovalRequire;
+      this.companyFollowUp = response.requireFollowup;
     },
       error => { },
       () => { }

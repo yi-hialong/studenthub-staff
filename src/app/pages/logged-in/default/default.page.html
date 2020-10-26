@@ -1,63 +1,98 @@
-<ion-header>
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Summary</ion-title>
+    <ion-title>Dashboard</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)" class="ion-padding">
 
+  <h2>Hello {{ authService.name }},</h2>
+
+  <p class="sub-title">We need to work on the following:</p>
+
+  <div *ngIf="statistics && !loading">
+
+    <ion-card class="danger stats" [class.clickable]="pendingRequests.length > 0"  (click)="pendingRequests.length > 0 && scrollToPending()">
+      <ion-card-content>
+        <div class="count">{{ statistics.totalPendingRequests }}</div>
+        <div class="message">
+          <b>Pending Requests</b> from companies to hire. Someone needs to pick up and handle it ASAP.
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card (click)="showExpiredIDs()" tappable class="danger stats">
+      <ion-card-content>
+        <div class="count">{{ statistics.totalExpiredCards }}</div>
+        <div class="message">
+          <b>Candidates with expired ID cards</b> that need renewal. Let’s unassign or renew ASAP.
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="stats" tappable [class.clickable]="activeRequests.length > 0"  (click)="activeRequests.length > 0 && scrollToActive()">
+      <ion-card-content>
+        <div class="count success">{{ statistics.activeRequests }}</div>
+        <div class="message">
+          <b>Active requests</b> from companies our team is working on.
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="stats" tappable routerLink="/company-followup-list">
+      <ion-card-content>
+        <div class="count success">{{ statistics.requireFollowup }}</div>
+        <div class="message">
+          <b>Clients requiring followup.</b> We need to collect feedback and try to up-sell additional services.
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="stats" routerLink="/candidate-bank-info-list" tappable>
+      <ion-card-content>
+        <div class="count success">{{ statistics.missingBankInfo }}</div>
+        <div class="message">
+          <b>Candidates missing bank info</b> so we can’t pay them.
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="stats" tappable routerLink="/incomplete-candidate-list">
+      <ion-card-content>
+        <div class="count success">{{ statistics.incompleteAssignedToWork }}</div>
+        <div class="message">
+          Candidates are assigned to work but have <b>incomplete profiles.</b>
+        </div>
+      </ion-card-content>
+    </ion-card>
+
+    <ion-card class="stats" tappable routerLink="/candidate-review-list">
+      <ion-card-content>
+        <div class="count warning">{{ statistics.profileApprovalRequire }}</div>
+        <div class="message">
+          Candidates with profile complete requiring their <b>profiles to be reviewed and approved.</b>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <h2 class="heading-request" id="heading-pending-request" *ngIf="pendingRequests.length > 0">Pending Requests</h2>
+
+  <request-listing *ngFor="let request of pendingRequests" tappable [routerLink]="'/request-view/' + request.request_uuid"
+                       [request]="request" [showStatus]="false"></request-listing>
+
+  <h2 class="heading-request" *ngIf="myRequests.length > 0">Requests you are currently handling</h2>
+
+  <request-listing *ngFor="let request of myRequests" tappable [routerLink]="'/request-view/' + request.request_uuid"
+                       [request]="request" [showStatus]="false"></request-listing>
+                       
+  <h2 class="heading-request" id="heading-active-request" *ngIf="activeRequests.length > 0">Active Requests</h2>
+
+  <request-listing *ngFor="let request of activeRequests" tappable [routerLink]="'/request-view/' + request.request_uuid"
+                       [request]="request" [showStatus]="false"></request-listing>
+  
   <loading-modal [loading]="loading" type="stats"></loading-modal>
-  <ng-container *ngIf="statistics && !loading">
-    <ion-grid>
-    <ion-row>
-      <!-- New candidate id need to renew -->
-      <ion-col size-lg="6" size-xl="6" size-md="6" *ngIf="statistics.id_expired && statistics.id_expired > 0">
-        <ion-card>
-          <ion-card-header>
-            {{ statistics.id_expired }} candidates have expired IDs
-          </ion-card-header>
-          <ion-card-content>
-            <p>You'll need to renew it for them</p>
-            <ion-button (click)="showExpiredIDs()">
-              Show Expired IDs
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <!-- New candidate id need to generate -->
-      <ion-col size-lg="6" size-xl="6" size-md="6" *ngIf="statistics.id_need_generated && statistics.id_need_generated > 0">
-        <ion-card>
-          <ion-card-header>
-            {{ statistics.id_need_generated }} candidates need an ID generated
-          </ion-card-header>
-          <ion-card-content>
-            <ion-button (click)="showCandidatesRequireNewID()">
-              Show Candidates Requiring IDs
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-      <!-- Candidate Count Card -->
-      <ion-col size-lg="6" size-xl="6" size-md="6">
-        <ion-card>
-          <ion-card-header>
-            {{statistics.total_candidates_assigned}} candidates currently working
-          </ion-card-header>
-          <ion-card-content>
-            <p>from a total of {{statistics.total_candidates}} registered candidates</p>
-            <ion-button (click)="showNotAssignedCandidates()" *ngIf="statistics.total_candidates_unassigned > 0">
-              Show candidates that aren't working
-            </ion-button>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-
-    </ion-row>
-  </ion-grid>
-  </ng-container>
 </ion-content>

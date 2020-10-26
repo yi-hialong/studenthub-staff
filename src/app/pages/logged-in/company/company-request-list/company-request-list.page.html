@@ -17,8 +17,8 @@
         <ion-label>
           <h2>
             <ion-note>{{ request.request_number_of_employees }}</ion-note> {{ request.request_position_title }} -
-            <span *ngIf="request.request_position_type == 1">Fulltime</span>
-            <span *ngIf="request.request_position_type == 2">Partime</span>
+            <span *ngIf="request.request_position_type == 1">Full-ttime</span>
+            <span *ngIf="request.request_position_type == 2">Part-time</span>
           </h2>
           <p *ngIf="request.request_additional_info">{{ request.request_additional_info }} </p>
 

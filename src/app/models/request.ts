@@ -1,6 +1,7 @@
 import { Staff } from './staff';
-import {CompanyContact} from './company-contact';
-import {Company} from './company';
+import { CompanyContact } from './company-contact';
+import { Company } from './company';
+import { RequestActivity } from './request-activity';
 
 export class Request {
     request_uuid: string;
@@ -12,19 +13,21 @@ export class Request {
     request_position_title: string;
     request_number_of_employees: number;
     request_additional_info: string;
-    request_status: Status;
+    request_status: any;
     request_feedback: string;
     request_created_datetime: string;
     request_updated_datetime: string;
     requestCreatedBy: Staff;
     requestUpdatedBy: Staff;
+    staff: Staff;
     contact: CompanyContact;
     company: Company;
+    lastActivity: RequestActivity;
 }
-
+/*
 enum Status {
     pending,
     started,
     delivered,
     cancelled
-}
+}*/

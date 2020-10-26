@@ -42,18 +42,22 @@ export class RequestFormPage implements OnInit {
 ) {
   }
 
-  ngOnInit() {
-    this.requestID = this.route.snapshot.paramMap.get('id');
+  ngOnInit() {}
 
+  ionViewWillEnter() {
+    this.requestID = this.route.snapshot.paramMap.get('id');
     if (window.history.state.model) {
       this.model = window.history.state.model;
       this.loadForm();
-    } else {
+    } else if (this.requestID) {
       this.detail(this.requestID);
+    } else  {
+      this.loadForm();
     }
   }
 
   loadForm(){
+    this.company = this.model.company;
     this.form = this.fb.group({
       company_name: [(this.model.company) ? this.model.company.company_name : '', Validators.required],
       company_id: [this.model.company_id, Validators.required],
@@ -96,7 +100,6 @@ export class RequestFormPage implements OnInit {
     this.saving = true;
 
     this.updateModelDataFromForm();
-
     let action;
     if (!this.model.request_uuid) {
       // Create
@@ -155,6 +158,7 @@ export class RequestFormPage implements OnInit {
     popover.onDidDismiss().then((_) => {
 
       if (_ && _.data) {
+
         this.company = _.data;
         this.form.controls.company_name.setValue(_.data.company_name);
         this.form.controls.company_id.setValue(_.data.company_id);

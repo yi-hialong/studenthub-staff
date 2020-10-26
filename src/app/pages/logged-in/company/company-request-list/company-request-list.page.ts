@@ -91,6 +91,15 @@ export class CompanyRequestListPage implements OnInit {
     }
   }
 
+  async viewRequest($event, request) {
+    this.router.navigate(['request-view', request.request_uuid], {
+      state: {
+        model: request,
+        from: 'company-request-list'
+      }
+    });
+  }
+
   async editRequest($event, request) {
     this.router.navigate(['request-form', request.request_uuid], {
       state: {

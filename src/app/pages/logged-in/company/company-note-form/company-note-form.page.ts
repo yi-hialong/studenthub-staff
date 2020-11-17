@@ -22,7 +22,7 @@ export class CompanyNoteFormPage implements OnInit {
   public model: Note = new Note();
 
   public operation: string;
-  
+
   public Editor = ClassicEditor;
 
   public editorConfig = {
@@ -53,8 +53,9 @@ export class CompanyNoteFormPage implements OnInit {
     });
 
     this.operation  = (this.model && this.model.note_uuid) ? 'Update' : 'Create';
-   
-    setTimeout(() => this.ckeditor.editorInstance.editing.view.focus(), 1000);
+
+    // this is causing issue. https://www.pivotaltracker.com/story/show/175598774
+    // setTimeout(() => this.ckeditor.editorInstance.editing.view.focus(), 1000);
   }
 
   ionViewDidEnter() {

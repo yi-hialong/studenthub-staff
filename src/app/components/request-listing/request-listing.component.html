@@ -26,9 +26,9 @@
     <div *ngIf="request.lastActivity">
       <h5>Last Activity</h5>
 
-      <p>“{{ request.lastActivity.activity_detail }}”</p>
+      <p>“{{ request.lastActivity.note_text }}”</p>
       
-      <p class="time">{{ request.lastActivity.staff.staff_name  }} - {{ request.lastActivity.activity_created_datetime | timeAgo }} </p>
+      <p class="time">{{ request.lastActivity.staff.staff_name  }} - {{ request.lastActivity.note_created_datetime | timeAgo }} </p>
     </div>
     
   </ion-card-content>

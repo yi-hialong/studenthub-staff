@@ -3,14 +3,14 @@
     <ion-row>
       <ion-col size="3" class="date-col">
         <div class="date-group">
-          <span class="month">{{ toDate(activity.activity_created_datetime) | date:'MMM' }}</span>
-          <span class="date">{{ toDate(activity.activity_created_datetime) | date:'dd' }}</span>
-          <span  class="year">{{ toDate(activity.activity_created_datetime) | date:'y' }}</span>
+          <span class="month">{{ toDate(activity.note_created_datetime) | date:'MMM' }}</span>
+          <span class="date">{{ toDate(activity.note_created_datetime) | date:'dd' }}</span>
+          <span  class="year">{{ toDate(activity.note_created_datetime) | date:'y' }}</span>
         </div>
       </ion-col>
       <ion-col size="9" class="detail-col">
-        <b class="txt-staff">{{ activity.staff.staff_name }} {{ "@" }} {{ toDate(activity.activity_created_datetime) | date:'h:mmaaaaa' }}m</b>
-        <p>{{ activity.activity_detail }}</p>
+        <b class="txt-staff">{{ activity.staff.staff_name }} {{ "@" }} {{ toDate(activity.note_created_datetime) | date:'h:mmaaaaa' }}m</b>
+        <p>{{ activity.note_text }}</p>
       </ion-col>
     </ion-row>
   </ion-grid>

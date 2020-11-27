@@ -1,24 +1,4 @@
 <ion-card [class.pending]="request.request_status == 'pending'">
-<!--  <ion-card-header>-->
-<!--&lt;!&ndash;    <ion-card-title>&ndash;&gt;-->
-<!--&lt;!&ndash;      {{ request.request_position_title }}&ndash;&gt;-->
-<!--&lt;!&ndash;    </ion-card-title>&ndash;&gt;-->
-
-<!--&lt;!&ndash;    <ion-card-subtitle>&ndash;&gt;-->
-<!--&lt;!&ndash;      <span *ngIf="request.request_position_type == 1">Full-time</span>&ndash;&gt;-->
-<!--&lt;!&ndash;      <span *ngIf="request.request_position_type == 2">Part-time</span>&ndash;&gt;-->
-<!--&lt;!&ndash;      for {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}&ndash;&gt;-->
-<!--&lt;!&ndash;    </ion-card-subtitle>&ndash;&gt;-->
-
-<!--    <p class="time">Requested {{ request.request_created_datetime | timeAgo }} </p>-->
-
-<!--    <p *ngIf="request.staff">-->
-<!--      Currently being handled by-->
-<!--      <span *ngIf="request.staff.staff_id == authService.staff_id">you</span>-->
-<!--      <span *ngIf="request.staff.staff_id != authService.staff_id">{{ request.staff.staff_name }}</span>-->
-<!--    </p>-->
-
-<!--  </ion-card-header>-->
   <ion-card-content [class.pending-request]="!request.staff">
     <h1>{{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}</h1>
     <h3>

@@ -148,7 +148,9 @@
           placeholder="Select University"
           [collection]="universitylistData"
           valueAttr="university_id"
-          labelAttr="university_name_en">
+          labelAttr="university_name_en"
+          altLabelAttr="university_name_ar"
+          >
         </app-select-search-input>
 
         <div class="error-wrapper" *ngIf="!form.controls.university_id.pristine">

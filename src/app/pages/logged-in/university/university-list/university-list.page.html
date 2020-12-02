@@ -13,7 +13,8 @@
     <ion-item tappable *ngFor="let university of universities" (click)="rowSelected(university)">
       <div tabindex="0"></div>
       <ion-label>
-        {{ university.university_name_en }}
+        <h5>{{ university.university_name_en }}</h5>
+        <p>{{ university.university_name_ar }}</p>
       </ion-label>
       <ion-badge slot="end" *ngIf="university.total_candidates > 0">
         {{ university.total_candidates }} candidates

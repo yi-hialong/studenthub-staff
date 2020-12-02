@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { AuthService } from 'src/app/providers/auth.service';
 import {Request} from '../../models/request';
 
@@ -7,12 +7,15 @@ import {Request} from '../../models/request';
   templateUrl: './request-listing.component.html',
   styleUrls: ['./request-listing.component.scss'],
 })
-export class RequestListingComponent {
+export class RequestListingComponent implements OnInit {
 
   @Input() request: Request;
   @Input() showStatus = true;
   public active = false;
   constructor(public authService: AuthService) {
+
+  }
+  ngOnInit() {
     if (this.request) {
       const time = this.getHours(this.request.request_updated_datetime);
       /**
@@ -20,7 +23,7 @@ export class RequestListingComponent {
        * but last updated is longer than 24 hours ago, otherwise can use green color
        * if completed or active but had update made today.
        */
-      this.active = (((this.request.staff_id) && (time < 24)) || (this.request.request_status == 'delivered'));
+      this.active = ((this.request.request_status == 'delivered') || ((this.request.staff_id) && (time < 24)));
     }
   }
 

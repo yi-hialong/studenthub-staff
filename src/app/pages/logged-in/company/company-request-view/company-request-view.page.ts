@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Location } from "@angular/common";
 import {
   AlertController,
   ToastController,
@@ -17,6 +18,7 @@ import { CompanyRequestService } from 'src/app/providers/logged-in/company-reque
 // models
 import { Request } from 'src/app/models/request';
 import { Note } from 'src/app/models/note';
+import { SuggessionService } from 'src/app/providers/logged-in/suggession.service';
 
 
 @Component({
@@ -28,6 +30,12 @@ export class CompanyRequestViewPage implements OnInit {
 
   public request: Request;
   public requestActivities: Note[] = [];
+
+  public suggestedSuggestions = [];
+
+  public acceptedSuggestions = [];
+
+  public rejectedSuggestions = [];
 
   public request_uuid;
   public loading = false;
@@ -51,6 +59,8 @@ export class CompanyRequestViewPage implements OnInit {
     public requestActivityService: RequestActivityService,
     public menuCtrl: MenuController,
     public navCtrl: NavController,
+    public location: Location,
+    public suggessionService: SuggessionService,
     public translateLabelService: TranslateLabelService,
     public platform: Platform
   ) {
@@ -200,21 +210,17 @@ export class CompanyRequestViewPage implements OnInit {
    */
   dismiss() {
     this.navCtrl.navigateBack('/company-request-dashboard');
-    // const state = window.history.state;
-    //
-    // this.modalCtrl.getTop().then(overlay => {
-    //   if (overlay) {
-    //     overlay.dismiss();
-    //   } else if (state && state.from == 'company-request-dashboard') {
-    //     this.navCtrl.navigateBack('/company-request-dashboard');
-    //   } else if (state && state.from == 'company-request-list') {
-    //     this.navCtrl.navigateBack('/company-request-list');
-    //   } else if (state && state.from == 'client') {
-    //     this.navCtrl.navigateBack('/client');
-    //   } else {
-    //     this.navCtrl.navigateBack('/default');
-    //   }
-    // });
+    const state = window.history.state;
+    console.log(state);
+    if (state && state.from == 'company-request-dashboard') {
+      this.location.back();
+    } else if (state && state.from == 'company-request-list') {
+      this.location.back();
+    } else if (state && state.from == 'client') {
+      this.location.back();
+    } else {
+      this.navCtrl.navigateBack('/default');
+    }
   }
 
   /**
@@ -265,6 +271,7 @@ export class CompanyRequestViewPage implements OnInit {
     this.requestService.view(this.request_uuid).subscribe(data => {
       this.request = data;
       this.loadRequestActivities();
+      this.loadSuggessions();
     }, () => {
     }, () => {
       this.loading = false;
@@ -281,6 +288,33 @@ export class CompanyRequestViewPage implements OnInit {
     }, () => {
     }, () => {
       this.loadingActivities = false;
+    });
+  }
+
+  /**
+   * load candidate suggestions for this request 
+   */
+  loadSuggessions() {
+
+    const params = '&request_uuid=' + this.request_uuid;
+
+    this.suggessionService.list().subscribe(data => {
+
+      this.suggestedSuggestions = [];
+
+      this.acceptedSuggestions = [];
+
+      this.rejectedSuggestions = [];
+
+      data.forEach(element => {
+        if(element.suggestion_status == 1) {
+          this.suggestedSuggestions.push(element);
+        } else if(element.suggestion_status == 2) {
+          this.rejectedSuggestions.push(element);
+        } else if(element.suggestion_status == 3) {
+          this.acceptedSuggestions.push(element);
+        }
+      });
     });
   }
 
@@ -313,11 +347,9 @@ export class CompanyRequestViewPage implements OnInit {
     }).then(prompt => prompt.present());
   }
 
-
   logScrolling(e) {
     //   this.borderLimit = (e.detail.scrollTop > 0) ?  true : false;
   }
-
 
   startRequest(event, request) {
 
@@ -444,6 +476,32 @@ export class CompanyRequestViewPage implements OnInit {
         }
       ]
     }).then(alert => { alert.present(); });
+  }
+
+  /**
+   * pickup the request
+   * @param event
+   * @param request
+   */
+  pickUpRequest(event, request) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.requestService.pickup(request).subscribe(async response => {
+
+      if (response.operation == 'success') {
+        this.loadDetail();
+        this.loadRequestActivities();
+      } else {
+        this.toastCtrl.create({
+          message: response.message,
+          buttons: ['Ok']
+        }).then(prompt => {
+          prompt.present();
+        });
+      }
+    });
 
   }
 }

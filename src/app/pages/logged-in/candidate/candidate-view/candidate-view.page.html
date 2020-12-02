@@ -243,7 +243,10 @@
         <div tabindex="0"></div>
         <ion-label>
           <h5>University</h5>
-          <p *ngIf="candidate.university">{{ candidate.university.university_name_en }}</p>
+          <p *ngIf="candidate.university">
+            {{ candidate.university.university_name_en }}
+            <span *ngIf="!candidate.university.university_name_en">{{ candidate.university.university_name_ar }}</span>
+          </p>
           <p *ngIf="!candidate.university">-</p>
         </ion-label>
       </ion-item>
@@ -476,7 +479,10 @@
             <ion-buttons slot="start">
 
               <ion-button [disabled]="addingNote || !noteForm.valid" (click)="addNote()">
-                <span *ngIf="!addingNote">Submit</span>
+                <span *ngIf="!addingNote">
+                  <ng-container *ngIf="this.editNoteData && !this.editNoteData.note_uuid">Submit</ng-container>
+                  <ng-container *ngIf="this.editNoteData && this.editNoteData.note_uuid">Update</ng-container>
+                </span>
                 <ion-spinner *ngIf="addingNote"></ion-spinner>
               </ion-button>
 
@@ -488,8 +494,8 @@
           </ion-item>
         </form>
 
-        <ion-list>
-          <ion-item-sliding *ngFor="let note of candidate.notes" [disabled]="platform.width() > 768">
+        <ion-list *ngIf="this.editNoteData && !this.editNoteData.note_uuid">
+          <ion-item-sliding *ngFor="let note of notes" [disabled]="platform.width() > 768">
             <ion-item tappable (click)="editNote(note)">
               <div tabindex="0"></div>
 

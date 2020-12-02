@@ -1,21 +1,22 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {AlertController, ModalController, NavController, Platform, PopoverController} from '@ionic/angular';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { AlertController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 import { ActivatedRoute } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // services
 import { FulltimerService } from 'src/app/providers/logged-in/fulltimer.service';
 import { AwsService } from 'src/app/providers/aws.service';
+import { NoteService } from '../../../../providers/logged-in/note.service';
+import { AuthService } from '../../../../providers/auth.service';
 // models
 import { Fulltimer } from 'src/app/models/fulltimer';
+import { Note } from 'src/app/models/note';
 // pages
 import { FulltimerFormPage } from '../fulltimer-form/fulltimer-form.page';
-import {Note} from 'src/app/models/note';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {NoteService} from '../../../../providers/logged-in/note.service';
-import {AuthService} from '../../../../providers/auth.service';
-import {CandidateNoteFormPage} from '../../candidate/candidate-note-form/candidate-note-form.page';
-import {AllCompanyListPage} from '../../company/company-request-list/all-company-list/all-company-list.page';
-import {CompanyRequestListPopupPage} from "../../company/company-request-list/company-request-list-popup/company-request-list-popup.page";
+import { CandidateNoteFormPage } from '../../candidate/candidate-note-form/candidate-note-form.page';
+import { AllCompanyListPage } from '../../company/company-request-list/all-company-list/all-company-list.page';
+import { CompanyRequestListPopupPage } from "../../company/company-request-list/company-request-list-popup/company-request-list-popup.page";
+import { SuggestPage } from "../../suggest/suggest.page";
 
 
 @Component({
@@ -25,6 +26,8 @@ import {CompanyRequestListPopupPage} from "../../company/company-request-list/co
 })
 export class FulltimerViewPage implements OnInit {
 
+  @ViewChild('ckeditor') ckeditor;
+  
   public borderLimit = false;
 
   public fulltimerUUID: string;
@@ -32,6 +35,8 @@ export class FulltimerViewPage implements OnInit {
   public loading = false;
   public sections = 'personal';
 
+  public notes: Note[] = [];
+  
   public editorFocused = false;
   public deletingNote = false;
   public editNoteData: Note = new Note();
@@ -45,7 +50,6 @@ export class FulltimerViewPage implements OnInit {
   public addingNote = false;
   public noteForm: FormGroup;
 
-  @ViewChild('ckeditor') ckeditor;
   public company;
 
   constructor(
@@ -230,7 +234,7 @@ export class FulltimerViewPage implements OnInit {
    */
   loadNotes(loading = true) {
     this.noteService.listByTypeAndId('fulltimer', this.fulltimer.fulltimer_uuid).subscribe(async jsonResponse => {
-      this.fulltimer.notes = jsonResponse.body;
+      this.notes = jsonResponse.body;
     });
   }
 
@@ -255,10 +259,7 @@ export class FulltimerViewPage implements OnInit {
       if (jsonResponse.operation == 'success') {
 
         this.editorFocused = false;
-
-        this.noteForm.controls.note.setValue('');
-
-        this.ckeditor.editorInstance.setData('');
+        this.cancelAddNote();
 
         this.loadNotes(false);
       }
@@ -278,36 +279,38 @@ export class FulltimerViewPage implements OnInit {
   }
 
   cancelAddNote() {
+    this.editNoteData = new Note();
+    this.noteForm.controls.note.setValue('');
+    this.ckeditor.editorInstance.setData('');
     this.editorFocused = false;
+
+    this.noteForm.controls.type.setValue('');
+    this.noteForm.controls.company_name.setValue('');
+    this.noteForm.controls.company_id.setValue('');
+    this.noteForm.controls.request_name.setValue('');
+    this.noteForm.controls.request_uuid.setValue('');
   }
+
 
   /**
    * edit note
    * @param note
    */
   async editNote(note: Note) {
-    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    this.editNoteData = note;
+    this.noteForm.controls.note.setValue(note.note_text);
+    this.ckeditor.editorInstance.setData(note.note_text);
+    this.editorFocused = true;
 
-    const modal = await this.modalCtrl.create({
-      component: CandidateNoteFormPage,
-      componentProps: {
-        candidate: this.fulltimer,
-        note,
-      }
-    });
-    modal.present();
-    modal.onDidDismiss().then(e => {
+    this.noteForm.controls.type.setValue(note.note_type);
+    if (note.company) {
+      this.noteForm.controls.company_name.setValue(note.company.company_name);
+      this.noteForm.controls.company_id.setValue(note.company.company_id);
+    }
 
-      if (!e.data || e.data.from != 'native-back-btn') {
-        window['history-back-from'] = 'onDidDismiss';
-        window.history.back();
-      }
-    });
-
-    const { data } = await modal.onWillDismiss();
-
-    if (data && data.refresh) {
-      this.loadNotes(false);
+    if (note.request) {
+      this.noteForm.controls.request_name.setValue(note.request.request_position_title);
+      this.noteForm.controls.request_uuid.setValue(note.request.request_uuid);
     }
   }
 
@@ -363,5 +366,32 @@ export class FulltimerViewPage implements OnInit {
       }
     });
     popover.present();
+  }
+
+  /**
+   * suggess this candidate 
+   */
+  async suggest() {
+
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: SuggestPage,
+      componentProps: {
+        fulltimer: this.fulltimer
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if(e.data && e.data.refresh) {
+        this.loadNotes();
+      }
+    });
+    return await modal.present();
   }
 }

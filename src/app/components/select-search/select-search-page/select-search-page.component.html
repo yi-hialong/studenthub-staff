@@ -6,6 +6,7 @@
     <div tabindex="0"></div>
     <ion-label>
       <span [innerHTML]="highlight(item[labelAttr])"></span>
+      <span *ngIf="!item[labelAttr]" [innerHTML]="highlight(item[altLabelAttr])"></span>
     </ion-label>
   </ion-item>
 </ion-list>

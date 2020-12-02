@@ -3,7 +3,10 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/university-list"></ion-back-button>
     </ion-buttons>
-    <ion-title  *ngIf="university">{{ university.university_name_en }}</ion-title>
+    <ion-title  *ngIf="university">
+      {{ university.university_name_en }}
+      <span *ngIf="!university.university_name_en">{{ university.university_name_ar }}</span>
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -21,7 +24,10 @@
       <div tabindex="0"></div>
       <ion-label>
         <h5>University Name</h5>
-        <p>{{ university.university_name_en }}</p>
+        <p>
+          {{ university.university_name_en }}
+          <span *ngIf="!university.university_name_en">{{ university.university_name_ar }}</span>
+        </p>
       </ion-label>
     </ion-item>
 

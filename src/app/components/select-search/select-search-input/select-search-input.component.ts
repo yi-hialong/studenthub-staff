@@ -28,6 +28,8 @@ export class SelectSearchInputComponent implements ControlValueAccessor {
   // Attribute for "Label" within collection array objects
   @Input() labelAttr: string;
 
+  @Input() altLabelAttr: string;
+
   // Array of objects that will be selected from
   _collection: any[];
   get collection(): any[] {
@@ -57,7 +59,8 @@ export class SelectSearchInputComponent implements ControlValueAccessor {
       componentProps: {
         collection: this.collection,
         valueAttr: this.valueAttr,
-        labelAttr: this.labelAttr
+        labelAttr: this.labelAttr,
+        altLabelAttr: this.altLabelAttr
       },
       cssClass: 'select_search_' + this.valueAttr,
       event: $ev,

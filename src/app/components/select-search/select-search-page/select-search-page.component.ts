@@ -13,6 +13,8 @@ export class SelectSearchPageComponent {
   public collection: any[];
   public labelAttr: string;
 
+  public altLabelAttr: string;
+
   // The collection data being presented to user
   public displayedCollection: any[];
 
@@ -22,6 +24,8 @@ export class SelectSearchPageComponent {
   ) {
     this.collection = params.get("collection");
     this.labelAttr = params.get("labelAttr");
+    this.altLabelAttr = params.get("altLabelAttr");
+
     this.displayedCollection = this.collection;
   }
 
@@ -56,7 +60,8 @@ export class SelectSearchPageComponent {
 
     if(this.query) {
       this.displayedCollection = this.collection.filter((collectionItem) => {
-        return collectionItem[this.labelAttr].toLowerCase().indexOf(this.query) >= 0;
+        return collectionItem[this.labelAttr].toLowerCase().indexOf(this.query) >= 0 || 
+          (this.altLabelAttr && collectionItem[this.altLabelAttr].toLowerCase().indexOf(this.query) >= 0);
       });
     } else {
       this.displayedCollection = this.collection.slice();

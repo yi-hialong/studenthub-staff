@@ -27,7 +27,7 @@ export class NoteService {
    */
   create(model: Note): Observable<any>{
     return this.authHttp.post(this.noteEndpoint, {
-      candidate_id: model.candidate_id,
+      candidate_id: (model.candidate_id) ? model.candidate_id : null,
       company_id: (model.company_id) ? model.company_id : null,
       request_uuid: (model.request_uuid) ? model.request_uuid : null,
       contact_uuid: (model.contact_uuid) ? model.contact_uuid : null,
@@ -64,13 +64,34 @@ export class NoteService {
    * list candidate note
    */
   list(): Observable<any>{
-    return this.authHttp.getRaw(`${this.noteEndpoint}?expand=createdBy,updatedBy`);
+    const url = `${this.noteEndpoint}?expand=createdBy,updatedBy,company,request`;
+    return this.authHttp.getRaw(url);
   }
 
   /**
    * list candidate note
    */
-  listByTypeAndId(type: string, id): Observable<any>{
-    return this.authHttp.getRaw(`${this.noteEndpoint}/${type}/${id}?expand=createdBy,updatedBy,company,request`);
+  listByTypeAndId(type: string, id, page): Observable<any>{
+    return this.authHttp.getRaw(`${this.noteEndpoint}/${type}/${id}?expand=createdBy,updatedBy,company,request&page=${page}`);
+  }
+
+  /**
+   * toggle committed
+   * @param model
+   */
+  toggleCommitted(model: Note): Observable<any>{
+    const url = `${this.noteEndpoint}/toggle-committed`;
+    return this.authHttp.patch(url, {
+      candidate_id: model.candidate_id,
+      note: model.note_text,
+      type: model.note_type
+    });
+  }
+  /**
+   * list candidate note by id
+   */
+  listById(id: number): Observable<any>{
+    const url = `${this.noteEndpoint}/list-by-id/${id}?expand=createdBy,updatedBy,company,request`;
+    return this.authHttp.getRaw(url);
   }
 }

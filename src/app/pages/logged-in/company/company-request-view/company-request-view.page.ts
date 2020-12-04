@@ -251,7 +251,7 @@ export class CompanyRequestViewPage implements OnInit {
   }
 
   /**
-   * load candidate suggestions for this request 
+   * load candidate suggestions for this request
    */
   loadSuggestions() {
 
@@ -285,7 +285,7 @@ export class CompanyRequestViewPage implements OnInit {
    * show alert to post update on request
    */
   async showUpdateAlert() {
-   
+
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
     let note = new Note;

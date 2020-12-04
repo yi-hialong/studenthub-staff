@@ -536,7 +536,7 @@
           </ng-container>
         </ion-select>
       </ion-item>
-    
+
       <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (focus)="onEditorFocus()"
         (change)="onChange($event)"></ckeditor>
 
@@ -546,7 +546,10 @@
         <ion-buttons slot="start">
 
           <ion-button [disabled]="addingNote || !noteForm.valid" (click)="addNote()">
-            <span *ngIf="!addingNote">Submit</span>
+            <span *ngIf="!addingNote">
+              <ng-container *ngIf="this.editNoteData && !this.editNoteData.note_uuid">Submit</ng-container>
+              <ng-container *ngIf="this.editNoteData && this.editNoteData.note_uuid">Update</ng-container>
+            </span>
             <ion-spinner *ngIf="addingNote"></ion-spinner>
           </ion-button>
 
@@ -558,7 +561,7 @@
       </ion-item>
     </form>
 
-    <ion-list>
+    <ion-list *ngIf="this.editNoteData && !this.editNoteData.note_uuid">
       <ion-item-sliding *ngFor="let note of notes" [disabled]="platform.width() > 768">
         <ion-item tappable (click)="editNote(note)">
           <div tabindex="0"></div>

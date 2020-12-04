@@ -27,7 +27,7 @@ import { SuggestPage } from "../../suggest/suggest.page";
 export class FulltimerViewPage implements OnInit {
 
   @ViewChild('ckeditor') ckeditor;
-  
+
   public borderLimit = false;
 
   public fulltimerUUID: string;
@@ -36,7 +36,7 @@ export class FulltimerViewPage implements OnInit {
   public sections = 'personal';
 
   public notes: Note[] = [];
-  
+
   public editorFocused = false;
   public deletingNote = false;
   public editNoteData: Note = new Note();
@@ -233,7 +233,7 @@ export class FulltimerViewPage implements OnInit {
    * @param loading
    */
   loadNotes(loading = true) {
-    this.noteService.listByTypeAndId('fulltimer', this.fulltimer.fulltimer_uuid).subscribe(async jsonResponse => {
+    this.noteService.listByTypeAndId('fulltimer', this.fulltimer.fulltimer_uuid, 1).subscribe(async jsonResponse => {
       this.notes = jsonResponse.body;
     });
   }
@@ -369,7 +369,7 @@ export class FulltimerViewPage implements OnInit {
   }
 
   /**
-   * suggess this candidate 
+   * suggess this candidate
    */
   async suggest() {
 

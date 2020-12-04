@@ -47,7 +47,9 @@ export class CompanyNoteService {
     return this.authhttp.patch(`${this.companyNoteEndpoint}/${model.note_uuid}`, {
       note: model.note_text,
       type: model.note_type,
-      contact_uuid: model.contact_uuid
+      company_id: model.company_id,
+      contact_uuid: (model.contact_uuid) ? model.contact_uuid : null,
+      request_uuid: (model.request_uuid) ? model.request_uuid : null
     });
   }
 

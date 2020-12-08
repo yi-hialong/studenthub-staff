@@ -1,7 +1,7 @@
 <ion-header mode="md" [class.add-border]="borderLimit" class="clear-header">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button icon="assets/images/ic_cancel.svg" *ngIf="backState && !backState.from"></ion-back-button>
+      <ion-back-button icon="assets/images/ic_cancel.svg" defaultHref="/company-request-dashboard" *ngIf="backState && !backState.from"></ion-back-button>
       <ion-button fill="clear" (click)="dismiss()" class="btn-close" *ngIf="backState && backState.from">
         <ion-icon src="assets/images/ic_cancel.svg"></ion-icon>
       </ion-button>

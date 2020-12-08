@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from "@angular/common";
+import { Location } from '@angular/common';
 import {
   AlertController,
   ToastController,
@@ -20,7 +20,7 @@ import { SuggestionService } from 'src/app/providers/logged-in/suggestion.servic
 // models
 import { Request } from 'src/app/models/request';
 import { Note } from 'src/app/models/note';
-//pages
+// pages
 import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page';
 
 
@@ -206,12 +206,14 @@ export class CompanyRequestViewPage implements OnInit {
   //   }, () => {
   //     loader.dismiss();
   //   });
+
   // }
   //
   /**
    * close this modal
    */
   dismiss() {
+    console.log('dismiss');
     this.location.back();
   }
 
@@ -260,11 +262,11 @@ export class CompanyRequestViewPage implements OnInit {
       this.rejectedSuggestions = [];
 
       data.forEach(element => {
-        if(element.suggestion_status == 1) {
+        if (element.suggestion_status == 1) {
           this.suggestedSuggestions.push(element);
-        } else if(element.suggestion_status == 2) {
+        } else if (element.suggestion_status == 2) {
           this.rejectedSuggestions.push(element);
-        } else if(element.suggestion_status == 3) {
+        } else if (element.suggestion_status == 3) {
           this.acceptedSuggestions.push(element);
         }
       });
@@ -284,14 +286,14 @@ export class CompanyRequestViewPage implements OnInit {
 
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
-    let note = new Note;
+    const note = new Note;
     note.request_uuid = this.request_uuid;
     note.company_id = this.request.company_id;
 
     const modal = await this.modalCtrl.create({
       component: CompanyNoteFormPage,
       componentProps: {
-        note: note,
+        note,
       }
     });
     modal.present();

@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 //models
 import { Suggestion } from 'src/app/models/suggestion';
-import { AwsService } from 'src/app/providers/aws.service';
 //services
+import { AwsService } from 'src/app/providers/aws.service';
 import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
 
 

@@ -378,18 +378,17 @@
 
   <!-- malls List -->
 
-  <section *ngIf="segment == 'malls'">
+  <section *ngIf="segment == 'malls'" class="mall">
 
     <ion-list>
-      <ion-item tappable (click)="mallSelected(mall)" *ngFor="let mall of company.malls">
+      <ion-item tappable (click)="mallSelected(mall)" *ngFor="let mall of company.malls" lines="none">
         <div tabindex="0"></div>
         <ion-label>
           <h5>{{ mall.mall_name_en }}</h5>
-          <p>{{ mall.mall_name_ar }}</p>
+<!--          <p>{{ mall.mall_name_ar }}</p>-->
         </ion-label>
-
-        <ion-badge slot="end" *ngIf="mall.candidate_count > 0">
-          {{ mall.candidate_count }}
+        <ion-badge slot="end" color="light" *ngIf="mall.candidate_count > 0">
+          {{ mall.candidate_count }} staff
         </ion-badge>
       </ion-item>
     </ion-list>
@@ -412,7 +411,7 @@
           <ion-label>
             <h2>{{ brand.brand_name_en }}</h2>
           </ion-label>
-          <ion-badge slot="end" color="light">{{brand.candidate_count}} staff</ion-badge>
+          <ion-badge slot="end" color="light" *ngIf="brand.candidate_count > 0">{{brand.candidate_count}} staff</ion-badge>
           <ion-buttons slot="end" *ngIf="platform.width() > 768">
             <ion-button color="primary" (click)="editBrandSelected($event, brand)">
               <ion-icon slot="start" name="pencil-outline"></ion-icon>

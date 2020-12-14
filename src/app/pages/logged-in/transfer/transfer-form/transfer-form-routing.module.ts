@@ -5,10 +5,10 @@ import { TransferFormPage } from './transfer-form.page';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':company_id',
     component: TransferFormPage
   },{
-    path: ':id',
+    path: ':company_id/:id',
     component: TransferFormPage
   }
 ];

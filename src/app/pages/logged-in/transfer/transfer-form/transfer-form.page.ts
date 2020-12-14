@@ -18,6 +18,7 @@ import { TransferCandidate } from 'src/app/models/transfer-candidate';
 // service
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 import { TransferService } from 'src/app/providers/logged-in/transfer.service';
+import { CompanyService } from 'src/app/providers/logged-in/company.service';
 import { AwsService } from 'src/app/providers/aws.service';
 import { AuthService } from '../../../../providers/auth.service';
 import {
@@ -45,6 +46,8 @@ export class TransferFormPage implements OnInit {
   public form: FormGroup = new FormGroup({});
   // The Transfer containing all records
   public transfer: Transfer;
+
+  public company_id;
 
   // Page Title depends on Operation (Create vs Edit Transfer)
   public pageTitle = 'New Transfer';
@@ -74,6 +77,7 @@ export class TransferFormPage implements OnInit {
     public aws: AwsService,
     public transferService: TransferService,
     public candidateService: CandidateService,
+    public companyService: CompanyService,
     // private _viewCtrl: ViewController,
     private _loadingCtrl: LoadingController,
     private _alertCtrl: AlertController,
@@ -83,9 +87,15 @@ export class TransferFormPage implements OnInit {
     private modalCtrl: ModalController
   ) {
 
+  }
+
+  ngOnInit() {
+
     this.transfer_id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.company_id = this.activatedRoute.snapshot.paramMap.get('company_id');
 
     const state = window.history.state;
+
     // Load the passed model (required)
     if (state.model) {
       this.transfer = state.model;
@@ -95,21 +105,19 @@ export class TransferFormPage implements OnInit {
 
     const d = new Date();
     this.max = (this.platform.is('mobile')) ? d.getFullYear() + '-12-12' : d;
-  }
 
-  ngOnInit() {
     if (!this.transfer_id) {
       this.transfer = new Transfer();
-    } else if (!this.transfer) {
+      this.transfer.company_id = this.company_id;
+    
+      // Load List of All Candidates Assigned to this Company
+      this._loadCandidateListThenInitialize();
+
+    } else { 
+      this.pageTitle = 'Edit Transfer'; 
+
       this.loadTransferDetail();
     }
-
-    // Update Page Title if Editing a Transfer that already exists in backend
-    if (this.transfer && this.transfer.transfer_id) { this.pageTitle = 'Edit Transfer'; }
-
-    // Load List of All Candidates Assigned to this Company
-    this._loadCandidateListThenInitialize();
-
   }
 
   /**
@@ -117,12 +125,12 @@ export class TransferFormPage implements OnInit {
    * Initialise the form once loaded.
    */
   async _loadCandidateListThenInitialize() {
-    console.log('_loadCandidateListThenInitialize');
+    
     const loader = await this._loadingCtrl.create();
     loader.present();
 
-    this.candidateService.list().subscribe(response => {
-      const allCandidatesAssignedToCompany: Candidate[] = response;
+    this.companyService.getWithCandidates(this.company_id).subscribe(response => {
+      const allCandidatesAssignedToCompany: Candidate[] = response.candidates;
       this._initTransferCandidateList(allCandidatesAssignedToCompany);
       loader.dismiss();
     });
@@ -175,12 +183,14 @@ export class TransferFormPage implements OnInit {
         CustomValidator.negativeNumberValidator
       ]];
     });
+
     formControls.start_date = [(this.transfer && this.transfer.start_date) ? this.transfer.start_date : '', [
       Validators.required
     ]];
     formControls.end_date = [(this.transfer && this.transfer.end_date) ? this.transfer.end_date : '', [
       Validators.required
     ]];
+
     // Replace the transferCandidates within the transfer with our up to date list
     if (this.transfer) {
       this.transfer.transferCandidates = updatedTransferRecords;
@@ -350,9 +360,11 @@ export class TransferFormPage implements OnInit {
     this.transferService.transferIdDetails(this.transfer_id).subscribe(response => {
       loading.dismiss();
       this.transfer = response;
+
+      // Load List of All Candidates Assigned to this Company
+      this._loadCandidateListThenInitialize();
     });
   }
-
 
   async openCalendar() {
     const options: CalendarModalOptions = {

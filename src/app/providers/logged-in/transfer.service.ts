@@ -28,7 +28,7 @@ export class TransferService {
    * @returns {Observable<any>}
    */
   transferIdDetails(transfer_id: number): Observable<any> {
-    const url = `${this._transferEndpoint}/${transfer_id}?expand=transferCandidates,invoices`;
+    const url = `${this._transferEndpoint}/${transfer_id}?expand=transferCandidates,transferCandidates.candidate,invoices,createdBy,updatedBy`;
     return this._authhttp.get(url);
   }
 
@@ -134,7 +134,7 @@ export class TransferService {
    * @param file
    * @param transfer_id
    */
-  updateTransferUploadExcel(file: string, transfer_id, start_date, end_date, company_id): Observable<any> {
+  updateTransferUploadExcel(file: string, transfer_id, start_date, end_date): Observable<any> {
     const url = this._transferEndpoint + '/edit-by-excel/' + transfer_id;
     return this._authhttp.patch(url, {
       excel: file,

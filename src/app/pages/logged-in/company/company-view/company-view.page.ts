@@ -143,7 +143,6 @@ export class CompanyViewPage implements OnInit {
     this.initNoteForm();
 
     this.eventService.reloadBrand$.subscribe(res => {
-      console.log('reload');
       this.loadBrand();
     });
 

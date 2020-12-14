@@ -24,7 +24,8 @@ import {
   CalendarResult,
   CalendarComponentOptions
 } from 'ion2-calendar';
-import {DefaultDate} from "ion2-calendar/dist/calendar.model";
+import { DefaultDate } from "ion2-calendar/dist/calendar.model";
+
 
 @Component({
   selector: 'app-import-transfer-form',
@@ -46,6 +47,8 @@ export class ImportTransferFormPage implements OnInit {
   public transfer: Transfer;
   public scenario: string = 'create';
 
+  public company_id;
+
   // Page Title depends on Operation (Create vs Edit Transfer)
   public pageTitle: string = "Create Transfer via Excel";
 
@@ -54,6 +57,7 @@ export class ImportTransferFormPage implements OnInit {
   public max; // max date
   public start_date; // max date
   public end_date; // max date
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
@@ -67,21 +71,26 @@ export class ImportTransferFormPage implements OnInit {
     public platform: Platform,
     public modalCtrl: ModalController,
   ) {
+  }
+
+  ngOnInit() {
+
     this.transfer_id = this.activatedRoute.snapshot.paramMap.get('id');
+    this.company_id = this.activatedRoute.snapshot.paramMap.get('company_id');
 
     this.min = '1930/01/01';
 
     const d = new Date();
     this.max = (this.platform.is('mobile')) ? d.getFullYear() + '-12-12' : d;
-  }
 
-  ngOnInit() {
     const state = window.history.state;
     // Load the passed model (required)
     if (state['transfer']) {
       this.transfer = state['transfer'];
       // Update Page Title if Editing a Transfer that already exists in backend
-      if (this.transfer.transfer_id) this.pageTitle = "Edit Transfer via Excel";
+      if (this.transfer.transfer_id) 
+        this.pageTitle = "Edit Transfer via Excel";
+
       this.scenario = 'update'
     }
     if (!this.transfer && this.transfer_id) {
@@ -113,7 +122,7 @@ export class ImportTransferFormPage implements OnInit {
 
     this.uploading = true;
 
-    this.browserUploadSubscription = this.awsService.uploadFile(fileList[0]).subscribe(event => {
+    this.browserUploadSubscription = this.awsService.uploadFile('transfer_', fileList[0]).subscribe(event => {
 
       this._handleUpload(event);
 
@@ -147,19 +156,18 @@ export class ImportTransferFormPage implements OnInit {
     // Via this API, you get access to the raw event stream.
     // Look for upload progress events.
     if (event.type === 'progress') {
-      console.log(event);
       // This is an upload progress event. Compute and show the % done:
-      // this.progress = Math.round(100 * event.loaded / event.total);
+      //this.progress = Math.round(100 * event.loaded / event.total);
     } else if (event.Key && event.Key.length > 0) {
 
       if (this.fileInput && this.fileInput.nativeElement)
         this.fileInput.nativeElement.value = null;
 
-        if (this.scenario == 'update') {
-          this.editTransferUpload(event.Key);
-        } else {
-          this.newTransferUpload(event.Key);
-        }
+      if (this.scenario == 'update') {
+        this.editTransferUpload(event.Key);
+      } else {
+        this.newTransferUpload(event.Key);
+      }
     }
   }
 
@@ -169,7 +177,7 @@ export class ImportTransferFormPage implements OnInit {
    */
   async newTransferUpload(file) {
 
-    this.transferService.uploadTransferExcel(file, this.start_date, this.end_date).subscribe(async data => {
+    this.transferService.uploadTransferExcel(file, this.start_date, this.end_date, this.company_id).subscribe(async data => {
 
       this.uploading = false;
 
@@ -250,7 +258,7 @@ export class ImportTransferFormPage implements OnInit {
   async downloadTemplate() {
     let loader = await this._loadingCtrl.create();
     loader.present();
-    this.transferService.downloadTransferTemplate().subscribe(response => {
+    this.transferService.downloadTransferTemplate(this.company_id).subscribe(response => {
       loader.dismiss();
     });
   }
@@ -275,7 +283,7 @@ export class ImportTransferFormPage implements OnInit {
       canBackwardsSelected: true,
       pickMode: 'range',
       title: 'RANGE',
-      defaultScrollTo : new Date(this.end_date ? this.end_date : new Date()),
+      defaultScrollTo: new Date(this.end_date ? this.end_date : new Date()),
       defaultDateRange: {
         from: new Date(this.start_date ? this.start_date : ''),
         to: new Date(this.end_date ? this.end_date : '')

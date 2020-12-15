@@ -150,19 +150,19 @@ export class RequestFormPage implements OnInit {
 
     let popover;
 
-    if (this.company) {
-      popover = await this.popoverCtrl.create({
-        component: CompanyContactListPage,
-        event: e,
-        componentProps: {
-          company: this.company
-        }
-      });
-    } else {
+    // if (this.company) {
+    //   popover = await this.popoverCtrl.create({
+    //     component: CompanyContactListPage,
+    //     event: e,
+    //     componentProps: {
+    //       company: this.company
+    //     }
+    //   });
+    // } else {
       popover = await this.modalCtrl.create({
         component: CompanyContactListPage
       });
-    }
+    // }
 
     popover.onDidDismiss().then((_) => {
       if (_ && _.data && _.data.companyContact) {

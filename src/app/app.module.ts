@@ -48,6 +48,7 @@ import { FulltimerFormPageModule } from './pages/logged-in/fulltimer/fulltimer-f
 import {CompanyModule} from "./components/company/company.module";
 import {LocationPageModule} from "./pages/logged-in/candidate/location/location.module";
 import { CalendarModule } from 'ion2-calendar';
+import { TransferChartPageModule } from './pages/logged-in/transfer/transfer-chart/transfer-chart.module';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -106,6 +107,7 @@ export function createTranslateLoader(http: HttpClient) {
         NoteModule,
         SuggestPageModule,
         CompanyModule,
+        TransferChartPageModule,
         CalendarModule,
         LocationPageModule
     ],

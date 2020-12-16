@@ -1,0 +1,16 @@
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/company-view/{{ this.company_id }}"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+  <app-company [company]="company" *ngFor="let company of company.subCompanies" (click)="rowSelected(company)"></app-company>
+</ion-content>
+<ion-footer>
+  <ion-button (click)="create(company.company_id, true)">
+    Create Sub Company
+  </ion-button>
+</ion-footer>

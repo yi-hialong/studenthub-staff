@@ -1,0 +1,22 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NoteModule } from 'src/app/components/note/note.module';
+import { IonicModule } from '@ionic/angular';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { CompanyNotesPageRoutingModule } from './company-notes-routing.module';
+
+import { CompanyNotesPage } from './company-notes.page';
+
+@NgModule({
+  imports: [
+    CommonModule,
+    FormsModule,
+    CKEditorModule,
+    NoteModule,
+    IonicModule,
+    CompanyNotesPageRoutingModule
+  ],
+  declarations: [CompanyNotesPage]
+})
+export class CompanyNotesPageModule {}

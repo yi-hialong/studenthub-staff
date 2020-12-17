@@ -184,6 +184,7 @@
             Not looking for job
           </p>
         </ion-label>
+        <ion-toggle [checked]="job_search_status" (ionChange)="toggleFollowup($event)"></ion-toggle>
       </ion-item>
 
       <ion-item [class.pending]="!candidate.candidate_hourly_rate">

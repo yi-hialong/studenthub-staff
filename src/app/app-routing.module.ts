@@ -405,6 +405,43 @@ const routes: Routes = [
       name: 'TransferViewPage'
     }
   },
+  
+  {
+    path: 'transfer-chart',
+    loadChildren: () => import('./pages/logged-in/transfer/transfer-chart/transfer-chart.module').then( m => m.TransferChartPageModule)
+  },
+  {
+    path: 'transfer-list',
+    loadChildren: () => import('./pages/logged-in/transfer/transfer-list/transfer-list.module').then( m => m.TransferListPageModule)
+  },
+  {
+    path: 'company-documents',
+    loadChildren: () => import('./pages/logged-in/company/company-documents/company-documents.module').then( m => m.CompanyDocumentsPageModule)
+  },
+  {
+    path: 'company-malls',
+    loadChildren: () => import('./pages/logged-in/company/company-malls/company-malls.module').then( m => m.CompanyMallsPageModule)
+  },
+  {
+    path: 'company-brands',
+    loadChildren: () => import('./pages/logged-in/company/company-brands/company-brands.module').then( m => m.CompanyBrandsPageModule)
+  },
+  {
+    path: 'company-contacts',
+    loadChildren: () => import('./pages/logged-in/company/company-contacts/company-contacts.module').then( m => m.CompanyContactsPageModule)
+  },
+  {
+    path: 'company-stores',
+    loadChildren: () => import('./pages/logged-in/company/company-stores/company-stores.module').then( m => m.CompanyStoresPageModule)
+  },
+  {
+    path: 'company-subcompanies',
+    loadChildren: () => import('./pages/logged-in/company/company-subcompanies/company-subcompanies.module').then( m => m.CompanySubcompaniesPageModule)
+  },
+  {
+    path: 'company-notes',
+    loadChildren: () => import('./pages/logged-in/company/company-notes/company-notes.module').then( m => m.CompanyNotesPageModule)
+  },
   {
     path: '**',
     redirectTo: 'not-found'

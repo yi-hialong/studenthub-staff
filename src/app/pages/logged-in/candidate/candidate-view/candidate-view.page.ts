@@ -9,7 +9,7 @@ import {
 } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 // models
 import { Store } from 'src/app/models/store';
 import { Candidate } from 'src/app/models/candidate';
@@ -24,8 +24,8 @@ import { AuthService } from '../../../../providers/auth.service';
 // pages
 import { OptionPage } from '../option/option.page';
 import { CandidateCommittedFormPage } from '../candidate-committed-form/candidate-committed-form.page';
-import { AllCompanyListPage } from "../../company/company-request-list/all-company-list/all-company-list.page";
-import { CompanyRequestListPopupPage } from "../../company/company-request-list/company-request-list-popup/company-request-list-popup.page";
+import { AllCompanyListPage } from '../../company/company-request-list/all-company-list/all-company-list.page';
+import { CompanyRequestListPopupPage } from '../../company/company-request-list/company-request-list-popup/company-request-list-popup.page';
 import { SuggestPage } from '../../suggest/suggest.page';
 
 
@@ -66,6 +66,7 @@ export class CandidateViewPage implements OnInit {
 
   public editorFocused = false;
   public deletingNote = false;
+  public job_search_status = false;
   public editNoteData: Note = new Note();
 
   public editorConfig = {
@@ -115,7 +116,7 @@ export class CandidateViewPage implements OnInit {
     });
 
     this.eventService.noteUpdated$.subscribe((data: any) => {
-      if(data.candidate_id == this.candidate_id) {
+      if (data.candidate_id == this.candidate_id) {
         this.loadNotes();
       }
     });
@@ -251,6 +252,10 @@ export class CandidateViewPage implements OnInit {
 
       this.loading = false;
       this.candidate = response;
+
+      setTimeout(_ => {
+        this.job_search_status = !!(this.candidate.candidate_job_search_status);
+      }, 500);
     });
   }
 
@@ -366,7 +371,7 @@ export class CandidateViewPage implements OnInit {
         window.history.back();
       }
 
-      if(e.data && e.data.refresh) {
+      if (e.data && e.data.refresh) {
         this.loadNotes();
       }
     });
@@ -702,5 +707,30 @@ export class CandidateViewPage implements OnInit {
       }
     });
     popover.present();
+  }
+
+  toggleFollowup($event) {
+
+    console.log($event.detail.checked);
+    // if same value then do nothing
+    if (this.job_search_status == $event.detail.checked) {
+      return;
+    }
+
+    this.job_search_status = $event.detail.checked;
+    this.candidate.candidate_job_search_status = $event.detail.checked;
+
+
+    this.candidateService.updateJobSearchStatus({
+      candidate_id : this.candidate.candidate_id,
+      job_search_status: this.candidate.candidate_job_search_status
+    }).subscribe(async response => {
+
+      // if (response && response.operation == 'success') {
+      //   this.eventService.reloadFollowupList$.next();
+      // }
+
+    }, () => {
+    });
   }
 }

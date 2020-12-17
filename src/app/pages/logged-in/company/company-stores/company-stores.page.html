@@ -1,0 +1,56 @@
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/company-view/{{ this.company_id }}"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+  <ion-item-sliding *ngFor="let store of company.stores" [disabled]="platform.width() > 768">
+    <ion-item tappable (click)="storeSelected(store)">
+      <div tabindex="0"></div>
+      <ion-label>
+        <h5>{{ store.store_name }}</h5>
+        <p>
+          <ion-badge *ngIf="store.store_location" class="icon-location">
+            <ion-icon name="location-outline"></ion-icon> {{ store.store_location }}
+          </ion-badge>
+          <ion-badge *ngIf="store && store.mall">
+            <ion-icon name="business-outline"></ion-icon> {{ store.mall.mall_name_en }}
+          </ion-badge>
+        </p>
+      </ion-label>
+
+      <ion-badge slot="end" *ngIf="store.store_total_candidates > 0">
+        {{ store.store_total_candidates }} candidates
+      </ion-badge>
+
+      <ion-buttons slot="end" *ngIf="platform.width() > 768">
+        <ion-button color="danger" (click)="deleteStore($event, store)">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          Delete
+        </ion-button>
+      </ion-buttons>
+
+    </ion-item>
+
+    <ion-item-options side="end">
+      <ion-button color="danger" (click)="deleteStore($event, store)">
+        <ion-icon name="trash"></ion-icon>
+        Delete
+      </ion-button>
+    </ion-item-options>
+
+  </ion-item-sliding>
+
+  <loading-modal [loading]="loading" type="text-list"></loading-modal>
+</ion-content>
+<ion-footer>
+ 
+    <ion-button (click)="addStore()">
+      Add a store
+    </ion-button>
+</ion-footer>
+
+

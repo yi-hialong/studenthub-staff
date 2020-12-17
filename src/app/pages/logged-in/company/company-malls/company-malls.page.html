@@ -1,0 +1,26 @@
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/company-view/{{ this.company_id }}"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+
+  <ion-list>
+    <ion-item tappable (click)="mallSelected(mall)" *ngFor="let mall of company.malls" lines="none">
+      <div tabindex="0"></div>
+      <ion-label>
+        <h5>{{ mall.mall_name_en }}</h5>
+      </ion-label>
+
+      <ion-badge slot="end" color="light" *ngIf="mall.store_count > 0">
+        {{ mall.store_count }} stores
+      </ion-badge>
+      <ion-badge slot="end" color="light" *ngIf="mall.candidate_count > 0">
+        {{ mall.candidate_count }} staff
+      </ion-badge>
+    </ion-item>
+  </ion-list>
+</ion-content>

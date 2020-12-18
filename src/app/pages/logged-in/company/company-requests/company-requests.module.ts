@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CompanyMallsPageRoutingModule } from './company-malls-routing.module';
+import { CompanyRequestsPageRoutingModule } from './company-requests-routing.module';
 
-import { CompanyMallsPage } from './company-malls.page';
+import { CompanyRequestsPage } from './company-requests.page';
 import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
+import { PipesModule } from 'src/app/pipes/pipes.module';
+import { RequestListingModule } from 'src/app/components/request-listing/request-listing.module';
 import {NoItemsModule} from 'src/app/components/no-items/no-items.module';
 
 @NgModule({
@@ -16,9 +18,11 @@ import {NoItemsModule} from 'src/app/components/no-items/no-items.module';
     FormsModule,
     IonicModule,
     LoadingModalModule,
+    PipesModule,
+    RequestListingModule,
     NoItemsModule,
-    CompanyMallsPageRoutingModule
+    CompanyRequestsPageRoutingModule
   ],
-  declarations: [CompanyMallsPage]
+  declarations: [CompanyRequestsPage]
 })
-export class CompanyMallsPageModule {}
+export class CompanyRequestsPageModule {}

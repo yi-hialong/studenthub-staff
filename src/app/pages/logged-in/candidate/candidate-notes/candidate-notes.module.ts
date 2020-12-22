@@ -7,12 +7,16 @@ import { IonicModule } from '@ionic/angular';
 import { CandidateNotesPageRoutingModule } from './candidate-notes-routing.module';
 
 import { CandidateNotesPage } from './candidate-notes.page';
+import { NoteModule } from 'src/app/components/note/note.module';
+import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
+    NoteModule,
+    LoadingModalModule,
     CandidateNotesPageRoutingModule
   ],
   declarations: [CandidateNotesPage]

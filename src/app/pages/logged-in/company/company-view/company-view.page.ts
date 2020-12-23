@@ -314,23 +314,13 @@ export class CompanyViewPage implements OnInit {
       this.company.company_id = this.company_id;
     }
 
-    this.companyService.view(this.company_id).subscribe(response => {
+    this.companyService.view(this.company_id, 'stats').subscribe(response => {
 
       this.loading = false;
       this.deleting = false;
       this.updating = false;
       this.company = response;
-      this.stats = {
-        requests : this.company.requests?.length,
-        stores : this.company.stores?.length,
-        subCompanies : this.company.subCompanies?.length,
-        contacts : this.company.companyContacts?.length,
-        brands : this.company.brands?.length,
-        malls : this.company.malls?.length,
-        documents : this.company.files?.length,
-        transfers : this.company.parentTransfers?.length
-      };
-
+      this.stats = response.stats;
 
       setTimeout(_ => {
         this.followup = !!(this.company.company_followup);

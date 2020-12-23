@@ -29,10 +29,11 @@ export class CompanyDocumentsPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.loadData();
   }
 
   loadData() {
-    this.companyService.view(this.company.company_id).subscribe(data => {
+    this.companyService.view(this.company.company_id, 'files').subscribe(data => {
       this.company = data;
     });
   }

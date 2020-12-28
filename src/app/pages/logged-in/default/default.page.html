@@ -24,14 +24,14 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="danger stats" *ngIf="statistics.totalPendingRequests > 0" tappable (click)="scrollToPending()">
-      <ion-card-content>
-        <div class="count">{{ statistics.totalPendingRequests }}</div>
-        <div class="message">
-          <b>Pending Requests</b> from companies to hire. Someone needs to pick up and handle it ASAP.
-        </div>
-      </ion-card-content>
-    </ion-card>
+<!--    <ion-card class="danger stats" *ngIf="statistics.totalPendingRequests > 0" tappable (click)="scrollToPending()">-->
+<!--      <ion-card-content>-->
+<!--        <div class="count">{{ statistics.totalPendingRequests }}</div>-->
+<!--        <div class="message">-->
+<!--          <b>Pending Requests</b> from companies to hire. Someone needs to pick up and handle it ASAP.-->
+<!--        </div>-->
+<!--      </ion-card-content>-->
+<!--    </ion-card>-->
 
     <ion-card (click)="showExpiredIDs()" *ngIf="statistics.totalExpiredCards > 0" tappable class="danger stats">
       <ion-card-content>
@@ -106,14 +106,14 @@
       </ion-card-content>
     </ion-card>
 
-    <ion-card class="stats" tappable *ngIf="statistics.profileApprovalRequire > 0" routerLink="/candidate-review-list">
-      <ion-card-content>
-        <div class="count warning">{{ statistics.profileApprovalRequire }}</div>
-        <div class="message">
-          Candidates with profile complete requiring their <b>profiles to be reviewed and approved.</b>
-        </div>
-      </ion-card-content>
-    </ion-card>
+<!--    <ion-card class="stats" tappable *ngIf="statistics.profileApprovalRequire > 0" routerLink="/candidate-review-list">-->
+<!--      <ion-card-content>-->
+<!--        <div class="count warning">{{ statistics.profileApprovalRequire }}</div>-->
+<!--        <div class="message">-->
+<!--          Candidates with profile complete requiring their <b>profiles to be reviewed and approved.</b>-->
+<!--        </div>-->
+<!--      </ion-card-content>-->
+<!--    </ion-card>-->
   </div>
 
 </ion-content>

@@ -59,7 +59,7 @@ export class CandidateComponent implements OnInit {
    * on candidate checkbox change
    * @param event
    */
-  onCandidateSelected(event) {
+  async onCandidateSelected(event) {
 
     event.preventDefault();
     event.stopPropagation();
@@ -85,6 +85,21 @@ export class CandidateComponent implements OnInit {
     // for candidate id operations
 
     if (!this.candidate.store) {
+
+      if(!event.detail.checked) {
+        return false;
+      }
+
+      //in case no store assigned and checked
+
+      const canndidate = this.candidate.candidate_name? this.candidate.candidate_name: this.candidate.candidate_name_ar;
+
+      const prompt = await this.alertCtrl.create({
+        message: canndidate + " not assigned to store, assign candidate to download ID",
+        buttons: ['Okay']
+      });
+      prompt.present();
+
       return false;
     }
 

@@ -7,6 +7,7 @@ import { Candidate } from 'src/app/models/candidate';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 import { AwsService } from 'src/app/providers/aws.service';
 import { CandidateIdCardService } from 'src/app/providers/logged-in/candidate.id.card.service';
+//pages
 import { CandidateMergeSelectPage } from '../candidate-merge-select/candidate-merge-select.page';
 
 

@@ -44,8 +44,8 @@ export class CompanyContactService {
   }
 
   /**
-   * check if email already exists 
-   * @param email 
+   * check if email already exists
+   * @param email
    */
   isEmailExists(email: string): Observable<any>{
     const url = `${this._endpoint}/is-email-exists?email=${email}`;
@@ -54,7 +54,7 @@ export class CompanyContactService {
 
   /**
    * add contact to team
-   * @param companyContact 
+   * @param companyContact
    */
   addToTeam(companyContact: CompanyContact): Observable<any>{
     const url = `${this._endpoint}/add-to-team`;
@@ -69,16 +69,16 @@ export class CompanyContactService {
   }
 
   /**
-   * Create university
-   * @param {Contact} model
-   * @returns {Observable<any>}
+   * create contact
+   * @param model
+   * @param companyContact
    */
   create(model: Contact, companyContact: CompanyContact = null): Observable<any>{
     const postUrl = `${this._endpoint}`;
 
     const params = {
       company_id: companyContact?.company_id,
-      role: companyContact?.role,
+      role: model.role,
       name: model.contact_name,
       email: model.contact_email,
       password: model.contact_password,
@@ -88,7 +88,7 @@ export class CompanyContactService {
       emails: model.contactEmails,
       phones: model.contactPhones,
     };
-   
+
     return this._authhttp.post(postUrl, params);
   }
 
@@ -101,8 +101,8 @@ export class CompanyContactService {
     const url = `${this._endpoint}/${model.contact_uuid}`;
 
     const params = {
-    //  company_id: model.company_id,
       name: model.contact_name,
+      role: model.role,
       position: model.contact_position,
       email: model.contact_email,
       password: model.contact_password,

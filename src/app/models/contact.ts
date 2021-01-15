@@ -1,5 +1,6 @@
 import { Note } from './note';
 import { Request } from './request';
+import {Company} from './company';
 
 export class Contact {
     contact_uuid: string;
@@ -14,9 +15,11 @@ export class Contact {
     contact_password_reset_token: string;
     contact_created_at: string;
     contact_updated_at: string;
+    role: string;
     contactEmails: contactEmail[];
     contactPhones: contactPhone[];
     notes: Note[];
+    company: Company;
     contactStats: any;
     requests: Request[];
 }

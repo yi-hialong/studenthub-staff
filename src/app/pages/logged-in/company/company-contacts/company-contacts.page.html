@@ -29,10 +29,10 @@
           <h4>{{ companyContact.contact_name }}</h4>
 
           <h2>
-            {{ companyContact.contact_position }}
+            {{ companyContact.contact_position }} <small>({{ companyContact.role }})</small>
           </h2>
 
-          <p>
+          <p *ngIf="companyContact.contact_email">
             <a href="mailto:{{ companyContact.contact_email }}" (click)="doNothing($event)">
               <ion-icon name="mail-outline"></ion-icon> {{ companyContact.contact_email }}
             </a>
@@ -52,7 +52,7 @@
             </a>
           </p>
 
-          <!-- 
+          <!--
           <p>
             <a *ngIf="companyContact.contactStats.lastNotes">
               <ion-icon name="time-outline"></ion-icon> Last note was {{ companyContact.contactStats.lastNotes.note_updated_datetime | timeAgo }}

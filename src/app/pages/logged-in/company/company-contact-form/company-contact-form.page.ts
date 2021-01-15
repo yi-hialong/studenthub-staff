@@ -19,7 +19,7 @@ import { CustomValidator } from 'src/app/validators/custom.validator';
 export class CompanyContactFormPage implements OnInit {
 
   public company_id;
-  
+
   public saving: boolean = false;
 
   public type: string = 'password';
@@ -27,7 +27,7 @@ export class CompanyContactFormPage implements OnInit {
   //model to update/add
   public model: Contact;
 
-  //already available 
+  //already available
   public contact: Contact;
 
   public companyContact: CompanyContact;
@@ -38,7 +38,7 @@ export class CompanyContactFormPage implements OnInit {
 
   public borderLimit = false;
 
-  public addingToTeam: boolean = false; 
+  public addingToTeam: boolean = false;
 
   constructor(
     public companyContactService: CompanyContactService,
@@ -55,11 +55,11 @@ export class CompanyContactFormPage implements OnInit {
     if(state && state.companyContact) {
       this.companyContact = state.companyContact;
     }
-
+    console.log(this.companyContact);
     if(!this.model) {
       this.model = new Contact;
     }
-    
+
     let emailCtrls = [];
 
     let phoneCtrls = [];
@@ -90,11 +90,12 @@ export class CompanyContactFormPage implements OnInit {
       this.operation = "Create";
 
       this.form = this._fb.group({
-        name: ["", Validators.required],
-        position: ["", Validators.required],
-        note: [""],
+        name: ['', Validators.required],
+        position: ['', Validators.required],
+        note: [''],
         email: ['', [CustomValidator.emailValidator, Validators.required]],
-        password: ['', Validators.required], 
+        password: ['', Validators.required],
+        role: ['', Validators.required],
         receive_email: [true, Validators.required],
         receive_notification: [true, Validators.required],
         emails: new FormArray(emailCtrls),
@@ -103,15 +104,16 @@ export class CompanyContactFormPage implements OnInit {
 
     } else { // Show Update Form
 
-      this.operation = "Update";
+      this.operation = 'Update';
 
       this.form = this._fb.group({
         name: [this.model.contact_name, Validators.required],
         position: [this.model.contact_position, Validators.required],
         email: [this.model.contact_email, [CustomValidator.emailValidator, Validators.required]],
-        password: [this.model.contact_password, Validators.required], 
+        password: [this.model.contact_password, Validators.required],
         receive_email: [this.model.contact_receive_email, Validators.required],
         receive_notification: [this.model.contact_receive_notification, Validators.required],
+        role: [this.model.role, Validators.required],
         emails: new FormArray(emailCtrls),
         phones: new FormArray(phoneCtrls),
       });
@@ -127,6 +129,7 @@ export class CompanyContactFormPage implements OnInit {
    * Update Model Data based on Form Input
    */
   updateModelDataFromForm() {
+    this.model.role = this.form.value.role;
     this.model.contact_name = this.form.value.name;
     this.model.contact_email = this.form.value.email;
     this.model.contact_receive_email = this.form.value.receive_email;
@@ -238,7 +241,7 @@ export class CompanyContactFormPage implements OnInit {
 
         this.eventService.reloadStats$.next({
           company_id: this.company_id
-        }); 
+        });
 
         // Close the page
         let data = { 'refresh': true };
@@ -284,7 +287,7 @@ export class CompanyContactFormPage implements OnInit {
 
         this.eventService.reloadStats$.next({
           company_id: this.company_id
-        }); 
+        });
 
         // Close the page
         let data = { 'refresh': true };

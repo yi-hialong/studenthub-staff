@@ -33,7 +33,7 @@ export class CompanyContactViewPage implements OnInit {
 
   public deleting: boolean = false;
 
-  public companyContact: CompanyContact;
+  public companyContact: CompanyContact = null;
 
   public notes: Note[] = [];
 
@@ -81,7 +81,7 @@ export class CompanyContactViewPage implements OnInit {
     const model = window.history.state.model;
 
     if(model) {
-      this.companyContact = model;
+      // this.companyContact = model;
       this.initNoteForm();
       this.loadNotes();
     }
@@ -121,7 +121,7 @@ export class CompanyContactViewPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: CompanyContactFormPage,
       componentProps: {
-        model: this.companyContact
+        model: this.companyContact.contact
       }
     });
     modal.onDidDismiss().then(e => {

@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { IonNav, ModalController } from '@ionic/angular';
 //models
 import { CompanyContact } from 'src/app/models/company-contact';

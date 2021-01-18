@@ -121,7 +121,8 @@ export class CompanyContactViewPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: CompanyContactFormPage,
       componentProps: {
-        model: this.companyContact.contact
+        model: this.companyContact.contact,
+        companyContact: this.companyContact
       }
     });
     modal.onDidDismiss().then(e => {

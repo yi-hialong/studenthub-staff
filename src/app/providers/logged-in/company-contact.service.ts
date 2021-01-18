@@ -97,10 +97,11 @@ export class CompanyContactService {
    * @param {Contact} model
    * @returns {Observable<any>}
    */
-  update(model: Contact): Observable<any>{
+  update(model: Contact, companyContact: CompanyContact = null): Observable<any>{
     const url = `${this._endpoint}/${model.contact_uuid}`;
 
     const params = {
+      company_id: companyContact?.company_id,
       name: model.contact_name,
       role: model.role,
       position: model.contact_position,

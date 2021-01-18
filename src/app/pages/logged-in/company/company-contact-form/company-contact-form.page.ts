@@ -55,9 +55,8 @@ export class CompanyContactFormPage implements OnInit {
     if(state && state.companyContact) {
       this.companyContact = state.companyContact;
     }
-    console.log(this.companyContact);
     if(!this.model) {
-      this.model = new Contact;
+      this.model = new Contact();
     }
 
     let emailCtrls = [];
@@ -275,7 +274,7 @@ export class CompanyContactFormPage implements OnInit {
       action = this.companyContactService.create(this.model, this.companyContact);
     } else {
       // Update
-      action = this.companyContactService.update(this.model);
+      action = this.companyContactService.update(this.model, this.companyContact);
     }
 
     action.subscribe(async jsonResponse => {

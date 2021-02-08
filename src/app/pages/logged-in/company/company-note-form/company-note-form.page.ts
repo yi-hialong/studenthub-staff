@@ -8,6 +8,7 @@ import { Company } from 'src/app/models/company';
 // services
 import { NoteService } from 'src/app/providers/logged-in/note.service';
 import { AuthService } from 'src/app/providers/auth.service';
+import { AwsService } from 'src/app/providers/aws.service';
 // pages
 import { AllCompanyListPage } from '../company-request-list/all-company-list/all-company-list.page';
 import { CompanyRequestListPopupPage } from '../company-request-list/company-request-list-popup/company-request-list-popup.page';
@@ -51,7 +52,8 @@ export class CompanyNoteFormPage implements OnInit {
     private modalCtrl: ModalController,
     private alertCtrl: AlertController,
     public popoverCtrl: PopoverController,
-    private authService: AuthService
+    private authService: AuthService,
+    public awsService: AwsService
   ) {
   }
 
@@ -305,5 +307,12 @@ export class CompanyNoteFormPage implements OnInit {
     this.form.controls.note.setValue(data);
     this.form.markAsDirty();
     this.form.updateValueAndValidity();
+  }
+
+  /**
+   * hide photo on error
+   */
+  onPhotoError() {
+    this.candidate.candidate_personal_photo = null;
   }
 }

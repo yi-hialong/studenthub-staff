@@ -715,7 +715,7 @@ export class CandidateViewPage implements OnInit {
 
   /**
    * add new note for candidate
-   *
+
   addNote() {
     this.addingNote = true;
 

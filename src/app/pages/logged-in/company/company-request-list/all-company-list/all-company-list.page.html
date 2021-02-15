@@ -19,12 +19,13 @@
               <div tabindex="0"></div>
               <strong>{{ company.company_name }}</strong>
             </ion-label>
-            <ng-container *ngIf="company.subCompanies && company.subCompanies.length > 0">
+            <ng-container *ngIf="!onlyParentcompany && company.subCompanies && company.subCompanies.length > 0">
               <ion-icon slot="end" *ngIf = "selectedCompany != company.company_id" name="arrow-down-outline"></ion-icon>
               <ion-icon slot="end" *ngIf = "selectedCompany == company.company_id" name="arrow-up-outline"></ion-icon>
             </ng-container>
           </ion-item>
-          <ng-container *ngIf="company.subCompanies && company.subCompanies.length > 0">
+
+          <ng-container *ngIf="!onlyParentcompany && company.subCompanies && company.subCompanies.length > 0">
             <div *ngIf = "selectedCompany == company.company_id">
               <ion-item tappable (click)="rowSelected(company)" class="ion-text-wrap">
                 <div tabindex="0"></div>

@@ -50,6 +50,7 @@ export class CompanyRequestListPage implements OnInit {
       endDate: null,
       position_type: null
   };
+
   dateRange: { from: string; to: string; };
   type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
   optionsRange: CalendarComponentOptions = {

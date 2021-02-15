@@ -12,7 +12,7 @@
     </ion-title>
 
     <ion-buttons slot="end">
-      <ion-button color="primary" [disabled]="form && !form.valid" (click)="save()">
+      <ion-button color="primary" [disabled]="saving || (form && !form.valid)" (click)="save()">
         <span *ngIf="!saving">Save</span>
         <ion-spinner *ngIf="saving"></ion-spinner>
       </ion-button>
@@ -32,7 +32,8 @@
     </ion-list>
 
     <ion-list>
-      <ion-item (click)="openContact($event)">
+      <!-- [disabled]="!form.controls.company_name.value"  -->
+      <ion-item (click)="form.controls.company_name.value && openContact($event)">
         <ion-label position="floating">Contact</ion-label>
         <ion-input type="text" formControlName="contact_name" readonly></ion-input>
       </ion-item>
@@ -87,7 +88,7 @@
   <ion-grid>
     <ion-row>
       <ion-col>
-        <ion-button [disabled]="form && !form.valid" (click)="save()">
+        <ion-button [disabled]="(form && !form.valid) || saving" (click)="save()">
           <span *ngIf="!saving">Save</span>
           <ion-spinner *ngIf="saving"></ion-spinner>
         </ion-button>

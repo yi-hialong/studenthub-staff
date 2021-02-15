@@ -65,10 +65,15 @@ export class RequestFormPage implements OnInit {
 
   loadForm() {
     this.company = this.model.company;
+
     this.form = this.fb.group({
       company_name: [(this.model.company) ? this.model.company.company_name : '', Validators.required],
       company_id: [this.model.company_id, Validators.required],
-      contact_name: [(this.model.contact) ? this.model.contact : '', Validators.required],
+      contact_name: [{
+        value: (this.model.contact) ? this.model.contact : '',
+        disabled: this.model.contact? false: true
+      }, Validators.required],
+
       contact_uuid: [this.model.contact_uuid, Validators.required],
       position_type: [this.model.request_position_type + '', Validators.required],
       position_title: [this.model.request_position_title, Validators.required],
@@ -195,6 +200,9 @@ export class RequestFormPage implements OnInit {
   async openClient(e) {
     const popover = await this.modalCtrl.create({
       component: AllCompanyListPage,
+      componentProps: {
+        onlyParentcompany: true
+      }
     });
     popover.onDidDismiss().then((_) => {
 
@@ -207,6 +215,7 @@ export class RequestFormPage implements OnInit {
         this.form.controls.contact_name.setValue(null);
         this.form.controls.contact_uuid.setValue(null);
 
+        this.form.controls.contact_name.enable();
       }
     });
     popover.present();

@@ -15,52 +15,65 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
     ) {}
 
 	transform(value: string) {
-		this.removeTimer();
-		const d = (value) ? this.kuwaitCurrentTime(value) : this.kuwaitCurrentTime(new Date());
-    const utcTimeNow = this.kuwaitCurrentTime(new Date());
-    const seconds = Math.round(Math.abs((utcTimeNow.getTime() - d.getTime()) / 1000));
-		const timeToUpdate = (Number.isNaN(seconds)) ? 1000 : this.getSecondsUntilUpdate(seconds) * 1000;
+    this.removeTimer();
+      const d = (value) ? new Date(value.replace(/ /g,'T')) : this.kuwaitCurrentTime(new Date());
+      // console.log(value,  new Date(value.replace(/ /g,'T') ));
+      // const d = (value) ? new Date(value) : this.kuwaitCurrentTime(new Date());
+      const utcTimeNow = this.kuwaitCurrentTime(new Date());
+      // console.log(d, utcTimeNow);
+      // console.log(utcTimeNow.getTime(), d.getTime());
+      // console.log(utcTimeNow.getTime() - d.getTime());
+      const seconds = Math.round(Math.abs((utcTimeNow.getTime() - d.getTime()) / 1000));
+      // console.log( value);
+      // console.log( utcTimeNow.getDate() , d.getDate());
+      // console.log( ">>>" + (utcTimeNow.getTime() - d.getTime()));
+      const timeToUpdate = (Number.isNaN(seconds)) ? 1000 : this.getSecondsUntilUpdate(seconds) * 1000;
 
-    this.timer = this.ngZone.runOutsideAngular(() => {
-        if (typeof window !== 'undefined') {
-          return window.setTimeout(() => {
-            this.ngZone.run(() => this.changeDetectorRef.markForCheck());
-          }, timeToUpdate);
-        }
-        return null;
-    });
+      this.timer = this.ngZone.runOutsideAngular(() => {
+          if (typeof window !== 'undefined') {
+            return window.setTimeout(() => {
+              this.ngZone.run(() => this.changeDetectorRef.markForCheck());
+            }, timeToUpdate);
+          }
+          return null;
+      });
 
-		const minutes = Math.round(Math.abs(seconds / 60));
-		const hours = Math.round(Math.abs(minutes / 60));
-		const days = Math.round(Math.abs(hours / 24));
-		const months = Math.round(Math.abs(days / 30.416));
-		const years = Math.round(Math.abs(days / 365));
+      const minutes = Math.round(Math.abs(seconds / 60));
+      const hours = Math.round(Math.abs(minutes / 60));
+      const days = Math.round(Math.abs(hours / 24));
+      const months = Math.round(Math.abs(days / 30.416));
+      const years = Math.round(Math.abs(days / 365));
 
-		if (Number.isNaN(seconds)){
-			return '';
-		} else if (seconds <= 45) {
-			return 'a few seconds ago';
-		} else if (seconds <= 90) {
-			return 'a minute ago';
-		} else if (minutes <= 45) {
-			return minutes + ' minutes ago';
-		} else if (minutes <= 90) {
-			return 'an hour ago';
-		} else if (hours <= 22) {
-			return hours + ' hours ago';
-		} else if (hours <= 36) {
-			return 'a day ago';
-		} else if (days <= 25) {
-			return days + ' days ago';
-		} else if (days <= 45) {
-			return 'a month ago';
-		} else if (days <= 345) {
-			return months + ' months ago';
-		} else if (days <= 545) {
-			return 'a year ago';
-		} else { // (days > 545)
-			return years + ' years ago';
-		}
+      if (Number.isNaN(seconds)){
+        return '';
+      } else if (seconds <= 45) {
+        return 'a few seconds ago';
+      } else if (seconds <= 90) {
+        return 'a minute ago';
+      } else if (minutes <= 45) {
+        return minutes + ' minutes ago';
+      } else if (minutes <= 90) {
+        return 'an hour ago';
+      } else if (hours <= 22) {
+        // return `
+        // ${value} ==== ${d}<br/>
+        // ${utcTimeNow.getHours()} ${d.getHours()} ${hours} hours ago<br/>
+        // ${utcTimeNow}
+        // `;
+        return `${hours} hours ago`;
+      } else if (hours <= 36) {
+        return 'a day ago';
+      } else if (days <= 25) {
+        return days + ' days ago';
+      } else if (days <= 45) {
+        return 'a month ago';
+      } else if (days <= 345) {
+        return months + ' months ago';
+      } else if (days <= 545) {
+        return 'a year ago';
+      } else { // (days > 545)
+        return years + ' years ago';
+      }
     }
 
 	ngOnDestroy(): void {
@@ -96,7 +109,7 @@ export class TimeAgoPipe implements PipeTransform, OnDestroy {
    */
 	kuwaitCurrentTime(date, tzString = 'Asia/Kuwait') {
     const time = new Date((typeof date === "string" ? new Date(date) : date).toLocaleString('en-US', {timeZone: tzString}));
-    console.log(date, time);
+    // console.log(date, time);
     return time;
   }
 }

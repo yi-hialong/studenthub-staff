@@ -197,5 +197,8 @@ export class CompanyRequestsPage implements OnInit {
         }
       }
     }
+    if ((this.requests.length > 0) && this.partTimeRequests.length == 0) {
+      this.sections = 'full';
+    }
   }
 }

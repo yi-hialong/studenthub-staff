@@ -1,6 +1,7 @@
 import { Note } from './note';
 import { Request } from './request';
 import {Company} from './company';
+import {CompanyContact} from "./company-contact";
 
 export class Contact {
     contact_uuid: string;
@@ -19,6 +20,7 @@ export class Contact {
     notes: Note[];
     company: Company;
     companies: Company[];
+    companyContact: CompanyContact;
     contactStats: any;
     requests: Request[];
 }

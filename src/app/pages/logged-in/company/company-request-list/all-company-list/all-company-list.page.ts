@@ -26,6 +26,8 @@ export class AllCompanyListPage implements OnInit {
     name: null
   };
 
+  public onlyParentcompany: boolean = false; 
+  
   public borderLimit = false;
 
   constructor(
@@ -87,7 +89,7 @@ export class AllCompanyListPage implements OnInit {
    * When its selected
    */
   showSub(model: Company) {
-    if (model.subCompanies && model.subCompanies.length > 0) {
+    if (!this.onlyParentcompany && model.subCompanies && model.subCompanies.length > 0) {
       if (model.company_id && this.selectedCompany == model.company_id) {
         this.selectedCompany = null;
       } else {

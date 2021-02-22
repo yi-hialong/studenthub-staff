@@ -53,6 +53,8 @@ export class CompanyRequestFormPage implements OnInit {
       position_type: [this.model.request_position_type + '', Validators.required],
       position_title: [this.model.request_position_title, Validators.required],
       number_of_employees: [this.model.request_number_of_employees, Validators.required],
+      job_description: [this.model.request_job_description, Validators.required],
+      compensation: [this.model.request_compensation, Validators.required],
       additional_info: [this.model.request_additional_info]
     });
 
@@ -69,6 +71,8 @@ export class CompanyRequestFormPage implements OnInit {
     this.model.request_position_title = this.form.value.position_title;
     this.model.request_number_of_employees = this.form.value.number_of_employees;
     this.model.request_additional_info = this.form.value.additional_info;
+    this.model.request_job_description = this.form.value.job_description;
+    this.model.request_compensation = this.form.value.compensation;
   }
 
   /**
@@ -145,6 +149,16 @@ export class CompanyRequestFormPage implements OnInit {
     }
 
     popover.onDidDismiss().then((_) => {
+      console.log(_);
+      if (_ && _.data && _.data.contact) {
+        this.form.controls.contact_name.setValue(_.data.contact.contact_name);
+        this.form.controls.contact_uuid.setValue(_.data.contact.contact_uuid);
+
+        if ((!this.company || !this.company.company_id) && _.data.contact.company) {
+          this.form.controls.company_id.setValue(_.data.contact.company.company_id);
+        }
+      }
+
       if (_ && _.data && _.data.companyContact) {
         this.form.controls.contact_name.setValue(_.data.companyContact.contact_name);
         this.form.controls.contact_uuid.setValue(_.data.companyContact.contact_uuid);
@@ -170,5 +184,7 @@ export class CompanyRequestFormPage implements OnInit {
     this.form.controls.position_title.setValue(null);
     this.form.controls.number_of_employees.setValue(null);
     this.form.controls.additional_info.setValue(null);
+    this.form.controls.job_description.setValue(null);
+    this.form.controls.compensation.setValue(null);
   }
 }

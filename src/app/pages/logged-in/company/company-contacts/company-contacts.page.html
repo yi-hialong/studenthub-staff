@@ -28,7 +28,12 @@
         <ion-label>
           <h4>{{ companyContact.contact_name }}</h4>
 
-          <h2>
+
+          <h2 *ngIf="companyContact.companyContact">
+            {{ companyContact.companyContact.contact_position }}
+          </h2>
+
+          <h2 *ngIf="companyContact.contact_position">
             {{ companyContact.contact_position }}
           </h2>
 

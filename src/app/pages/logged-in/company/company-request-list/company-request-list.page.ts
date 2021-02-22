@@ -42,12 +42,15 @@ export class CompanyRequestListPage implements OnInit {
     requestStatus: string,
     startDate: string
     endDate: string
+    position_type: any
   } = {
       companyName: null,
       requestStatus: null,
       startDate: null,
-      endDate: null
+      endDate: null,
+      position_type: null
   };
+
   dateRange: { from: string; to: string; };
   type: 'string'; // 'string' | 'js-date' | 'moment' | 'time' | 'object'
   optionsRange: CalendarComponentOptions = {
@@ -166,6 +169,10 @@ export class CompanyRequestListPage implements OnInit {
       urlParams += '&end_date=' + this.filters.endDate;
     }
 
+    if (this.filters.position_type) {
+      urlParams += '&position_type=' + this.filters.position_type;
+    }
+
     return urlParams;
   }
 
@@ -174,7 +181,8 @@ export class CompanyRequestListPage implements OnInit {
       companyName: null,
       requestStatus: null,
       startDate: null,
-      endDate: null
+      endDate: null,
+      position_type: null
     };
   }
 
@@ -220,7 +228,12 @@ export class CompanyRequestListPage implements OnInit {
     this.filters.requestStatus = status;
     this.list(); // reload all result
   }
-  
+
+  filterByType($event, type) {
+    this.filters.position_type = type;
+    this.list(); // reload all result
+  }
+
   searchByName($event) {
     this.filters.companyName = $event.detail.value;
     this.list(); // reload all result

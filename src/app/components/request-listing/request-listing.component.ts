@@ -60,4 +60,10 @@ export class RequestListingComponent implements OnInit {
     const minutes = Math.round(Math.abs(seconds / 60));
     return Math.round(Math.abs(minutes / 60));
   }
+
+  kuwaitCurrentTime(date = new Date(), tzString = 'Asia/Kuwait') {
+    const time = new Date((typeof date === "string" ? new Date(date) : date).toLocaleString('en-US', {timeZone: tzString}));
+    // console.log(date, time);
+    return time;
+  }
 }

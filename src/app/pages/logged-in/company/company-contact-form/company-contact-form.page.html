@@ -20,19 +20,37 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <form [formGroup]="form" *ngIf="form">
     <ion-list>
 
       <ion-item>
-        <ion-label position="floating">Emails</ion-label>
+        <ion-label position="floating">Name</ion-label>
+        <ion-input type="text" formControlName="name"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Position</ion-label>
+        <ion-input type="text" formControlName="position"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Primary Email</ion-label>
         <ion-input type="text" formControlName="email" (ionChange)="checkEmailAvailable($event)"></ion-input>
+      </ion-item>
+
+      <ion-item class="field-password" *ngIf="form.controls.password">
+        <ion-label position="floating">Password</ion-label>
+        <ion-input type="{{ type }}" formControlName="password"></ion-input>
+
+        <ion-button class="btn-password" fill="clear" (click)="togglePasswordVisibility()">
+          <ion-icon *ngIf="type == 'password'" name="eye"></ion-icon>
+          <ion-icon *ngIf="type != 'password'" name="eye-off"></ion-icon>
+        </ion-button>
       </ion-item>
 
       <ion-item *ngIf="contact">
         <div tabindex="0"></div>
-
         <ion-label>
           <h2>Found contact with given email </h2>
           <h4>{{ contact.contact_name }}</h4>
@@ -44,41 +62,24 @@
       </ion-item>
 
       <ion-item>
-        <ion-label position="floating">Position</ion-label>
-        <ion-input type="text" formControlName="position"></ion-input>
-      </ion-item>
-
-      <ion-item>
         <ion-checkbox slot="start" formControlName="allow_access"></ion-checkbox>
-        <ion-label>Allow access?</ion-label>  
+        <ion-label>Allowed to login and use system</ion-label>
       </ion-item>
 
       <div *ngIf="!contact">
 
         <ion-item>
-          <ion-label position="floating">Name</ion-label>
-          <ion-input type="text" formControlName="name"></ion-input>
-        </ion-item>
-
-        <ion-item class="field-password" *ngIf="form.controls.password">
-          <ion-label position="floating">Password</ion-label>
-          <ion-input type="{{ type }}" formControlName="password"></ion-input>
-
-          <ion-button class="btn-password" fill="clear" (click)="togglePasswordVisibility()">
-            <ion-icon *ngIf="type == 'password'" name="eye"></ion-icon>
-            <ion-icon *ngIf="type != 'password'" name="eye-off"></ion-icon>
-          </ion-button>
-        </ion-item>
-
-        <ion-item>
-          <ion-label>Receive Email?</ion-label>
+          <ion-label>Receives emails (invoices and notifications)</ion-label>
           <ion-toggle slot="end" formControlName="receive_email"></ion-toggle>
         </ion-item>
 
+        <!--
         <ion-item>
           <ion-label>Receive Notification?</ion-label>
           <ion-toggle slot="end" formControlName="receive_notification"></ion-toggle>
         </ion-item>
+        -->
+
       </div>
 
     </ion-list>
@@ -103,7 +104,7 @@
         </div>
       </ion-card-content>
     </ion-card>
-  
+
     <ion-card *ngIf="!contact">
       <ion-card-header>
         <ion-card-title>Phones </ion-card-title>

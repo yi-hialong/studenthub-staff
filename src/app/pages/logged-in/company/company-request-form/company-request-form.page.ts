@@ -3,12 +3,12 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { ModalController, AlertController, PopoverController } from '@ionic/angular';
 // services
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
+import { EventService } from "../../../../providers/event.service";
 // models
 import { Request } from 'src/app/models/request';
 import { AuthService } from "../../../../providers/auth.service";
 //pages
 import { CompanyContactListPage } from "../company-contact/company-contact-list/company-contact-list.page";
-import {EventService} from "../../../../providers/event.service";
 
 
 @Component({
@@ -19,6 +19,7 @@ import {EventService} from "../../../../providers/event.service";
 export class CompanyRequestFormPage implements OnInit {
 
   @Input() company;
+
   @Input() request;
 
   public saving = false;
@@ -47,12 +48,13 @@ export class CompanyRequestFormPage implements OnInit {
     }
 
     this.form = this.fb.group({
-      company_id: [this.company? this.company.company_id : null, Validators.required],
+      company_id: [this.company ? this.company.company_id : null, Validators.required],
       contact_name: [(this.model.contact) ? this.model.contact : '', Validators.required],
       contact_uuid: [this.model.contact_uuid, Validators.required],
       position_type: [this.model.request_position_type + '', Validators.required],
       position_title: [this.model.request_position_title, Validators.required],
       number_of_employees: [this.model.request_number_of_employees, Validators.required],
+      location: [this.model.request_location],
       job_description: [this.model.request_job_description, Validators.required],
       compensation: [this.model.request_compensation, Validators.required],
       additional_info: [this.model.request_additional_info]
@@ -73,6 +75,7 @@ export class CompanyRequestFormPage implements OnInit {
     this.model.request_additional_info = this.form.value.additional_info;
     this.model.request_job_description = this.form.value.job_description;
     this.model.request_compensation = this.form.value.compensation;
+    this.model.request_location = this.form.value.location;
   }
 
   /**
@@ -134,7 +137,7 @@ export class CompanyRequestFormPage implements OnInit {
 
     let popover;
 
-    if(this.company) {
+    if (this.company) {
       popover = await this.popoverCtrl.create({
         component: CompanyContactListPage,
         event: e,
@@ -176,7 +179,9 @@ export class CompanyRequestFormPage implements OnInit {
     this.borderLimit = (e.detail.scrollTop > 20);
   }
 
-
+  /**
+   * reset form inputs
+   */
   resetForm() {
     this.form.controls.contact_name.setValue(null);
     this.form.controls.contact_uuid.setValue(null);
@@ -186,5 +191,6 @@ export class CompanyRequestFormPage implements OnInit {
     this.form.controls.additional_info.setValue(null);
     this.form.controls.job_description.setValue(null);
     this.form.controls.compensation.setValue(null);
+    this.form.controls.location.setValue(null);
   }
 }

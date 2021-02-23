@@ -63,6 +63,7 @@ import { CompanyMallsPageModule } from './pages/logged-in/company/company-malls/
 import { CompanySubcompaniesPageModule } from './pages/logged-in/company/company-subcompanies/company-subcompanies.module';
 import {ModalPopPageModule} from './pages/logged-in/modal-pop/modal-pop.module';
 import {StoreViewPageModule} from "./pages/logged-in/store/store-view/store-view.module";
+import { InvitePageModule } from './pages/logged-in/invite/invite.module';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -136,7 +137,8 @@ export function createTranslateLoader(http: HttpClient) {
     CompanyStoresPageModule,
     TransferChartPageModule,
     ModalPopPageModule,
-    StoreViewPageModule
+    StoreViewPageModule,
+    InvitePageModule
   ],
   providers: [
     {

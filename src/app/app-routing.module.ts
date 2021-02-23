@@ -391,13 +391,21 @@ const routes: Routes = [
     }
   },
   {
+    path: 'candidate-invitations',
+    loadChildren: () => import('./pages/logged-in/candidate/candidate-invitations/candidate-invitations.module').then( m => m.CandidateInvitationsPageModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'CandidateInvitationsPage'
+    }
+  },
+  {
     path: 'app-error',
     loadChildren: () => import('./pages/errors/app-error/app-error.module').then( m => m.AppErrorPageModule)
   },
   {
     path: '**',
     redirectTo: 'not-found'
-  }
+  },
 ];
 
 @NgModule({

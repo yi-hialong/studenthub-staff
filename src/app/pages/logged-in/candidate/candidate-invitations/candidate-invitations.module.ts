@@ -4,23 +4,23 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
-import { CandidateSuggestionsPageRoutingModule } from './candidate-suggestions-routing.module';
-
-import { CandidateSuggestionsPage } from './candidate-suggestions.page';
+import { CandidateInvitationsPageRoutingModule } from './candidate-invitations-routing.module';
 import { NoteModule } from 'src/app/components/note/note.module';
 import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
-import { SuggestionModule } from "../../../../components/suggestion/suggestion.module";
+
+import { CandidateInvitationsPage } from './candidate-invitations.page';
+import { InvitationModule } from 'src/app/components/invitation/invitation.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    NoteModule,
+    // NoteModule,
+    InvitationModule,
     LoadingModalModule,
-    CandidateSuggestionsPageRoutingModule,
-    SuggestionModule
+    CandidateInvitationsPageRoutingModule
   ],
-  declarations: [CandidateSuggestionsPage]
+  declarations: [CandidateInvitationsPage]
 })
-export class CandidateSuggestionsPageModule { }
+export class CandidateInvitationsPageModule { }

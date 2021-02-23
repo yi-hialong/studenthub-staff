@@ -85,7 +85,7 @@ export class IncompleteCandidateListPage implements OnInit {
   }
 
   /**
-   * load assigned user data
+   * load assigned and incomplete profile
    * @param page
    * @param search
    */
@@ -93,8 +93,8 @@ export class IncompleteCandidateListPage implements OnInit {
 
     this.currentPage = page;
 
-    // Load list of candidates
     this.loading = true;
+
     this.candidateService.listAssigned(search, page, 1).subscribe(response => {
 
       this.totalCount = parseInt(response.headers.get('X-Pagination-Total-Count'));

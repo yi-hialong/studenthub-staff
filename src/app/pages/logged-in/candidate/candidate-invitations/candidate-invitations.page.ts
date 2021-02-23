@@ -2,38 +2,38 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ModalController } from '@ionic/angular';
 // models
-import { Suggestion } from 'src/app/models/suggestion';
+import { Invitation } from 'src/app/models/invitation';
 import { EventService } from 'src/app/providers/event.service';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 // services
-import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
-import {NoteService} from '../../../../providers/logged-in/note.service';
-import {Note} from 'src/app/models/note';
+import { InvitationService } from 'src/app/providers/logged-in/invitation.service';
+
 
 @Component({
-  selector: 'app-candidate-suggestions',
-  templateUrl: './candidate-suggestions.page.html',
-  styleUrls: ['./candidate-suggestions.page.scss'],
+  selector: 'app-candidate-invitations',
+  templateUrl: './candidate-invitations.page.html',
+  styleUrls: ['./candidate-invitations.page.scss'],
 })
-export class CandidateSuggestionsPage implements OnInit {
+export class CandidateInvitationsPage implements OnInit {
 
   public borderLimit;
+  
   public loading = false;
-  public candidate_id;
-  public status; // 1:Suggested, 2:Rejected, 3:Accepted
-  public notes: Note[] = [];
 
+  public candidate_id;
+  
+  public status; // 1:Invited, 2:Rejected, 3:Accepted
+  
   public candidate;
   
-  public suggestions: Suggestion[] = [];
+  public invitations: Invitation[] = [];
 
   constructor(
     public modalCtrl: ModalController,
     public activatedRoute: ActivatedRoute,
     public eventService: EventService,
     public candidateService: CandidateService,
-    public suggestionService: SuggestionService,
-    public noteService: NoteService
+    public invitationService: InvitationService
   ) {
   }
 
@@ -61,13 +61,13 @@ export class CandidateSuggestionsPage implements OnInit {
       this.loadCandidateDetail();
     });
 
-    this.eventService.noteUpdated$.subscribe((data: any) => {
+    this.eventService.invitationUpdated$.subscribe((data: any) => {
       if (data.candidate_id == this.candidate_id) {
-        this.loadSuggestions();
+        this.loadInvitations();
       }
     });
 
-    this.loadSuggestions();
+    this.loadInvitations();
   }
 
   loadCandidateDetail(loading = true) {
@@ -79,28 +79,17 @@ export class CandidateSuggestionsPage implements OnInit {
   }
 
   /**
-   * load candidate notes without pagination
+   * load candidate invitations without pagination
    */
-  loadSuggestions() {
-    this.suggestionService
+  loadInvitations() {
+    this.invitationService
       .list('&candidate_id=' + this.candidate_id + '&status=' + this.status)
       .subscribe(async jsonResponse => {
-        this.suggestions = jsonResponse;
+        this.invitations = jsonResponse;
       });
   }
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
-  }
-
-  /**
-   * load candidate notes without pagination
-   */
-  loadNotes() {
-    const params = '&candidate_id=' + this.candidate_id;
-
-    this.noteService.list(params).subscribe(async jsonResponse => {
-      this.notes = jsonResponse;
-    });
   }
 }

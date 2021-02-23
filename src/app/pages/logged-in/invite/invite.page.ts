@@ -3,21 +3,20 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertController, ModalController } from '@ionic/angular';
 // models
 import { Candidate } from 'src/app/models/candidate';
-import { Fulltimer } from 'src/app/models/fulltimer';
 import { Request } from 'src/app/models/request';
 import { AuthService } from 'src/app/providers/auth.service';
 import { EventService } from 'src/app/providers/event.service';
-import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
+import { InvitationService } from 'src/app/providers/logged-in/invitation.service';
 // services
 import { CompanyRequestService } from '../../../providers/logged-in/company-request.service';
 
 
 @Component({
-  selector: 'app-suggest',
-  templateUrl: './suggest.page.html',
-  styleUrls: ['./suggest.page.scss'],
+  selector: 'app-invite',
+  templateUrl: './invite.page.html',
+  styleUrls: ['./invite.page.scss'],
 })
-export class SuggestPage implements OnInit {
+export class InvitePage implements OnInit {
 
   public borderLimit = false;
 
@@ -26,8 +25,6 @@ export class SuggestPage implements OnInit {
   public loading = false;
 
   public candidate: Candidate;
-
-  public fulltimer: Fulltimer;
 
   public activeRequests: Request[] = [];
 
@@ -39,7 +36,7 @@ export class SuggestPage implements OnInit {
     public alertCtrl: AlertController,
     public authService: AuthService,
     public eventService: EventService,
-    public suggestionService: SuggestionService,
+    public invitationService: InvitationService,
     public requestService: CompanyRequestService
   ) { }
 
@@ -51,9 +48,7 @@ export class SuggestPage implements OnInit {
   initForm() {
 
     this.form = this.fb.group({
-      suggestion: ['', Validators.required],
       request_uuid: ['', Validators.required],
-      fulltimer_uuid: [this.fulltimer ? this.fulltimer.fulltimer_uuid : null],
       candidate_id: [this.candidate ? this.candidate.candidate_id : null],
     });
   }
@@ -61,17 +56,17 @@ export class SuggestPage implements OnInit {
   selectRequest(request) {
     this.form.controls.request_uuid.setValue(request.request_uuid);
     this.form.controls.request_uuid.markAsDirty();
+    this.save();
   }
 
   /**
-   * load all requests
+   * load all requests for parttimers 
    */
   loadRequests() {
     this.loadingRequests = true;
 
-    this.requestService
-      .listActiveRequests((this.fulltimer) ? '&position_type=1' : '&position_type=2')
-      .subscribe(data => {
+    this.requestService.listActiveRequests('&position_type=2').subscribe(data => {
+
       this.loadingRequests = false;
 
       this.activeRequests = data;
@@ -94,14 +89,14 @@ export class SuggestPage implements OnInit {
   save() {
     this.loading = true;
 
-    this.suggestionService.create(this.form.value).subscribe(async response => {
+    this.invitationService.create(this.form.value).subscribe(async response => {
       
       this.loading = false;
 
       // On Success
       if (response.operation == 'success') {
         // Close the page
-        this.close(true, response.suggestionCount);
+        this.close(true, response.invitedCount);
       }
 
       // On Failure
@@ -120,11 +115,12 @@ export class SuggestPage implements OnInit {
   /**
    * close popup
    * @param refresh
-   * @param suggestionCount
+   * @param invitedCount
    */
-  close(refresh = false, suggestionCount = null) {
+  close(refresh = false, invitedCount = null) {
     this.modalCtrl.dismiss({
-      refresh, suggestionCount
+      refresh, 
+      invitedCount
     });
   }
 

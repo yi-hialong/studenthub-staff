@@ -33,6 +33,7 @@ import { SelectSearchPageComponent } from 'src/app/components/select-search/sele
 import { CompanyNoteFormPage } from '../../company/company-note-form/company-note-form.page';
 import {ModalPopPage} from "../../modal-pop/modal-pop.page";
 import {StoreViewPage} from "../../store/store-view/store-view.page";
+import { InvitePage } from '../../invite/invite.page';
 
 
 @Component({
@@ -441,6 +442,34 @@ export class CandidateViewPage implements OnInit {
         this.toggleCommitted();
       }
     });
+  }
+
+  /**
+   * invite candidate for open request
+   */
+  async invite() {
+
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: InvitePage,
+      componentProps: {
+        candidate: this.candidate
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if (e.data && e.data.refresh && e.data.invitedCount) {
+        //this.loadNotes();
+        this.candidate.invited = e.data.invitedCount;
+      }
+    });
+    await modal.present();
   }
 
   /**
@@ -903,6 +932,28 @@ export class CandidateViewPage implements OnInit {
   }
   onCivilFrontError() {
     this.candidate.candidate_civil_photo_front = null;
+  }
+
+  /**
+   * invitation list page
+   * @param status
+   */
+  invitationListPage(status: number) {
+    if (status == 1 && this.candidate.invited < 1) { // Suggested
+      return false;
+    }
+    if (status == 2 && this.candidate.invitationAccepted < 1) { // Rejected
+      return false;
+    }
+    if (status == 3 && this.candidate.invitationRejected < 1) { // Accepted
+      return false;
+    }
+
+    this.router.navigate(['candidate-invitations', this.candidate_id, status], {
+      state: {
+        candidate: this.candidate
+      }
+    });
   }
 
   /**

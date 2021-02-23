@@ -54,6 +54,9 @@ export class Candidate {
     candidate_latitude: any;
     candidate_longitude: any;
     suggested: number;
+    invited: number;
+    invitationAccepted: number;
+    invitationRejected: number;
     suggestionAccepted: number;
     suggestionRejected: number;
     store: Store;

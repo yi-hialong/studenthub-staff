@@ -69,6 +69,7 @@ export class AssignedIdleCandidatesPage implements OnInit {
 
     // Load list of candidates
     this.loading = true;
+
     this.candidateService.assignedIdleCandidate(search, page).subscribe(response => {
 
       this.totalCount = parseInt(response.headers.get('X-Pagination-Total-Count'));
@@ -77,9 +78,10 @@ export class AssignedIdleCandidatesPage implements OnInit {
 
       this.candidates = response.body;
     },
-      error => { },
-      () => { this.loading = false; }
-    );
+    error => { },
+    () => { 
+      this.loading = false; 
+    });
   }
 
   doInfinite(event) {

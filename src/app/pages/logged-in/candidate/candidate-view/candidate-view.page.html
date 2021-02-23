@@ -133,6 +133,21 @@
               <div class="suggestion-wrapper">
                 <h5 class="heading">Candidate has been</h5>
 
+                <ion-item tappable (click)="invitationListPage(1)">
+                  <ion-label>Invited</ion-label>
+                  <ion-note slot="end">{{ candidate.invited }}</ion-note>
+                </ion-item>
+
+                <ion-item tappable (click)="invitationListPage(3)">
+                  <ion-label>Invitation accepted</ion-label>
+                  <ion-note slot="end">{{ candidate.invitationAccepted }}</ion-note>
+                </ion-item>
+
+                <ion-item tappable (click)="invitationListPage(2)">
+                  <ion-label>Invitation rejected</ion-label>
+                  <ion-note slot="end">{{ candidate.invitationRejected }}</ion-note>
+                </ion-item>
+
                 <ion-item tappable (click)="suggestionListPage(1)">
                   <ion-label>Suggested</ion-label>
                   <ion-note slot="end">{{ candidate.suggested }}</ion-note>
@@ -148,6 +163,7 @@
                   <ion-note class="rejected" slot="end">{{ candidate.suggestionRejected }}</ion-note>
                 </ion-item>
               </div>
+
               <div class="note-wrapper">
 
                 <h5 class="heading">Notes</h5>
@@ -404,6 +420,12 @@
       <ion-col *ngIf="candidate.isProfileCompleted">
         <ion-button class="btn-suggest" (click)="suggest()">
           Suggest for client request
+        </ion-button>
+      </ion-col>
+
+      <ion-col *ngIf="candidate.isProfileCompleted">
+        <ion-button class="btn-invite" (click)="invite()">
+          Invite for client request
         </ion-button>
       </ion-col>
 

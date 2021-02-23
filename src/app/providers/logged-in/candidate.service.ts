@@ -48,7 +48,8 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   detail(id: number): Observable<any> {
-    return this._authhttp.get(this._candidateEndpoint + '/detail/' + id + '?expand=candidateIdCard,store,company,candidateSkills,candidateExperiences,bank,nationality,area,country,university,suggestionAccepted,suggestionRejected,suggested');
+    const url = this._candidateEndpoint + '/detail/' + id + '?expand=candidateIdCard,store,company,candidateSkills,candidateExperiences,bank,nationality,area,country,university,invited,invitationAccepted,invitationRejected,suggestionAccepted,suggestionRejected,suggested';
+    return this._authhttp.get(url);
   }
 
   /**
@@ -281,7 +282,8 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   totalToReview(): Observable<any>{
-    return this._authhttp.get(this._candidateEndpoint + '/total-to-review');
+    const url = this._candidateEndpoint + '/total-to-review';
+    return this._authhttp.get(url);
   }
 
   /**
@@ -290,7 +292,8 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   approve(model: Candidate): Observable<any>{
-    return this._authhttp.patch(`${this._candidateEndpoint}/approve/${model.candidate_id}`, {});
+    const url = `${this._candidateEndpoint}/approve/${model.candidate_id}`;
+    return this._authhttp.patch(url, {});
   }
 
   /**
@@ -299,7 +302,8 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   unapprove(model: Candidate): Observable<any>{
-    return this._authhttp.patch(`${this._candidateEndpoint}/unapprove/${model.candidate_id}`, {});
+    const url = `${this._candidateEndpoint}/unapprove/${model.candidate_id}`;
+    return this._authhttp.patch(url, {});
   }
 
   /**
@@ -308,7 +312,8 @@ export class CandidateService {
    * @param rate
    */
   updateHour(model: Candidate, rate: number): Observable<any>{
-    return this._authhttp.patch(`${this._candidateEndpoint}/update-hour-rate/${model.candidate_id}`, {
+    const url = `${this._candidateEndpoint}/update-hour-rate/${model.candidate_id}`;
+    return this._authhttp.patch(url, {
       hourly_rate: rate
     });
   }
@@ -318,7 +323,8 @@ export class CandidateService {
    * @param rate
    */
   expired(model: Candidate): Observable<any>{
-    return this._authhttp.patch(`${this._candidateEndpoint}/expire-card/${model.candidate_id}`, {});
+    const url = `${this._candidateEndpoint}/expire-card/${model.candidate_id}`;
+    return this._authhttp.patch(url, {});
   }
 
   /**
@@ -327,7 +333,8 @@ export class CandidateService {
    * @param exportWithNumber
    */
   exportCV(model: Candidate, exportWithNumber = 1): Observable<any>{
-    return this._authhttp.pdfget(`${this._candidateEndpoint}/candidate-resume-pdf/${model.candidate_id}?with_number=${exportWithNumber}`, model.candidate_name + '-cv');
+    const url = `${this._candidateEndpoint}/candidate-resume-pdf/${model.candidate_id}?with_number=${exportWithNumber}`;
+    return this._authhttp.pdfget(url, model.candidate_name + '-cv');
   }
 
   /**

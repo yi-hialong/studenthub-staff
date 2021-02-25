@@ -10,17 +10,19 @@ import { LoadingModalModule } from 'src/app/components/loading-modal/loading-mod
 
 import { CandidateInvitationsPage } from './candidate-invitations.page';
 import { InvitationModule } from 'src/app/components/invitation/invitation.module';
+import {RequestListingModule} from "../../../../components/request-listing/request-listing.module";
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FormsModule,
-    IonicModule,
-    // NoteModule,
-    InvitationModule,
-    LoadingModalModule,
-    CandidateInvitationsPageRoutingModule
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        IonicModule,
+        // NoteModule,
+        InvitationModule,
+        LoadingModalModule,
+        CandidateInvitationsPageRoutingModule,
+        RequestListingModule
+    ],
   declarations: [CandidateInvitationsPage]
 })
 export class CandidateInvitationsPageModule { }

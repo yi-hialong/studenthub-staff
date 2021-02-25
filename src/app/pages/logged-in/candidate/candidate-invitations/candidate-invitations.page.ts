@@ -10,7 +10,6 @@ import { InvitationService } from 'src/app/providers/logged-in/invitation.servic
 import {SuggestionService} from "../../../../providers/logged-in/suggestion.service";
 import {AuthService} from "../../../../providers/auth.service";
 
-
 @Component({
   selector: 'app-candidate-invitations',
   templateUrl: './candidate-invitations.page.html',
@@ -101,6 +100,11 @@ export class CandidateInvitationsPage implements OnInit {
    * save suggestion
    */
   suggest(invitation: Invitation) {
+
+    if (invitation.is_suggested) {
+      return false;
+    }
+
     this.loading = true;
 
     const param = {
@@ -112,7 +116,7 @@ export class CandidateInvitationsPage implements OnInit {
     this.suggestionService.create(param).subscribe(async response => {
 
       this.loading = false;
-
+      invitation.is_suggested = true;
       // On Success
       if (response.operation == 'success') {
         const prompt = await this.alertCtrl.create({

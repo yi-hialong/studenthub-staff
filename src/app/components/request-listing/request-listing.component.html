@@ -1,6 +1,9 @@
 <ion-card [class.pending]="request.request_status == 'pending'" tappable>
   <ion-card-content>
     <h1 *ngIf="request.company">{{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}</h1>
+    <ion-badge slot="end" class="suggested" *ngIf="invitation.invitation_uuid && invitation.invitation_status == 3 && invitation.is_suggested">
+      Already Suggested
+    </ion-badge>
     <h3>
       Looking for <b>{{ request.request_number_of_employees }}
       <span *ngIf="request.request_position_type == 1">Full-time</span>

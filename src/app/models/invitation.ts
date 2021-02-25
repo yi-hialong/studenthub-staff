@@ -1,4 +1,5 @@
 import { Candidate } from './candidate';
+import { Request } from './request';
 
 export class Invitation {
     invitation_uuid: string;
@@ -9,5 +10,7 @@ export class Invitation {
     invitation_updated_by: number;
     invitation_created_at: string;
     invitation_updated_at: string;
+    is_suggested: any;
     candidate: Candidate;
+    request: Request;
 }

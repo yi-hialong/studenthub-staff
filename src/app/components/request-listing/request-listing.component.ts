@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/providers/auth.service';
 //models
 import { Request } from '../../models/request';
+import {Invitation} from "../../models/invitation";
 
 
 @Component({
@@ -13,6 +14,7 @@ import { Request } from '../../models/request';
 export class RequestListingComponent implements OnInit {
 
   @Input() request: Request;
+  @Input() invitation: Invitation;
   @Input() showStatus = true;
 
   public active = false;

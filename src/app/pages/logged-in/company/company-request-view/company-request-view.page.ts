@@ -23,6 +23,8 @@ import { Request } from 'src/app/models/request';
 import { Note } from 'src/app/models/note';
 // pages
 import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page';
+import { InvitationService } from 'src/app/providers/logged-in/invitation.service';
+import { Invitation } from 'src/app/models/invitation';
 
 
 @Component({
@@ -42,6 +44,14 @@ export class CompanyRequestViewPage implements OnInit {
   public acceptedSuggestions = [];
 
   public rejectedSuggestions = [];
+
+  public invitedCandidates: Invitation[] = [];
+
+  public rejectedCandidates: Invitation[] = [];
+
+  public acceptedStaffInvitations: Invitation[] = []; //created by staff + accepted by candidate 
+
+  public acceptedCompanyInvitations: Invitation[] = [];//created by company + accepted by candidate 
 
   public request_uuid;
   public loading = false;
@@ -67,6 +77,7 @@ export class CompanyRequestViewPage implements OnInit {
     public navCtrl: NavController,
     public location: Location,
     public suggestionService: SuggestionService,
+    public invitationService: InvitationService,
     public eventService: EventService,
     public translateLabelService: TranslateLabelService,
     public platform: Platform
@@ -120,6 +131,7 @@ export class CompanyRequestViewPage implements OnInit {
       this.request = data;
       this.loadRequestActivities();
       this.loadSuggestions();
+      this.loadInvitations();
     }, () => {
     }, () => {
       this.loading = false;
@@ -131,6 +143,58 @@ export class CompanyRequestViewPage implements OnInit {
    */
   toggleActivityExpanded() {
     this.activityExpanded = !this.activityExpanded;
+  }
+
+  /**
+   * load invitations for this request
+   */
+  loadInvitations() 
+  {
+    this.invitedCandidates = [];
+
+    this.rejectedCandidates = [];
+
+    this.acceptedStaffInvitations = [];
+
+    this.acceptedCompanyInvitations = [];
+
+    this.invitationService.list('&request_uuid=' + this.request_uuid).subscribe(invitations => {
+      
+      invitations.forEach((invitation: Invitation) => {
+        
+        if(invitation.is_suggested) {
+          return null;
+        }
+
+        if(invitation.invitation_status == 1) 
+        {
+          this.invitedCandidates.push(invitation);
+        } 
+        else if (invitation.invitation_status == 2) 
+        {
+          this.rejectedCandidates.push(invitation);
+        } 
+        /**
+         * hide from staff invitations if moved to suggestion
+         */
+        else if (invitation.invitation_status == 3 && invitation.invitation_created_by_staff) //created by staff + accepted by candidate  
+        {
+          this.acceptedStaffInvitations.push(invitation);
+        } 
+        else if (invitation.invitation_status == 3 && invitation.invitation_created_by_company) //created by company + accepted by candidate
+        {
+          this.acceptedCompanyInvitations.push(invitation);
+        }
+      });
+    })
+  }
+
+  /**
+   * On Invitation updated/moved to suggestion
+   */
+  onInvitationUpdated() {
+    this.loadInvitations();
+    this.loadSuggestions();
   }
 
   /**

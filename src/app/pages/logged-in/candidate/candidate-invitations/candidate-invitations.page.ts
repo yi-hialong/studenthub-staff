@@ -85,8 +85,7 @@ export class CandidateInvitationsPage implements OnInit {
    * load candidate invitations without pagination
    */
   loadInvitations() {
-    this.invitationService
-      .list('&candidate_id=' + this.candidate_id + '&status=' + this.status)
+    this.invitationService.list('&candidate_id=' + this.candidate_id + '&status=' + this.status)
       .subscribe(async jsonResponse => {
         this.invitations = jsonResponse;
       });
@@ -101,7 +100,10 @@ export class CandidateInvitationsPage implements OnInit {
    */
   suggest(invitation: Invitation) {
 
-    if (invitation.is_suggested) {
+    /**
+     * show as "accepted by both" in request if invited by client, else suggest to client
+     */
+    if (invitation.is_suggested && invitation.invitation_created_by_company) {
       return false;
     }
 
@@ -113,10 +115,12 @@ export class CandidateInvitationsPage implements OnInit {
       fulltimer_uuid: null,
       candidate_id: invitation.candidate_id
     };
+
     this.suggestionService.create(param).subscribe(async response => {
 
       this.loading = false;
       invitation.is_suggested = true;
+
       // On Success
       if (response.operation == 'success') {
         const prompt = await this.alertCtrl.create({

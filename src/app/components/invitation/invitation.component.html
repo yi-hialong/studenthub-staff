@@ -1,14 +1,20 @@
-<ion-card tappable>
+<ion-card tappable *ngIf="!model.is_suggested">
   <ion-badge *ngIf="model.invitation_status == 1">
     Invited a candidate
   </ion-badge>
-  <ion-badge *ngIf="model.invitation_status == 3">
-    Accepted a candidate
-  </ion-badge>
+  
   <ion-badge *ngIf="model.invitation_status == 2">
-    Rejected a candidate
+    Rejected by candidate
+  </ion-badge>
+  
+  <ion-badge *ngIf="model.invitation_status == 3 && !model.invitation_created_by_company">
+    Accepted by candidate
   </ion-badge>
 
+  <ion-badge *ngIf="model.invitation_status == 3 && model.invitation_created_by_company">
+    Accepted by both
+  </ion-badge>
+  
   <ion-item lines="none" *ngIf="model.candidate">
     <div tabindex="0"></div>
 
@@ -28,3 +34,11 @@
     {{ toDate(model.invitation_created_at) | date: 'MMM d, y' }}
   </p>
 </ion-card>
+
+<!-- move to suggestion if not suggested + created by staff and accepted -->
+
+<ion-button *ngIf="!model.is_suggested && model.invitation_created_by_staff && model.invitation_status == 3" class="btn-suggestion" (click)="suggest($event)">
+  Move to suggestion
+</ion-button>
+
+<div class="clearfix"></div>

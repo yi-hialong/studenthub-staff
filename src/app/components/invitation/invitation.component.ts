@@ -3,9 +3,11 @@ import { Router } from '@angular/router';
 import { AlertController, ToastController } from '@ionic/angular';
 //models
 import { Invitation } from 'src/app/models/invitation';
+import { AuthService } from 'src/app/providers/auth.service';
 //services
 import { AwsService } from 'src/app/providers/aws.service';
 import { InvitationService } from 'src/app/providers/logged-in/invitation.service';
+import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
 
 
 @Component({
@@ -19,11 +21,15 @@ export class InvitationComponent implements OnInit {
 
   @Input() model: Invitation;
 
+  public loading: boolean = false; 
+
   constructor(
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     public router: Router,
     public aws: AwsService,
+    public authService: AuthService,
+    public suggestionService: SuggestionService,
     public invitationService: InvitationService
   ) { }
 
@@ -47,5 +53,57 @@ export class InvitationComponent implements OnInit {
     if (date) {
       return new Date(date.replace(/-/g, '/'));
     }
+  }
+
+  /**
+   * move to suggestion
+   */
+  suggest(ev) {
+
+    /**
+     * show as "accepted by both" in request if invited by client, else suggest to client
+     */
+    if (this.model.is_suggested && this.model.invitation_created_by_company) {
+      return false;
+    }
+
+    this.loading = true;
+
+    const param = {
+      suggestion: 'Candidate Suggestion',
+      request_uuid: this.model.request_uuid,
+      fulltimer_uuid: null,
+      candidate_id: this.model.candidate_id
+    };
+
+    this.suggestionService.create(param).subscribe(async response => {
+
+      this.loading = false;
+
+      // On Success
+      if (response.operation == 'success') {
+
+        this.model.is_suggested = true;
+
+        this.onUpdate.emit();
+
+        const prompt = await this.alertCtrl.create({
+          message: 'Suggested successfully',
+          buttons: ['Okay']
+        });
+        prompt.present();
+      }
+
+      // On Failure
+      if (response.operation == 'error') {
+        const prompt = await this.alertCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          buttons: ['Okay']
+        });
+        prompt.present();
+      }
+    }, () => {
+      this.loading = false;
+    });
   }
 }

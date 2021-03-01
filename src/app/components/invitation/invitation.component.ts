@@ -21,7 +21,7 @@ export class InvitationComponent implements OnInit {
 
   @Input() model: Invitation;
 
-  public loading: boolean = false; 
+  public loading: boolean = false;
 
   constructor(
     public toastCtrl: ToastController,
@@ -41,7 +41,9 @@ export class InvitationComponent implements OnInit {
     event.stopPropagation();
   }
 
-  openCandidatePage() {
+  openCandidatePage(event) {
+    event.preventDefault();
+    event.stopPropagation();
     this.router.navigate(['/candidate-view', this.model.candidate_id]);
   }
 

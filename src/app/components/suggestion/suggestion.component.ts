@@ -35,7 +35,9 @@ export class SuggestionComponent implements OnInit {
     event.stopPropagation();
   }
 
-  openCandidatePage() {
+  openCandidatePage($event) {
+    $event.preventDefault();
+    $event.stopPropagation();
     if(this.model.candidate) {
       this.router.navigate(['/candidate-view', this.model.candidate_id]);
     } else {

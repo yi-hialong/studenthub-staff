@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import {
@@ -23,6 +23,8 @@ import { Request } from 'src/app/models/request';
 import { Note } from 'src/app/models/note';
 // pages
 import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page';
+import { InvitationService } from 'src/app/providers/logged-in/invitation.service';
+import { Invitation } from 'src/app/models/invitation';
 
 
 @Component({
@@ -30,7 +32,7 @@ import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page
   templateUrl: './company-request-view.page.html',
   styleUrls: ['./company-request-view.page.scss'],
 })
-export class CompanyRequestViewPage implements OnInit {
+export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
   @ViewChild(IonContent, { static: true }) content: IonContent;
 
@@ -43,6 +45,12 @@ export class CompanyRequestViewPage implements OnInit {
 
   public rejectedSuggestions = [];
 
+  public invitedCandidates: Invitation[] = [];
+
+  public rejectedCandidates: Invitation[] = [];
+
+  public acceptedInvitations: Invitation[] = [];
+
   public request_uuid;
   public loading = false;
   public loadingInvoice = false;
@@ -53,6 +61,8 @@ export class CompanyRequestViewPage implements OnInit {
   public backState = null;
 
   public activityExpanded: boolean = false;
+  
+  public internvalSubscribe;
 
   constructor(
     public modalCtrl: ModalController,
@@ -63,10 +73,10 @@ export class CompanyRequestViewPage implements OnInit {
     public authService: AuthService,
     public requestService: CompanyRequestService,
     public requestActivityService: RequestActivityService,
-    public menuCtrl: MenuController,
     public navCtrl: NavController,
     public location: Location,
     public suggestionService: SuggestionService,
+    public invitationService: InvitationService,
     public eventService: EventService,
     public translateLabelService: TranslateLabelService,
     public platform: Platform
@@ -94,6 +104,15 @@ export class CompanyRequestViewPage implements OnInit {
         this.loadRequestActivities();
       }
     });
+
+    this.internvalSubscribe = setInterval(  _ => {
+      this.isRequestUpdated();
+    }, 6 * 1000);//every 6 seconds
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.internvalSubscribe);
+    this.internvalSubscribe = null;
   }
 
   /**
@@ -113,13 +132,34 @@ export class CompanyRequestViewPage implements OnInit {
   /**
    * load request detail
    */
-  loadDetail() {
-    this.loading = true;
+  loadDetail(loading = true) {
+
+    if(loading)
+      this.loading = true;
 
     this.requestService.view(this.request_uuid).subscribe(data => {
       this.request = data;
       this.loadRequestActivities();
       this.loadSuggestions();
+      this.loadInvitations();
+    }, () => {
+    }, () => {
+      this.loading = false;
+    });
+  }
+
+  /**
+   * check if request updated, if so reload details
+   */
+  isRequestUpdated() {
+    if(!this.request) {
+      return null;
+    }
+
+    this.requestService.isRequestUpdated(this.request_uuid).subscribe(data => {
+      if(data.request_updated_datetime != this.request.request_updated_datetime) {
+        this.loadDetail(false);//refresh without showing loader
+      }
     }, () => {
     }, () => {
       this.loading = false;
@@ -131,6 +171,29 @@ export class CompanyRequestViewPage implements OnInit {
    */
   toggleActivityExpanded() {
     this.activityExpanded = !this.activityExpanded;
+  }
+
+  /**
+   * load invitations for this request
+   */
+  loadInvitations(loading = true)
+  {
+    this.invitationService.list('&request_uuid=' + this.request_uuid).subscribe(invitations => {
+      
+      this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
+
+      this.rejectedCandidates = invitations.filter(invitation => invitation.invitation_status == 2);
+
+      this.acceptedInvitations = invitations.filter(invitation => invitation.invitation_status == 3);
+    })
+  }
+
+  /**
+   * On Invitation moved to suggestion
+   */
+  onInvitationUpdated() {
+    //this.loadInvitations();
+    this.loadSuggestions();
   }
 
   /**
@@ -224,10 +287,10 @@ export class CompanyRequestViewPage implements OnInit {
 
       this.request.request_updated_datetime = data.request_updated_datetime;
 
-      this.eventService.companyRequestUpdate$.next({ 
+      this.eventService.companyRequestUpdate$.next({
         company_id: this.request.company_id,
         request_updated_datetime: data.request_updated_datetime,
-        request_uuid: this.request_uuid 
+        request_uuid: this.request_uuid
       });
     }
   }
@@ -238,8 +301,8 @@ export class CompanyRequestViewPage implements OnInit {
 
   /**
    * mark request as cancelled
-   * @param event 
-   * @param request 
+   * @param event
+   * @param request
    */
   cancelledRequest(event, request) {
 
@@ -285,7 +348,7 @@ export class CompanyRequestViewPage implements OnInit {
             this.requestService.cancel(request).subscribe(async response => {
 
               if (response.operation == 'success') {
-                
+
                 request.request_status = 'cancelled';
 
                 this.loadRequestActivities();
@@ -294,10 +357,10 @@ export class CompanyRequestViewPage implements OnInit {
                   company_id: this.request.company_id
                 });
 
-                this.eventService.companyRequestUpdate$.next({ 
+                this.eventService.companyRequestUpdate$.next({
                   company_id: this.request.company_id,
                   request_updated_datetime: response.request_updated_datetime,
-                  request_uuid: this.request_uuid 
+                  request_uuid: this.request_uuid
                 });
 
               } else {
@@ -318,9 +381,9 @@ export class CompanyRequestViewPage implements OnInit {
   }
 
   /**
-   * mark request as delivered 
-   * @param event 
-   * @param request 
+   * mark request as delivered
+   * @param event
+   * @param request
    */
   deliveredRequest(event, request) {
 
@@ -376,12 +439,12 @@ export class CompanyRequestViewPage implements OnInit {
                   company_id: this.request.company_id
                 });
 
-                this.eventService.companyRequestUpdate$.next({ 
+                this.eventService.companyRequestUpdate$.next({
                   company_id: this.request.company_id,
                   request_updated_datetime: response.request_updated_datetime,
-                  request_uuid: this.request_uuid 
+                  request_uuid: this.request_uuid
                 });
-                
+
               } else {
                 this.toastCtrl.create({
                   message: this.translateLabelService.errorMessage(response.message),

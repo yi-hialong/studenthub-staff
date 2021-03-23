@@ -120,6 +120,7 @@
                     <h5 *ngIf="history.store">{{ history.store.store_name }} @ {{ history.company.company_name }}</h5>
 
                     <h5 *ngIf="!history.store">@ {{ history.company.company_name }}</h5>
+                    <ng-container *ngIf="history.end_date">{{ toDate(history.end_date) | date }}</ng-container>
 
                     <p>
                       {{ toDate(history.start_date) | date }} to
@@ -127,27 +128,45 @@
                       <ng-container *ngIf="!history.end_date">now</ng-container>
                     </p>
                   </label>
+                  <ion-button slot="end" (click)="downloadCertification(history)"><ion-icon name="cloud-download-outline"></ion-icon>&nbsp;Certificate</ion-button>
                 </ion-item>
               </div>
 
               <div class="suggestion-wrapper">
+
                 <h5 class="heading">Candidate has been</h5>
 
+                <ion-item tappable (click)="invitationListPage(1)">
+                  <ion-label>Invited</ion-label>
+                  <ion-note slot="end">{{ candidate.invited }}</ion-note>
+                </ion-item>
+
+                <ion-item tappable (click)="invitationListPage(3)">
+                  <ion-label>Accepted Invitation</ion-label>
+                  <ion-note slot="end">{{ candidate.invitationAccepted }}</ion-note>
+                </ion-item>
+
+                <ion-item tappable (click)="invitationListPage(2)">
+                  <ion-label>Rejected Invitation</ion-label>
+                  <ion-note slot="end">{{ candidate.invitationRejected }}</ion-note>
+                </ion-item>
+
                 <ion-item tappable (click)="suggestionListPage(1)">
-                  <ion-label>Suggested</ion-label>
+                  <ion-label>Suggested to client</ion-label>
                   <ion-note slot="end">{{ candidate.suggested }}</ion-note>
                 </ion-item>
 
                 <ion-item tappable (click)="suggestionListPage(3)">
-                  <ion-label>Accepted</ion-label>
+                  <ion-label>Accepted by client</ion-label>
                   <ion-note class="accepted" slot="end">{{ candidate.suggestionAccepted }}</ion-note>
                 </ion-item>
 
                 <ion-item tappable (click)="suggestionListPage(2)">
-                  <ion-label>Rejected</ion-label>
+                  <ion-label>Rejected by client</ion-label>
                   <ion-note class="rejected" slot="end">{{ candidate.suggestionRejected }}</ion-note>
                 </ion-item>
               </div>
+
               <div class="note-wrapper">
 
                 <h5 class="heading">Notes</h5>
@@ -404,6 +423,12 @@
       <ion-col *ngIf="candidate.isProfileCompleted">
         <ion-button class="btn-suggest" (click)="suggest()">
           Suggest for client request
+        </ion-button>
+      </ion-col>
+
+      <ion-col *ngIf="candidate.isProfileCompleted">
+        <ion-button class="btn-invite" (click)="invite()">
+          Invite for client request
         </ion-button>
       </ion-col>
 

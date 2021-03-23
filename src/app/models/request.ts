@@ -2,6 +2,7 @@ import { Staff } from './staff';
 import { CompanyContact } from './company-contact';
 import { Company } from './company';
 import { Note } from './note';
+import { Contact } from './contact';
 
 
 export class Request {
@@ -13,6 +14,7 @@ export class Request {
     request_position_type: number;
     request_position_title: string;
     request_number_of_employees: number;
+    request_location: string;
     request_additional_info: string;
     request_job_description: string;
     request_compensation: string;
@@ -23,7 +25,7 @@ export class Request {
     request_updated_datetime: string;
     requestCreatedBy: Staff;
     requestUpdatedBy: Staff;
-    contact: CompanyContact;
+    contact: Contact;
     company: Company;
     lastActivity: Note;
 }

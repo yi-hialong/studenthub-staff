@@ -95,6 +95,7 @@ export class SuggestPage implements OnInit {
     this.loading = true;
 
     this.suggestionService.create(this.form.value).subscribe(async response => {
+      
       this.loading = false;
 
       // On Success

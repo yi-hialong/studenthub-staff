@@ -24,7 +24,9 @@ export class CandidateSuggestionsPage implements OnInit {
   public notes: Note[] = [];
 
   public candidate;
+  
   public suggestions: Suggestion[] = [];
+
   constructor(
     public modalCtrl: ModalController,
     public activatedRoute: ActivatedRoute,
@@ -101,5 +103,4 @@ export class CandidateSuggestionsPage implements OnInit {
       this.notes = jsonResponse;
     });
   }
-
 }

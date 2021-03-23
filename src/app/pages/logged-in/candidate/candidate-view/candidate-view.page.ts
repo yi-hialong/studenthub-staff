@@ -31,8 +31,9 @@ import { CompanyRequestListPopupPage } from '../../company/company-request-list/
 import { SuggestPage } from '../../suggest/suggest.page';
 import { SelectSearchPageComponent } from 'src/app/components/select-search/select-search-page/select-search-page.component';
 import { CompanyNoteFormPage } from '../../company/company-note-form/company-note-form.page';
-import {ModalPopPage} from "../../modal-pop/modal-pop.page";
-import {StoreViewPage} from "../../store/store-view/store-view.page";
+import { ModalPopPage } from "../../modal-pop/modal-pop.page";
+import { StoreViewPage } from "../../store/store-view/store-view.page";
+import { InvitePage } from '../../invite/invite.page';
 
 
 @Component({
@@ -64,6 +65,7 @@ export class CandidateViewPage implements OnInit {
   public loading = false;
   public approving = false;
   public unapproving = false;
+  public downloading = false;
 
   public processing = null;
 
@@ -114,8 +116,9 @@ export class CandidateViewPage implements OnInit {
 
   ngOnInit() {
 
-    if(!this.candidate_id)
+    if (!this.candidate_id) {
       this.candidate_id = this.activatedRoute.snapshot.paramMap.get('id');
+    }
 
     this.eventService.reloadCandidateHistory$.subscribe((res) => {
       this.loadCandidateDetail();
@@ -277,7 +280,7 @@ export class CandidateViewPage implements OnInit {
 
               if (response.operation == 'success') {
 
-                if(this.candidate) {
+                if (this.candidate) {
                   this.candidate.store_id = null;
                   this.candidate.store = null;
                   this.candidate.company = null;
@@ -378,30 +381,30 @@ export class CandidateViewPage implements OnInit {
   }
 
   async openWorkPlace(history) {
-    if(history.store) {
-        window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+    if (history.store) {
+      window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
-        const modal = await this.modalCtrl.create({
-          component: ModalPopPage,
-          componentProps: {
-            activatedRoutePath: StoreViewPage,
-            activatedRoutePathProps: {
-              store_id: history.store.store_id,
-              view: 'direct',
-            }
+      const modal = await this.modalCtrl.create({
+        component: ModalPopPage,
+        componentProps: {
+          activatedRoutePath: StoreViewPage,
+          activatedRoutePathProps: {
+            store_id: history.store.store_id,
+            view: 'direct',
           }
-        });
-        modal.onDidDismiss().then(e => {
+        }
+      });
+      modal.onDidDismiss().then(e => {
 
-          if (!e.data || e.data.from != 'native-back-btn') {
-            window['history-back-from'] = 'onDidDismiss';
-            window.history.back();
-          }
-        });
-        modal.present();
+        if (!e.data || e.data.from != 'native-back-btn') {
+          window['history-back-from'] = 'onDidDismiss';
+          window.history.back();
+        }
+      });
+      modal.present();
 
       // this.router.navigate(['/store-view', history.store.store_id]);
-    } else if(history.company) {
+    } else if (history.company) {
       this.router.navigate(['/company-view', history.company.company_id]);
     }
   }
@@ -441,6 +444,34 @@ export class CandidateViewPage implements OnInit {
         this.toggleCommitted();
       }
     });
+  }
+
+  /**
+   * invite candidate for open request
+   */
+  async invite() {
+
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: InvitePage,
+      componentProps: {
+        candidate: this.candidate
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if (e.data && e.data.refresh && e.data.invitedCount) {
+        //this.loadNotes();
+        this.candidate.invited = e.data.invitedCount;
+      }
+    });
+    await modal.present();
   }
 
   /**
@@ -485,21 +516,21 @@ export class CandidateViewPage implements OnInit {
    */
   async assingToStore(ev) {
     const selectPage = await this.popoverCtrl.create({
-      component : SelectSearchPageComponent,
+      component: SelectSearchPageComponent,
       componentProps: {
         collection: this.stores,
         valueAttr: 'store_id',
         labelAttr: 'storeWithCompany'
       },
       cssClass: 'select_search_store_id',
-      //event: ev,
+      // event: ev,
       translucent: true
     });
     selectPage.onDidDismiss().then(e => {
-        if (e.data) {
-          this.assignCandidateToStore(e.data['store_id']);
-        }
-      });
+      if (e.data) {
+        this.assignCandidateToStore(e.data.store_id);
+      }
+    });
     await selectPage.present();
   }
 
@@ -614,8 +645,8 @@ export class CandidateViewPage implements OnInit {
     this.noteForm.controls.type.setValue(note.note_type);
 
     if (note.company) {
-        this.noteForm.controls.company_name.setValue(note.company.company_name);
-        this.noteForm.controls.company_id.setValue(note.company.company_id);
+      this.noteForm.controls.company_name.setValue(note.company.company_name);
+      this.noteForm.controls.company_id.setValue(note.company.company_id);
     }
 
     if (note.request) {
@@ -710,7 +741,7 @@ export class CandidateViewPage implements OnInit {
 
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
-    let note = new Note;
+    const note = new Note;
     note.candidate_id = this.candidate_id;
 
     const modal = await this.modalCtrl.create({
@@ -886,7 +917,7 @@ export class CandidateViewPage implements OnInit {
 
 
     this.candidateService.updateJobSearchStatus({
-      candidate_id : this.candidate.candidate_id,
+      candidate_id: this.candidate.candidate_id,
       job_search_status: this.candidate.candidate_job_search_status
     }).subscribe(async response => {
 
@@ -903,6 +934,28 @@ export class CandidateViewPage implements OnInit {
   }
   onCivilFrontError() {
     this.candidate.candidate_civil_photo_front = null;
+  }
+
+  /**
+   * invitation list page
+   * @param status
+   */
+  invitationListPage(status: number) {
+    if (status == 1 && parseInt(this.candidate.invited) < 1) { // Suggested
+      return false;
+    }
+    if (status == 2 && parseInt(this.candidate.invitationRejected) < 1) { // Rejected
+      return false;
+    }
+    if (status == 3 && parseInt(this.candidate.invitationAccepted) < 1) { // Accepted
+      return false;
+    }
+
+    this.router.navigate(['candidate-invitations', this.candidate_id, status], {
+      state: {
+        candidate: this.candidate
+      }
+    });
   }
 
   /**
@@ -924,6 +977,19 @@ export class CandidateViewPage implements OnInit {
       state: {
         candidate: this.candidate
       }
+    });
+  }
+
+  /**
+   * download candidate appreciation certifcate
+   * @param history
+   */
+  async downloadCertification(history) {
+    this.downloading = true;
+
+    this.candidateService.downloadCertificate(this.candidate.candidate_id, history.id).subscribe(response => {
+
+      this.downloading = false;
     });
   }
 }

@@ -11,6 +11,7 @@ import { LoadingModalModule } from 'src/app/components/loading-modal/loading-mod
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { RecentActivityComponent } from 'src/app/components/recent-activity/recent-activity.component';
 import { SuggestionModule } from 'src/app/components/suggestion/suggestion.module';
+import { InvitationModule } from 'src/app/components/invitation/invitation.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { SuggestionModule } from 'src/app/components/suggestion/suggestion.modul
     PipesModule,
     IonicModule,
     SuggestionModule,
+    InvitationModule,
     LoadingModalModule,
     CompanyRequestViewRoutingModule
   ],

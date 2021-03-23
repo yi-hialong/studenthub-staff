@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import {Observable} from "rxjs";
+import { Observable } from "rxjs";
+//services
+import { AuthHttpService } from "./authhttp.service";
 
-import {AuthHttpService} from "./authhttp.service";
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class StatisticService {
    * Return statistics
    * @returns {Observable<any>}
    */
-  get(): Observable<any>{
+  get(): Observable<any> {
     let url = this._endpoint;
     return this._authhttp.get(url);
   }

@@ -63,6 +63,7 @@ export class CompanyRequestService {
       position_type: model.request_position_type,
       position_title: model.request_position_title,
       number_of_employees: model.request_number_of_employees,
+      location: model.request_location,
       additional_info: model.request_additional_info,
       compensation: model.request_compensation,
       job_description: model.request_job_description
@@ -102,6 +103,7 @@ export class CompanyRequestService {
       position_type: model.request_position_type,
       position_title: model.request_position_title,
       number_of_employees: model.request_number_of_employees,
+      location: model.request_location,
       additional_info: model.request_additional_info,
       compensation: model.request_compensation,
       job_description: model.request_job_description
@@ -133,5 +135,14 @@ export class CompanyRequestService {
   addActivity(params) : Observable<any> {
     let url = this.companyRequestEndpoint + '/add-activity';
     return this.authhttp.post(url, params);
+  }
+
+  /**
+   * check if request updated
+   * @param request_uuid 
+   */
+  isRequestUpdated(request_uuid) : Observable<any> {
+    let url = this.companyRequestEndpoint + '/is-request-updated/' + request_uuid;
+    return this.authhttp.get(url);
   }
 }

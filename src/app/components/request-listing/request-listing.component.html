@@ -24,7 +24,7 @@
     </h3>
 
     <p *ngIf="request.request_additional_info" [ngStyle]="{ 'white-space': 'pre-wrap' }" class="txt-additional-info" [innerHTML]="request.request_additional_info"></p>
-    <p *ngIf="request.num_hours_followup_interval" class="txt-additional-info">Number of Hours to Followup Interval: <strong>{{request.num_hours_followup_interval}}</strong></p>
+    <p *ngIf="request.num_hours_followup_interval" class="txt-additional-info">Number of Hours to Followup Interval: <strong>{{request.num_hours_followup_interval}} hours</strong></p>
 
     <small class="time">Request made {{ request.request_created_datetime | timeAgo }} </small><br/>
 

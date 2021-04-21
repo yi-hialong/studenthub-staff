@@ -56,7 +56,7 @@
       <p class="txt-additional-info">{{ request.request_compensation }}</p>
 
       <p *ngIf="updatingInterval" class="txt-additional-info">Number of Hours to Followup Interval: <ion-spinner></ion-spinner></p>
-      <p *ngIf="!updatingInterval && request.num_hours_followup_interval" class="txt-additional-info">Number of Hours to Followup Interval: <strong>{{request.num_hours_followup_interval}}</strong> &nbsp;&nbsp;&nbsp;<ion-badge tappable (click)="updateValue($event)" color="primary">Update Interval</ion-badge></p>
+      <p *ngIf="!updatingInterval && request.num_hours_followup_interval" class="txt-additional-info">Number of Hours to Followup Interval: <strong>{{request.num_hours_followup_interval}} hours</strong> &nbsp;&nbsp;&nbsp;<ion-badge tappable (click)="updateValue($event)" color="primary">Update Interval</ion-badge></p>
 
       <div class="requested-by">
         Requested <ng-container *ngIf="request.contact">by <span class="requested-by-staff" tappable [routerLink]="'/company-contact-view/' + request.contact_uuid">{{ request.contact.contact_name }}</span></ng-container>

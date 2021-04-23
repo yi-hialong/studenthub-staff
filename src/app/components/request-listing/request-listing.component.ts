@@ -37,9 +37,9 @@ export class RequestListingComponent implements OnInit {
        * if completed or active but had update made today.
        */
 
-      this.active = ((minutes - (this.request.num_hours_followup_interval * 60)) < 1);
+      this.active = ((minutes - (this.request.num_hours_followup_interval*60)) < 1);
 
-      this.late = (minutes - (this.request.num_hours_followup_interval * 60));
+      this.late = (minutes - (this.request.num_hours_followup_interval*60));
 
       // this.active = time < 24;
     }
@@ -67,7 +67,7 @@ export class RequestListingComponent implements OnInit {
    * @param date
    */
   getHours(date) {
-    const d = (date) ? new Date(date.replace(/-/g, '/') + ' UTC') : new Date();
+    const d = date ? new Date(date.replace(/-/g, '/') + ' GMT+03:00') : new Date();
     const now = new Date();
     const seconds = Math.round(Math.abs((now.getTime() - d.getTime()) / 1000));
     const minutes = Math.round(Math.abs(seconds / 60));
@@ -79,7 +79,7 @@ export class RequestListingComponent implements OnInit {
    * @param date
    */
   getMinutes(date) {
-    const d = (date) ? new Date(date.replace(/-/g, '/') + ' UTC') : new Date();
+    const d = date ? new Date(date.replace(/-/g, '/') + ' GMT+03:00') : new Date();
     const now = new Date();
     const seconds = Math.round(Math.abs((now.getTime() - d.getTime()) / 1000));
     return Math.round(Math.abs(seconds / 60));

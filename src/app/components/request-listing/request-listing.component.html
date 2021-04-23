@@ -75,6 +75,7 @@
       <p *ngIf="request.request_status == 'delivered'">Delivered {{ request.request_updated_datetime | timeAgo }} </p>
       <p *ngIf="request.request_status == 'cancelled'">Cancelled {{ request.request_updated_datetime | timeAgo }} </p>
       <p *ngIf="active && request.request_status == 'started'">Last updated {{ request.request_updated_datetime | timeAgo }} </p>
+      <p *ngIf="active && request.request_status == 'pending'">Last updated {{ request.request_updated_datetime | timeAgo }} </p>
       <p *ngIf="!active && late">{{ getLateTime(late)}}</p>
     </div>
 

@@ -160,6 +160,14 @@
         </ion-card-content>
       </ion-card>
 
+      <ion-item class="flip-in-hor-bottom" *ngIf="this.request_uuid">
+        <div tabindex="0"></div>
+        <ion-label position="floating">
+          Reason for suggestion
+        </ion-label>
+        <ion-textarea formControlName="suggestion"></ion-textarea>
+      </ion-item>
+
     </ion-list>
   </form>
 </ion-content>

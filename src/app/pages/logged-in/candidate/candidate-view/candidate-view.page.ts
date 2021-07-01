@@ -186,6 +186,7 @@ export class CandidateViewPage implements OnInit {
     this.storeService.list('store_id', 'storeWithCompany').subscribe(response => {
       this.stores = response;
     });
+    console.log(this.stores);
   }
 
   /**

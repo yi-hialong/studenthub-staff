@@ -224,6 +224,10 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     });
   }
 
+  storySelected(story) {
+    this.navCtrl.navigateForward('story-view/' + story.story_uuid);
+  }
+
   /**
    * load candidate suggestions for this request
    */

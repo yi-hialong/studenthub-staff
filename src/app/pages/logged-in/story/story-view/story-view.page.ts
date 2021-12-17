@@ -3,8 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Subject, interval } from 'rxjs';
 
 // services
-import { StaffService } from 'src/app/providers/logged-in/staff.service';
-import { NoteService } from 'src/app/providers/logged-in/note.service';
 import { EventService } from 'src/app/providers/event.service';
 // models
 
@@ -13,7 +11,6 @@ import { Request } from 'src/app/models/request';
 import { InvitationService } from 'src/app/providers/logged-in/invitation.service';
 import { Invitation } from 'src/app/models/invitation';
 import { AuthService } from 'src/app/providers/auth.service';
-import { InvitationListPage } from '../../invitation-list/invitation-list.page';
 import {AlertController, IonNav, ModalController, NavController} from '@ionic/angular';
 import { SuggestionService } from 'src/app/providers/logged-in/suggestion.service';
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
@@ -134,7 +131,6 @@ export class StoryViewPage implements OnInit, OnDestroy {
       this.story = res;
       this.request = this.story.request;
 
-      console.log(this.story);
       this.loadInvitations();
       this.loadSuggestions();
       if (this.story.story_status == 1) {

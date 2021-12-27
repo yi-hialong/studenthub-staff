@@ -89,12 +89,6 @@ export class StoryViewPage implements OnInit, OnDestroy {
       this.story_uuid = this.activatedRoute.snapshot.paramMap.get('id');
 
     const state = window.history.state;
-
-    if (state.model) {
-      this.loadInvitations();
-      this.loadSuggestions();
-    }
-
     if (!this.story) {
       this.loadData();
     }

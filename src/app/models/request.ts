@@ -60,6 +60,7 @@ export class Story {
   request: Request;
   staff: Staff;
   storyActivities: StoryActivity[];
+  latestStoryActivity: StoryActivity;
 }
 
 export class StoryActivity {

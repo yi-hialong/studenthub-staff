@@ -10,58 +10,12 @@
 
       <small class="time">{{ request.request_created_datetime | timeAgo }} </small>
 
-
       <p *ngIf="request.request_additional_info" class="txt-additional-info">{{request.request_additional_info.substr(0,85)}}...</p>
-
-  <!--    <p *ngIf="request.num_hours_followup_interval" class="txt-additional-info">Number of Hours to Followup Interval: <strong>{{request.num_hours_followup_interval}} hours</strong></p>-->
-
-  <!--    <p class="invitation-time" *ngIf="invitation">-->
-
-  <!--      Invited at {{ toDate(invitation.invitation_created_at) | date: 'MMM d, y, h:mm:ss a' }}, first-->
-
-  <!--      <ng-container *ngIf="-->
-  <!--        invitation.invitation_app_seen_at &&-->
-  <!--        (-->
-  <!--          !invitation.invitation_email_seen_at ||-->
-  <!--          toDate(invitation.invitation_app_seen_at) > toDate(invitation.invitation_email_seen_at)-->
-  <!--        )-->
-  <!--        ">-->
-  <!--        saw the invitation via app at {{ toDate(invitation.invitation_app_seen_at) | date: 'MMM d, y, h:mm:ss a' }}-->
-  <!--        (took her {{ invitation.invitation_created_at | duration : translateService.currentLang : invitation.invitation_app_seen_at }})-->
-  <!--      </ng-container>-->
-
-  <!--      <ng-container *ngIf="-->
-  <!--        invitation.invitation_email_seen_at &&-->
-  <!--        (-->
-  <!--          !invitation.invitation_app_seen_at ||-->
-  <!--          toDate(invitation.invitation_email_seen_at) > toDate(invitation.invitation_app_seen_at)-->
-  <!--        )-->
-  <!--        ">-->
-  <!--        saw the invitation via email at {{ toDate(invitation.invitation_email_seen_at) | date: 'MMM d, y, h:mm:ss a' }}-->
-  <!--        (took her {{ invitation.invitation_created_at | duration : translateService.currentLang : invitation.invitation_email_seen_at }})-->
-  <!--      </ng-container>-->
-
-  <!--      <ng-container *ngIf="!invitation.invitation_app_seen_at && !invitation.invitation_email_seen_at">-->
-  <!--        Not viewed yet-->
-  <!--      </ng-container>-->
-
-  <!--    </p>-->
-
-  <!--    <ng-container *ngIf="showStatus && invitation">-->
-  <!--      <ion-badge *ngIf="invitation && invitation.invitation_status == 1" color="warning">-->
-  <!--        Invited-->
-  <!--      </ion-badge>-->
-  <!--      <ion-badge *ngIf="invitation && invitation.invitation_status == 3" color="success">-->
-  <!--        Invitation Accepted-->
-  <!--      </ion-badge>-->
-  <!--      <ion-badge *ngIf="invitation && invitation.invitation_status == 2" color="danger">-->
-  <!--        Invitation Rejected-->
-  <!--      </ion-badge>-->
-  <!--    </ng-container>-->
 
       <div>
         <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
         <ion-badge *ngIf="request.request_position_type == 2">Part-time</ion-badge>
+        <ion-badge *ngIf="request.request_location">{{request.request_location}}</ion-badge>
         <ion-badge *ngFor="let staff of request.staffs">
           {{ staff.staff_name }}
         </ion-badge>

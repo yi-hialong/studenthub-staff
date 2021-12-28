@@ -96,3 +96,21 @@ ion-toolbar.title {
   margin-top: 15px;
   margin-bottom: 14px;
 }
+ion-segment-button {
+  text-transform: inherit;
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #68687a;
+}
+ion-segment-button.segment-button-checked {
+  font-weight: 600;
+  color: #263879;
+  --indicator-color	:#263879;
+  --border-color	:#263879;
+}

@@ -144,7 +144,7 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     this.loading = loading;
 
-    let param = '&expand=request,request.company';
+    let param = '&expand=request,request.company,latestStoryActivity';
 
     if (this.storyStatus) {
       param += '&story_status=' + this.storyStatus;
@@ -173,7 +173,7 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     this.currentPage++;
 
-    let param = '&expand=request,request.company';
+    let param = '&expand=request,request.company,latestStoryActivity';
     if (this.storyStatus) {
       param += '&story_status=' + this.storyStatus;
     }

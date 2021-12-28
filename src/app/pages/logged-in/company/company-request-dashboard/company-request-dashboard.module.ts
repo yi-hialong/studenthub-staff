@@ -10,6 +10,7 @@ import { CompanyRequestDashboardPage } from './company-request-dashboard.page';
 import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { RequestListingModule } from 'src/app/components/request-listing/request-listing.module';
+import {StoryItemModule} from 'src/app/components/story-item/story-item.module';
 
 @NgModule({
   imports: [
@@ -19,6 +20,7 @@ import { RequestListingModule } from 'src/app/components/request-listing/request
     LoadingModalModule,
     PipesModule,
     RequestListingModule,
+    StoryItemModule,
     CompanyRequestDashboardPageRoutingModule
   ],
   declarations: [CompanyRequestDashboardPage]

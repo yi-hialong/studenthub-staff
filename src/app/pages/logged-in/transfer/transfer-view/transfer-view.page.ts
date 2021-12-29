@@ -300,11 +300,14 @@ export class TransferViewPage implements OnInit {
 
       if (response.operation == 'success') {
 
+        this.eventService.transferDeleted$.next(); 
+        
         this.eventService.reloadStats$.next({
           company_id: this.transfer.company_id
         });
 
         this.back();
+
       } else {
         const alert = await this.alertCtrl.create({
           message: response.message,

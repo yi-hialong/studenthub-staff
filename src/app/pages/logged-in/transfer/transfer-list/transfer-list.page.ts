@@ -4,6 +4,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 //models
 import { Company } from 'src/app/models/company';
 import { Transfer } from 'src/app/models/transfer';
+import { EventService } from 'src/app/providers/event.service';
 //services
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
 //pages
@@ -29,11 +30,16 @@ export class TransferListPage implements OnInit {
     public activatedRoute: ActivatedRoute,
     public alertCtrl: AlertController,
     public modalCtrl: ModalController,
+    public eventService: EventService,
     public companyService: CompanyService
   ) { }
 
   ngOnInit() {
     this.loadData();
+
+    this.eventService.transferDeleted$.subscribe(() => {
+      this.loadData();
+    }); 
   }
 
   loadData() {

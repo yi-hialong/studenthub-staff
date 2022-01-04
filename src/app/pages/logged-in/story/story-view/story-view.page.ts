@@ -48,7 +48,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
   public acceptedInvitations: Invitation[] = [];
 
-  public segment: string = 'invitations';
+  public segment: string = 'detail';
 
   private destroyed$ = new Subject();
 
@@ -114,7 +114,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
   loadData() {
     this.loading = true;
 
-    this.storyService.detail(this.story_uuid, '?expand=request,request.company').subscribe(res => {
+    this.storyService.detail(this.story_uuid, '?expand=request,request.contact,request.staffs,request.company').subscribe(res => {
 
       this.loading = false;
       this.story = res;

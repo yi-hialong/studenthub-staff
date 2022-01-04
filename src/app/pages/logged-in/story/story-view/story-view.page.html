@@ -5,7 +5,7 @@
       </ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button><ion-icon name="ellipsis-vertical-outline"></ion-icon></ion-button>
+      <ion-button (click)="openPopover($event)"><ion-icon name="ellipsis-vertical-outline"></ion-icon></ion-button>
     </ion-buttons>
 
   </ion-toolbar>
@@ -81,7 +81,7 @@
 </ion-content>
 <!-- enable if my active story -->
 <ion-footer class="ion-text-center">
-  <ion-button *ngIf="authService && story && story.story_status == 0" class="start-btn">
+  <ion-button *ngIf="authService && story && story.story_status == 0" class="start-btn" onClick="changeStoryStatus(1)">
     Start Work
   </ion-button>
 </ion-footer>

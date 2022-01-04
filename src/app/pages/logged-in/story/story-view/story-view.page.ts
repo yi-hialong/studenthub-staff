@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Optional } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Subject, interval } from 'rxjs';
-import { AlertController, IonNav, ModalController, NavController } from '@ionic/angular';
+import {AlertController, IonNav, ModalController, NavController, PopoverController} from '@ionic/angular';
 // services
 import { EventService } from 'src/app/providers/event.service';
 import { StoryService } from 'src/app/providers/logged-in/story.service';
@@ -12,6 +12,7 @@ import { TranslateLabelService } from 'src/app/providers/translate-label.service
 // models
 import { Request } from 'src/app/models/request';
 import { Invitation } from 'src/app/models/invitation';
+import {StoryViewOptionPage} from "./story-view-option.page";
 
 
 export interface TimeSpan {
@@ -80,7 +81,8 @@ export class StoryViewPage implements OnInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     public eventService: EventService,
     public router: Router,
-    public alertCtrl: AlertController
+    public alertCtrl: AlertController,
+    public popoverCtrl: PopoverController
   ) { }
 
   ngOnInit() {
@@ -313,5 +315,22 @@ export class StoryViewPage implements OnInit, OnDestroy {
         }
       });
     }
+  }
+
+  /**
+   * view request detail page
+   * @param e
+   */
+  async openPopover(e) {
+    const popover = await this.popoverCtrl.create({
+      component: StoryViewOptionPage,
+      event: e
+    });
+    popover.present();
+    popover.onDidDismiss().then(click => {
+      if (click && click.data && click.data.click) {
+        this.navCtrl.navigateForward('request-view/'+  this.request.request_uuid);
+      }
+    });
   }
 }

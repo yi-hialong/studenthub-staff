@@ -12,6 +12,7 @@ import { NoItemsModule } from 'src/app/components/no-items/no-items.module';
 import { NoteModule } from 'src/app/components/note/note.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { InvitationModule } from 'src/app/components/invitation/invitation.module';
+import {StoryViewOptionPage} from './story-view-option.page';
 
 @NgModule({
   imports: [
@@ -23,8 +24,11 @@ import { InvitationModule } from 'src/app/components/invitation/invitation.modul
     InvitationModule,
     StoryViewPageRoutingModule,
     NoItemsModule,
-    LoadingModalModule
+    LoadingModalModule,
   ],
-  declarations: [StoryViewPage]
+  declarations: [StoryViewPage, StoryViewOptionPage],
+  exports: [
+    StoryViewOptionPage
+  ]
 })
 export class StoryViewPageModule {}

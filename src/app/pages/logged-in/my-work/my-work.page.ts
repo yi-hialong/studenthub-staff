@@ -16,7 +16,7 @@ import {AuthService} from "../../../providers/auth.service";
 export class MyWorkPage implements OnInit {
 
   public segment: string = 'current';
-  public currentStory: Story;
+  public currentStory: Story[];
   public oldStories: Story[];
 
   constructor(

@@ -12,21 +12,23 @@
     </ion-segment>
 
     <div *ngIf="segment == 'current'">
-      <ion-card tappable (click)="rowSelected(currentStory)" *ngIf="currentStory">
+      <ng-container *ngIf="currentStory">
+      <ion-card tappable *ngFor="let story of currentStory" (click)="rowSelected(story)" >
 
         <ion-card-header>
           <ion-card-subtitle>
 
-            <span *ngIf="currentStory.request.request_position_type == 1">Full-time -</span>
-            <span *ngIf="currentStory.request.request_position_type == 2">Part-time -</span>
+            <span *ngIf="story.request.request_position_type == 1">Full-time -</span>
+            <span *ngIf="story.request.request_position_type == 2">Part-time -</span>
 
-            {{currentStory.request.request_position_title}}</ion-card-subtitle>
+            {{story.request.request_position_title}}</ion-card-subtitle>
           <ion-card-title>for</ion-card-title>
         </ion-card-header>
         <ion-card-content>
-          {{currentStory.request.company.company_name}}
+          {{story.company.company_name}}
         </ion-card-content>
       </ion-card>
+      </ng-container>
       <h2 class="ion-text-center" *ngIf="!currentStory"> No Working Story</h2>
     </div>
 

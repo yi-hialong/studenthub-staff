@@ -115,7 +115,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
       this.story = res;
       this.request = this.story.request;
 
-      this.loadInvitations();
+      this.loadStoryInvitations();
       this.loadSuggestions();
       if (this.story.story_status == 1) {
         this.loadTimer();
@@ -129,8 +129,16 @@ export class StoryViewPage implements OnInit, OnDestroy {
   /**
  * load invitations for this request
  */
-  loadInvitations(loading = true) {
+  loadRequestInvitations(loading = true) {
     this.invitationService.list('&request_uuid=' + this.request.request_uuid).subscribe(invitations => {
+      this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
+      this.rejectedCandidates = invitations.filter(invitation => invitation.invitation_status == 2);
+      this.acceptedInvitations = invitations.filter(invitation => invitation.invitation_status == 3);
+    });
+  }
+
+  loadStoryInvitations(loading = true) {
+    this.invitationService.list('&story_uuid=' + this.story_uuid).subscribe(invitations => {
       this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
       this.rejectedCandidates = invitations.filter(invitation => invitation.invitation_status == 2);
       this.acceptedInvitations = invitations.filter(invitation => invitation.invitation_status == 3);

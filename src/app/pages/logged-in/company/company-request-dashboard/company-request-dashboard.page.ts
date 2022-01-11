@@ -43,6 +43,7 @@ export class CompanyRequestDashboardPage implements OnInit {
   public segment = 'request';
 
   public filters = {
+    storyStatus: '1',
     requestStatus: 'started',
     position_type: null,
     startDate: null,
@@ -82,7 +83,6 @@ export class CompanyRequestDashboardPage implements OnInit {
   }
 
   loadAllRequest() {
-
     this.loadRequests();
     this.loadStories(1);
   }
@@ -162,6 +162,9 @@ export class CompanyRequestDashboardPage implements OnInit {
     if (this.filters.requestStatus) {
       urlParams += '&request_status=' + this.filters.requestStatus;
     }
+    if (this.filters.storyStatus) {
+      urlParams += '&story_status=' + this.filters.storyStatus;
+    }
 
     if (this.filters.startDate) {
       const d = new Date(this.filters.startDate);
@@ -195,11 +198,8 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     this.loading = loading;
 
-    let param = '&expand=request,request.company,latestStoryActivity';
-
-    if (this.storyStatus) {
-      param += '&story_status=' + this.storyStatus;
-    }
+    let param = this.urlParams();
+    param += '&expand=request,request.company,latestStoryActivity';
 
     this.storyService.list(this.currentPage, param).subscribe(response => {
 
@@ -221,15 +221,11 @@ export class CompanyRequestDashboardPage implements OnInit {
    * @param event
    */
   doInfiniteStories(event) {
-    // this.loadMore = true;
 
     this.currentPage++;
 
-    let param = '&expand=request,request.company,latestStoryActivity';
-
-    if (this.storyStatus) {
-      param += '&story_status=' + this.storyStatus;
-    }
+    let param = this.urlParams();
+    param += '&expand=request,request.company,latestStoryActivity';
 
     this.storyService.list(this.currentPage, param).subscribe(response => {
 
@@ -269,7 +265,8 @@ export class CompanyRequestDashboardPage implements OnInit {
       component: RequestFilterComponent,
       cssClass: 'modal-request-filter',
       componentProps: {
-        filters: Object.assign({}, this.filters)
+        filters: Object.assign({}, this.filters),
+        tab: this.segment
       }
     });
 
@@ -277,15 +274,20 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     const { data } = await modal.onWillDismiss();
 
+    console.log(data);
     if(data && (
+        data.storyStatus != this.filters.storyStatus ||
         data.requestStatus != this.filters.requestStatus ||
         data.position_type != this.filters.position_type ||
         data.startDate != this.filters.startDate ||
         data.endDate != this.filters.endDate
     )) {
       this.filters = data;
-
-      this.loadAllRequest();
+      if (this.segment == 'request') {
+        this.loadRequests();
+      } else {
+        this.loadStories(1);
+      }
     }
   }
 

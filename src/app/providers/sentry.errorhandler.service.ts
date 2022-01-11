@@ -15,7 +15,7 @@ export class SentryErrorhandlerService extends ErrorHandler {
 
   // Array of environments to log
   public environmentsLogged: string[] = ["dev", "prod", "dev-mobile", "prod-mobile"];
-  
+
   constructor() {
     super();
 
@@ -24,7 +24,7 @@ export class SentryErrorhandlerService extends ErrorHandler {
 
       // Enable sentry logging
       this.sentryLoggingEnabled = true;
-      
+
       Sentry.init({
         dsn: 'https://50fe720cb6344764980e53ca00db5860@o70039.ingest.sentry.io/5339276',
         // TryCatch has to be configured to disable XMLHttpRequest wrapping, as we are going to handle
@@ -75,7 +75,7 @@ export class SentryErrorhandlerService extends ErrorHandler {
   }
 
   handleError(error) {
-    
+
     const chunkFailedMessage = /Loading chunk [\d]+ failed/;
 
     if (chunkFailedMessage.test(error.message)) {
@@ -92,7 +92,7 @@ export class SentryErrorhandlerService extends ErrorHandler {
     // Capture handled exception and send it to Sentry.
     const eventId = Sentry.captureException(extractedError);
     console.error(extractedError);
-    Sentry.showReportDialog({ eventId });
+    // Sentry.showReportDialog({ eventId });
     // When in development mode, log the error to console for immediate feedback
     // Optionally show user dialog to provide details on what happened.
   }

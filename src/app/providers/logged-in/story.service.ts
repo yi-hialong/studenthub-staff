@@ -19,7 +19,7 @@ export class StoryService {
    * @returns {Observable<any>}
    */
   list(page: number = 1, urlParams = ''): Observable<any>{
-    const url = `${this.storyEndpoint}/list?page=${page}${urlParams}`;
+    const url = this.storyEndpoint + '/list?page=' + page + urlParams;
     return this._authhttp.getRaw(url);
   }
 

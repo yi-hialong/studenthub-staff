@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertController, ModalController } from '@ionic/angular';
+import {AlertController, ModalController, ToastController} from '@ionic/angular';
 // models
 import { Candidate } from 'src/app/models/candidate';
 import { Request, Story } from 'src/app/models/request';
@@ -30,14 +30,15 @@ export class InvitePage implements OnInit {
   public activeRequestsData: Request[] = [];
 
   public form: FormGroup;
-  
+
   public query;
-  
+
   public story: Story;
 
   constructor(
     private fb: FormBuilder,
     public modalCtrl: ModalController,
+    public toastCtrl: ToastController,
     public alertCtrl: AlertController,
     public authService: AuthService,
     public eventService: EventService,
@@ -95,7 +96,7 @@ export class InvitePage implements OnInit {
    * load all requests for parttimers
    */
   loadRequests() {
-    
+
     this.loadingRequests = true;
 
     this.requestService.listActiveRequests().subscribe(data => {
@@ -116,9 +117,9 @@ export class InvitePage implements OnInit {
       return (
         (item.company && item.company.company_name.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1) ||
         (item.company && item.company.company_common_name_en && item.company.company_common_name_en.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1) ||
-        (item.company && item.company.company_common_name_ar && item.company.company_common_name_ar.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1) || 
+        (item.company && item.company.company_common_name_ar && item.company.company_common_name_ar.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1) ||
         item.request_position_title.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1 ||
-        item.request_job_description.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1 
+        item.request_job_description.toLowerCase().indexOf(ev.target.value.toLowerCase()) > -1
       );
     });
   }
@@ -144,6 +145,14 @@ export class InvitePage implements OnInit {
       // On Success
       if (response.operation == 'success') {
         // Close the page
+
+        this.toastCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          duration: 3000
+        }).then(toast => {
+          toast.present();
+        });
+
         this.close(true, response.invitedCount);
       }
 

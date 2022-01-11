@@ -133,6 +133,13 @@
               </span>
             </ion-label>
           </ion-button>
+
+          <ion-button *ngIf="story.request && story.story_status < 3 && acceptedInvitations && acceptedInvitations.length > 0"
+            class="stop-btn" fill="outline" (click)="changeStoryStatus(3)">
+            <ion-label>
+              Delivery Story
+            </ion-label>
+          </ion-button>
         </ion-col>
       </ion-row>
     </ion-grid>

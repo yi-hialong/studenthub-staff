@@ -72,7 +72,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public segment: string = 'activities';
 
   public activeStory: Story;
-  
+
   constructor(
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
@@ -148,8 +148,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
     this.requestService.view(this.request_uuid).subscribe(data => {
       this.request = data;
-      
-      //my active story 
+
+      //my active story
 
       this.request.stories.forEach((story) => {
         if(story.staff_id == this.authService.staff_id) {
@@ -180,8 +180,6 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
       if (data.request_updated_datetime != this.request.request_updated_datetime) {
         this.loadDetail(false);//refresh without showing loader
       }
-    }, () => {
-    }, () => {
       this.loading = false;
     });
   }
@@ -197,7 +195,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    * load invitations for this request
    */
   loadInvitations(loading = true) {
-    
+
     this.invitationService.list('&request_uuid=' + this.request_uuid).subscribe(invitations => {
 
       this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
@@ -635,7 +633,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
                   request_updated_datetime: response.request_updated_datetime,
                   request_uuid: this.request_uuid
                 });
-                
+
               } else {
                 this.toastCtrl.create({
                   message: this.translateService.errorMessage(response.message),

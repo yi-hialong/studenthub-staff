@@ -27,6 +27,25 @@ export class MyWorkPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    
+    this.eventService.companyRequestCancelled$.subscribe((request) => {
+      
+      this.currentStory = null;
+      this.oldStories = [];
+
+      this.loadActiveStories();
+      this.loadAllOtherStories();
+    });
+
+    this.eventService.companyRequestDelivered$.subscribe((request: any) => {
+      
+      this.currentStory = null;
+      this.oldStories = [];
+
+      this.loadActiveStories();
+      this.loadAllOtherStories();
+    });
+
     this.eventService.storyStatusUpdated$.subscribe(() => {
 
       this.currentStory = null;
@@ -48,13 +67,15 @@ export class MyWorkPage implements OnInit {
 
   loadActiveStories() {
     this.storyService.loadActiveStory().subscribe(res => {
-      this.currentStory = res.body;
+      if(res.body)
+        this.currentStory = res.body;
     });
   }
 
   loadAllOtherStories() {
     this.storyService.listAllOldHistory().subscribe(res => {
-      this.oldStories = res.body;
+      if(res.body)
+        this.oldStories = res.body;
     });
   }
 

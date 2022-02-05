@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IonContent, ModalController, NavController } from '@ionic/angular';
+import { AlertController, IonContent, ModalController, NavController } from '@ionic/angular';
 // models
 import { Request } from 'src/app/models/request';
 // services
@@ -43,8 +43,8 @@ export class CompanyRequestDashboardPage implements OnInit {
   public segment = 'request';
 
   public filters = {
-    storyStatus: '1',
-    requestStatus: 'started',
+    storyStatus: null,//'1'
+    requestStatus: null,//'started',
     position_type: null,
     startDate: null,
     endDate: null,
@@ -52,10 +52,13 @@ export class CompanyRequestDashboardPage implements OnInit {
 
   public query = '';
 
+  public alertRequestCountUpdated;
+
   constructor(
     public requestService: CompanyRequestService,
     public eventService: EventService,
     public navCtrl: NavController,
+    public alertCtrl: AlertController,
     public modalCtrl: ModalController,
     public activatedRoute: ActivatedRoute,
     private storyService: StoryService,
@@ -70,6 +73,45 @@ export class CompanyRequestDashboardPage implements OnInit {
     this.eventService.companyRequestUpdate$.subscribe(() => {
       this.loadAllRequest();
     });
+
+    this.eventService.requestCountUpdated$.subscribe(async () => {
+
+      this.alertRequestCountUpdated = true;
+
+      /*this.alertRequestCountUpdated = await this.alertCtrl.create({
+        header: 'Request count updated',
+        subHeader: 'Refresh to view latest update',
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: (data) => {
+              this.alertRequestCountUpdated = null;
+            }
+          }, {
+            text: 'Refresh',
+            handler: (data) => {
+              this.loadAllRequest();
+              this.alertRequestCountUpdated = null;
+            }
+          }
+        ]
+      });
+      this.alertRequestCountUpdated.present();*/
+    });
+
+    this.eventService.companyRequestCancelled$.subscribe(() => {
+      this.loadStories(1);
+    });
+
+    this.eventService.companyRequestDelivered$.subscribe((request: any) => {
+      this.loadStories(1);
+    });
+
+    this.eventService.storyStatusUpdated$.subscribe(() => {
+      this.loadStories(1);
+    });
   }
 
   ionViewWillEnter() {
@@ -82,7 +124,12 @@ export class CompanyRequestDashboardPage implements OnInit {
     });
   }
 
+  closeAlert() {
+    this.alertRequestCountUpdated = false;
+  }
+
   loadAllRequest() {
+    this.alertRequestCountUpdated = false;
     this.loadRequests();
     this.loadStories(1);
   }
@@ -93,7 +140,7 @@ export class CompanyRequestDashboardPage implements OnInit {
   loadRequests() {
 
     let param = this.urlParams();
-    console.log(param);
+
     this.requestService.listActiveWithPages(1, param).subscribe(response => {
       this.activeRequests = response.body;
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
@@ -162,6 +209,7 @@ export class CompanyRequestDashboardPage implements OnInit {
     if (this.filters.requestStatus) {
       urlParams += '&request_status=' + this.filters.requestStatus;
     }
+
     if (this.filters.storyStatus) {
       urlParams += '&story_status=' + this.filters.storyStatus;
     }
@@ -200,6 +248,7 @@ export class CompanyRequestDashboardPage implements OnInit {
 
     let param = this.urlParams();
     param += '&expand=request,request.company,latestStoryActivity';
+    param += '&query=' + this.query;
 
     this.storyService.list(this.currentPage, param).subscribe(response => {
 
@@ -292,8 +341,11 @@ export class CompanyRequestDashboardPage implements OnInit {
   }
 
   searchFilter(event) {
-
     this.query = event.target.value;
-    this.loadAllRequest();
+    if (this.segment == 'request') {
+      this.loadAllRequest();
+    } else {
+      this.loadStories(1);
+    }
   }
 }

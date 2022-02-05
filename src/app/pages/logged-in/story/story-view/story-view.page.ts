@@ -38,9 +38,11 @@ export class StoryViewPage implements OnInit, OnDestroy {
   public loading = false;
   public loadMore = false;
 
+  public allSuggestions = [];
   public suggestedSuggestions = [];
   public acceptedSuggestions = [];
   public rejectedSuggestions = [];
+  public allInvitedCandidates: Invitation[] = [];
   public invitedCandidates: Invitation[] = [];
   public rejectedCandidates: Invitation[] = [];
   public acceptedInvitations: Invitation[] = [];
@@ -95,6 +97,19 @@ export class StoryViewPage implements OnInit, OnDestroy {
     });
 
     this.changeDetector.detectChanges();
+    
+    this.eventService.companyRequestCancelled$.subscribe((request: any) => {
+      if(this.story && request.request_uuid == this.story.request_uuid) {
+        this.loadData();
+      }
+    });
+
+    this.eventService.companyRequestDelivered$.subscribe((request: any) => {
+      if(this.story && request.request_uuid == this.story.request_uuid) {
+        this.loadData();
+      }
+    });
+
     // this.story.story_last_updated_at
     // this.subscription = interval(1000)
     //   .subscribe(x => { this.getTimeDifference(); });
@@ -139,6 +154,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
   loadStoryInvitations(loading = true) {
     this.invitationService.list('&story_uuid=' + this.story_uuid).subscribe(invitations => {
+      this.allInvitedCandidates = invitations;
       this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
       this.rejectedCandidates = invitations.filter(invitation => invitation.invitation_status == 2);
       this.acceptedInvitations = invitations.filter(invitation => invitation.invitation_status == 3);
@@ -150,9 +166,10 @@ export class StoryViewPage implements OnInit, OnDestroy {
    */
   loadSuggestions() {
 
-    const params = '&request_uuid=' + this.request.request_uuid;
+    const params = '&story_uuid=' + this.story_uuid;
 
     this.suggestionService.listAll(params).subscribe(data => {
+      this.allSuggestions = data;
       this.suggestedSuggestions = [];
       this.acceptedSuggestions = [];
       this.rejectedSuggestions = [];
@@ -281,7 +298,6 @@ export class StoryViewPage implements OnInit, OnDestroy {
   }
 
   loadTimer() {
-    console.log(this.story);
     this.dDay = this.toDate(this.story.story_last_updated_at);
     this.subscription = interval(1000)
       .subscribe(x => { this.getTimeDifference(); });

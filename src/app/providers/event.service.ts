@@ -27,6 +27,10 @@ export class EventService {
   public reloadStats$ = new Subject();
   public storyStatusUpdated$ = new Subject();
   
+  public companyRequestCancelled$ = new Subject();
+
+  public companyRequestDelivered$ = new Subject();
+
   public clearCandidateSelection$ = new Subject();
 
   public filterCollapse$ = new Subject();
@@ -36,6 +40,8 @@ export class EventService {
   public reviewRequired$ = new Subject();
   public companyRequestUpdate$ = new Subject();
 
+  public requestCountUpdated$ = new Subject();
+  
   public reloadFollowupList$ = new Subject();
 
   public noteUpdated$ = new Subject();

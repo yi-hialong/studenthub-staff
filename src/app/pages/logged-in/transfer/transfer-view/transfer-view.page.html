@@ -127,14 +127,20 @@
           <div tabindex="0"></div>
 
           <ion-avatar slot="start">
-            <ion-img *ngIf="resource.candidate.candidate_personal_photo"
+            <ion-img *ngIf="resource.candidate && resource.candidate.candidate_personal_photo"
               src="{{ aws.cloudinaryUrl + resource.candidate.candidate_personal_photo }}"
               (ionError)="loadLogo($event,resource.candidate)"></ion-img>
-            <ion-img *ngIf="!resource.candidate.candidate_personal_photo" src="/assets/icon/icon.png"></ion-img>
+            <ion-img *ngIf="!resource.candidate || !resource.candidate.candidate_personal_photo" src="/assets/icon/icon.png"></ion-img>
           </ion-avatar>
 
           <ion-label>
-            <h2 class="candidate_name">{{ resource.candidate.candidate_name? resource.candidate.candidate_name: resource.candidate.candidate_name_ar }}</h2>
+            <h2 class="candidate_name" *ngIf="resource.candidate">
+              {{ resource.candidate.candidate_name? resource.candidate.candidate_name: resource.candidate.candidate_name_ar }}
+            </h2>
+            
+            <h2 class="candidate_name txt-color-warning" *ngIf="!resource.candidate">
+              Deleted Account
+            </h2>
 
             <p *ngIf="resource.hours > 0">{{ resource.hours | number }} hours x KD
               {{ resource.company_hourly_rate | number:'1.0-3' }} per hour</p>

@@ -337,6 +337,9 @@ export class TransferViewPage implements OnInit {
     return Number((candidate.company_hourly_rate * candidate.hours) + candidate.bonus).toFixed(3);
   }
 
+  /**
+   * close page
+   */
   back() {
     this.modalCtrl.getTop().then(overlay => {
       if(overlay) {

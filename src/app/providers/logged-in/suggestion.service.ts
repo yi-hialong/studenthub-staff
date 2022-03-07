@@ -29,7 +29,7 @@ export class SuggestionService {
    * @returns
    */
   list(page: number, params: string = ''): Observable<any> {
-    let url = this._endpoint + '?withPagination=1&'+ params;
+    let url = this._endpoint + '?withPagination=1&page=' + page + params;
     return this._authhttp.getRaw(url);
   }
 

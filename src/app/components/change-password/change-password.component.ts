@@ -13,12 +13,12 @@ import { AccountService } from 'src/app/providers/logged-in/account.service';
 })
 export class ChangePasswordComponent implements OnInit {
 
-  public loading: boolean = false; 
+  public loading: boolean = false;
 
   public form: FormGroup;
 
   public type: string = 'password';
-  
+
   public confirmType: string = 'password';
 
   constructor(
@@ -51,7 +51,7 @@ export class ChangePasswordComponent implements OnInit {
    */
   submit() {
 
-    this.loading = true; 
+    this.loading = true;
 
     this.accountService.updatePassword(this.form.value).subscribe(async result => {
 
@@ -61,9 +61,7 @@ export class ChangePasswordComponent implements OnInit {
           duration: 3000
         });
         toast.present();
-        //this.authService.logout();
-
-        this.modalCtrl.dismiss(); 
+        this.modalCtrl.dismiss();
 
       } else {
         const prompt = await this._alertCtrl.create({

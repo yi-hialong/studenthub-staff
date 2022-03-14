@@ -147,12 +147,12 @@ export class TeamViewPage implements OnInit {
    * todo: ability to update password
    */
   async changePassword() {
-    
+    // this.navController.navigateForward('/change-password');
     const modal = await this.modalCtrl.create({
       component: ChangePasswordComponent,
       cssClass: 'modal-change-password'
     });
 
     await modal.present();
-  } 
+  }
 }

@@ -457,6 +457,14 @@ const routes: Routes = [
     }
   },
   {
+    path: 'change-password',
+    loadChildren: () => import('./pages/logged-in/change-password/change-password-routing.module').then( m => m.ChangePasswordPageRoutingModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'ChangePasswordPage'
+    }
+  },
+  {
     path: 'app-error',
     loadChildren: () => import('./pages/errors/app-error/app-error.module').then( m => m.AppErrorPageModule)
   },

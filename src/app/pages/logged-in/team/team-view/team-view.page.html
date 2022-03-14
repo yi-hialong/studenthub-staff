@@ -93,7 +93,7 @@
   </ion-infinite-scroll>
 </ion-content>
 <ion-footer *ngIf="staff && segment == 'details'" class="ion-text-center ion-no-border ion-transparent">
-  <ion-button *ngIf="authService.staff_id == staff_id" (click)="changePassword()" class="btn-change-pwd">
+  <ion-button *ngIf="authService.staff_id == staff_id" [routerLink]="['/change-password/']" class="btn-change-pwd">
     Change Password
   </ion-button>
 </ion-footer>

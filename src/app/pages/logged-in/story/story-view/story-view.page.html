@@ -113,7 +113,7 @@
   <div class="container" *ngIf="request && story && segment == 'suggestion'">
     <h2>Suggested Candidates</h2>
 
-    <suggestion *ngFor="let suggestion of allSuggestions" [model]="suggestion"></suggestion>
+    <suggestion *ngFor="let suggestion of allSuggestions" [model]="suggestion" [showBadge]="false"></suggestion>
   </div>
 
 </ion-content>
@@ -138,10 +138,6 @@
             Stop Work &nbsp;&nbsp;
             <span class="timer ion-text-center">
                 {{ story.story_last_updated_at | timer }}
-              <!--
-              <span id="hours" *ngIf="hoursToDday"> {{hoursToDday}} :</span>
-              <span id="minutes"> {{minutesToDday}} : </span>
-              <span id="seconds"> {{secondsToDday}} </span>-->
               </span>
           </ion-label>
         </ion-button>

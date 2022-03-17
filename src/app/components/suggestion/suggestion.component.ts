@@ -18,6 +18,7 @@ export class SuggestionComponent implements OnInit {
   @Output() onUpdate: EventEmitter<any> = new EventEmitter();
 
   @Input() model: Suggestion;
+  @Input() showBadge = true;
 
   constructor(
     public toastCtrl: ToastController,
@@ -167,9 +168,9 @@ export class SuggestionComponent implements OnInit {
    * @param date
    */
   toDate(date) {
-    if (!date) 
+    if (!date)
       return null;
-      
+
     if (date) {
       return new Date(date.replace(/-/g, '/'));
     }

@@ -1,15 +1,16 @@
 <!--<ion-card (click)="openCandidatePage()" tappable>-->
 <ion-card tappable>
-  <ion-badge *ngIf="model.suggestion_status == 1">
-    Suggested a candidate
-  </ion-badge>
-  <ion-badge *ngIf="model.suggestion_status == 3">
-    Accepted a candidate
-  </ion-badge>
-  <ion-badge *ngIf="model.suggestion_status == 2">
-    Rejected a candidate
-  </ion-badge>
-
+  <ng-container *ngIf="showBadge">
+    <ion-badge *ngIf="model.suggestion_status == 1">
+      Suggested a candidate
+    </ion-badge>
+    <ion-badge *ngIf="model.suggestion_status == 3">
+      Accepted a candidate
+    </ion-badge>
+    <ion-badge *ngIf="model.suggestion_status == 2">
+      Rejected a candidate
+    </ion-badge>
+  </ng-container>
   <ion-item lines="none" *ngIf="model.candidate">
     <div tabindex="0"></div>
 
@@ -39,11 +40,11 @@
   <!-- for old data -->
 
   <p class="activity" *ngIf="!model.feedback">
-    
+
     <span class="staff-name" *ngIf="model.updatedBy && model.updatedBy.staff_id" [routerLink]="'/team-view/' + model.updatedBy.staff_id">
       {{ model.updatedBy.staff_name }}:&nbsp;
     </span>
-    
+
     <span class="staff-name" *ngIf="model.updatedBy && model.updatedBy.candidate_id" [routerLink]="'/candidate-view/' + model.updatedBy.candidate_id">
       {{ model.updatedBy.candidate_name }}:&nbsp;
     </span>
@@ -56,6 +57,11 @@
     because <span [innerHTML]="model.note.note_text"></span>
   </p>
 
+  <p class="txt-time">
+    {{ model.suggestion_datetime | timeAgo }}
+    <!--    {{ toDate(model.suggestion_datetime) | date: 'MMM d, y' }}-->
+  </p>
+
   <p class="activity" *ngIf="model.feedback">
     <span class="staff-name" *ngIf="model.feedback.updatedBy">
       {{ model.feedback.updatedBy.staff_name? model.feedback.updatedBy.staff_name: model.feedback.updatedBy.candidate_name }}:&nbsp;
@@ -66,20 +72,13 @@
     <span class="candidate_name" *ngIf="model.fulltimer">&nbsp;{{ model.fulltimer.fulltimer_name }}</span>
     because <span [innerHTML]="model.feedback.note_text"></span>
   </p>
-
-  <p class="txt-time">
-    {{ model.suggestion_datetime | timeAgo }} on
-    {{ toDate(model.suggestion_datetime) | date: 'MMM d, y' }}
-  </p>
+  <ng-container *ngIf="model.suggestion_status == 1">
+    <ion-button class="btn-reject" (click)="rejectSuggestion($event)">
+      Rejected
+    </ion-button>
+    <ion-button class="btn-accept" (click)="acceptSuggestion($event)">
+      Accepted
+    </ion-button>
+  </ng-container>
 </ion-card>
-
-<ng-container *ngIf="model.suggestion_status == 1">
-  <ion-button class="btn-accept" (click)="acceptSuggestion($event)">
-    Accepted
-  </ion-button>
-  <ion-button class="btn-reject" (click)="rejectSuggestion($event)">
-    Rejected
-  </ion-button>
-</ng-container>
-
 <div class="clearfix"></div>

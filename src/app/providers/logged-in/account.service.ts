@@ -19,4 +19,11 @@ export class AccountService {
   updatePassword(params): Observable<any> {
     return this._authhttp.post(this._accountEndpoint + '/update-password', params);
   }
+
+  /**
+   * get account info
+   */
+  accountInfo(): Observable<any> {
+    return this._authhttp.get(this._accountEndpoint);
+  }
 }

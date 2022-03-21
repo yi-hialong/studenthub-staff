@@ -1,10 +1,11 @@
-import { Component, Renderer2, ViewChild, OnInit, ViewEncapsulation } from '@angular/core';
+import {Component, Renderer2, ViewChild, OnInit, ViewEncapsulation, OnDestroy} from '@angular/core';
 import { Platform, IonTabs, ActionSheetController, IonTabButton } from '@ionic/angular';
 import { Router } from '@angular/router';
 // services
 import { AuthService } from 'src/app/providers/auth.service';
 import { EventService } from 'src/app/providers/event.service';
 import { StatisticService } from 'src/app/providers/logged-in/statistic.service';
+import {AccountService} from "../../../providers/logged-in/account.service";
 
 
 @Component({
@@ -13,12 +14,12 @@ import { StatisticService } from 'src/app/providers/logged-in/statistic.service'
   styleUrls: ['tabs.page.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class TabsPage implements OnInit {
+export class TabsPage implements OnInit, OnDestroy {
 
   @ViewChild('tabRef', { static: true }) tabRef: IonTabs;
 
   @ViewChild('browserTaskRef', { static: true }) browserTaskRef: IonTabButton;
-  
+
   @ViewChild('mobileTaskRef', { static: true }) mobileTaskRef: IonTabButton;
 
   public companyFollowUp: any = 0;
@@ -27,7 +28,7 @@ export class TabsPage implements OnInit {
 
   public internvalSubscribe;
 
-  public statLoaded; 
+  public statLoaded;
 
   constructor(
     public actionSheetCtrl: ActionSheetController,
@@ -37,6 +38,7 @@ export class TabsPage implements OnInit {
     public router: Router,
     public statisticService: StatisticService,
     public authService: AuthService,
+    public accountService: AccountService,
   ) {
   }
 
@@ -45,7 +47,12 @@ export class TabsPage implements OnInit {
 
     if (state && state.selectedTab) {
       this.tabRef.select(state.selectedTab).then();
-    } 
+    }
+
+    // in case story not found.
+    if (!this.authService.story) {
+      this.getAccountInfo();
+    }
 
     // add event to scroll content to top on tab selection
 
@@ -78,13 +85,13 @@ export class TabsPage implements OnInit {
 
     this.statisticService.get().subscribe(response => {
 
-      //skip for first time 
+      //skip for first time
 
       if(this.statLoaded && this.totalRequest != response.totalRequests) {
         this.eventService.requestCountUpdated$.next();
       }
 
-      this.statLoaded = true; 
+      this.statLoaded = true;
 
       this.companyFollowUp = response.requireFollowup;
       this.totalRequest = response.totalRequests;
@@ -106,7 +113,7 @@ export class TabsPage implements OnInit {
       this.totalCandidateToReview = response.profileApprovalRequire;
       this.assignedExpiredCivilID = response.assignedExpiredCivilID;
       this.assignedIdleCandidates = response.assignedIdleCandidates;
-      
+
       this.companyMoreThen40DaysWithoutPayment = response.companyMoreThen40DaysWithoutPayment;*/
     },
       error => { },
@@ -155,8 +162,17 @@ export class TabsPage implements OnInit {
         this.tabRef.select(this.mobileTaskRef.tab.)
       }
       todo: have to check alternative
-      this.tabRef.select('tasks').then(); 
+      this.tabRef.select('tasks').then();
       */
+    });
+  }
+
+  async getAccountInfo() {
+    this.accountService.accountInfo().subscribe( res => {
+      if (res && res.story) {
+        this.authService.story = res.story;
+        this.authService.saveInStorage();
+      }
     });
   }
 }

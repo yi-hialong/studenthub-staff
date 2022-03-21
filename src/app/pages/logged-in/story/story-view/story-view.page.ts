@@ -97,7 +97,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
     });
 
     this.changeDetector.detectChanges();
-    
+
     this.eventService.companyRequestCancelled$.subscribe((request: any) => {
       if(this.story && request.request_uuid == this.story.request_uuid) {
         this.loadData();
@@ -132,7 +132,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
       this.loadStoryInvitations();
       this.loadSuggestions();
-      
+
       /*if (this.story.story_status == 1) {
         this.loadTimer();
       }
@@ -156,7 +156,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
   /**
    * load invitations
-   * @param loading 
+   * @param loading
    */
   loadStoryInvitations(loading = true) {
     this.invitationService.list('&story_uuid=' + this.story_uuid).subscribe(invitations => {
@@ -304,7 +304,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
   }
 
   loadTimer() {
-    
+
     this.dDay = this.toDate(this.story.story_last_updated_at);
 
     this.subscription = interval(1000)

@@ -46,7 +46,8 @@ export class CompanyRequestListPage implements OnInit {
   public borderLimit = false;
 
   public scrollPosition = 0;
-
+  public total = 0;
+  
   constructor(
     public navCtrl: NavController,
     public platform: Platform,
@@ -92,8 +93,10 @@ export class CompanyRequestListPage implements OnInit {
 
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
-
+      this.total = parseInt(response.headers.get('X-Pagination-Total-Count'));
+      
       this.requests = response.body;
+      
     },
       error => { },
       () => { this.loading = false; }

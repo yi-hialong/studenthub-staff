@@ -1,17 +1,15 @@
 <ion-header [class.add-border]="borderLimit" class="ion-no-border">
-  <ion-toolbar>
+  <ion-toolbar class="container">
     <ion-buttons slot="start">
       <ion-back-button (click)="close()"></ion-back-button>
     </ion-buttons>
-
+  </ion-toolbar>
+  <ion-toolbar class="container">
     <ion-title>{{ operation }}</ion-title>
 
     <ion-buttons slot="end">
-      <ion-button clear color="primary"
-        [disabled]="!form.valid"
-        (click)="save()">
-        <span *ngIf="!saving">Save</span>
-        <ion-spinner *ngIf="saving"></ion-spinner>
+      <ion-button clear (click)="close()">
+        Cancel
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -19,68 +17,74 @@
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <form [formGroup]="form" *ngIf="form">
-    <ion-list>
+     
+      <h5>Basic Information</h5>
 
-        <app-image-upload
-                label="Company Logo" icon="person-outline" prefix="logo"
-                formControlName="logo"
-        ></app-image-upload>
+      <app-image-upload label="Company Logo" icon="person-outline" prefix="logo" formControlName="logo">
+      </app-image-upload>
 
-        <ion-item>
-          <ion-label position="floating">Company name as per license</ion-label>
-          <ion-input type="text" formControlName="name"></ion-input>
-        </ion-item>
+      <ion-item class="input-wrapper">
+        <ion-label position="floating">Company Name as Per License</ion-label>
+        <ion-input type="text" formControlName="name"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Common Name en</ion-label>
-          <ion-input type="text" formControlName="common_name_en"></ion-input>
-        </ion-item>
+      <ion-item class="input-wrapper">
+        <ion-label position="floating">Common Name in English</ion-label>
+        <ion-input type="text" formControlName="common_name_en"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Common Name ar</ion-label>
-          <ion-input type="text" formControlName="common_name_ar"></ion-input>
-        </ion-item>
+      <ion-item class="input-wrapper">
+        <ion-label position="floating">Common Name in Arabic</ion-label>
+        <ion-input type="text" formControlName="common_name_ar"></ion-input>
+      </ion-item>
 
-      <ion-item *ngIf="!this.isSubCompany">
+      <ion-item class="input-wrapper" *ngIf="!this.isSubCompany">
         <ion-label position="floating">Password</ion-label>
         <ion-input type="text" formControlName="password"></ion-input>
       </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Description - English</ion-label>
+      <ion-item class="input-wrapper">
+        <ion-label position="floating">Description in English</ion-label>
 
-          <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor"
-            (ready)="onEditorReady()" (change)="onChange($event)">
-          </ckeditor>
-          <!--
+        <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (ready)="onEditorReady()"
+          (change)="onChange($event)">
+        </ckeditor>
+        <!--
           <ion-textarea formControlName="description_en"></ion-textarea>-->
-        </ion-item>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Description - Arabic</ion-label>
+      <ion-item class="input-wrapper">
+        <ion-label position="floating">Description in Arabic</ion-label>
 
-          <ckeditor [config]="editorConfig" #ckeditor_ar [editor]="Editor"
-            (ready)="onArabicEditorReady()" (change)="onArabicEditorChange($event)">
-          </ckeditor>
+        <ckeditor [config]="editorConfig" #ckeditor_ar [editor]="Editor" (ready)="onArabicEditorReady()"
+          (change)="onArabicEditorChange($event)">
+        </ckeditor>
 
-        </ion-item>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Website</ion-label>
-          <ion-input type="text" formControlName="website"></ion-input>
-        </ion-item>
+      <h5>More Information</h5>
 
-        <ion-item>
-          <ion-label position="floating">Hourly Rate</ion-label>
-          <ion-input type="text" formControlName="hourly_rate"></ion-input>
-        </ion-item>
+      <ion-item class="input-wrapper" *ngIf="!isSubCompany">
+        <ion-label position="floating">Email</ion-label>
+        <ion-input type="text" formControlName="email"></ion-input>
+      </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Bonus Commission(%)</ion-label>
-          <ion-input type="text" formControlName="bonus_commission"></ion-input>
-        </ion-item>
+      <ion-item class="input-wrapper">
+        <ion-label position="floating">Website</ion-label>
+        <ion-input type="text" formControlName="website"></ion-input>
+      </ion-item>
 
-      <ion-item *ngIf="!isSubCompany">
+      <ion-item class="input-wrapper">
+        <ion-label position="floating">Hourly Rate</ion-label>
+        <ion-input type="text" formControlName="hourly_rate"></ion-input>
+      </ion-item>
+
+      <ion-item class="input-wrapper">
+        <ion-label position="floating">Bonus Commission(%)</ion-label>
+        <ion-input type="text" formControlName="bonus_commission"></ion-input>
+      </ion-item>
+
+      <ion-item class="input-wrapper" *ngIf="!isSubCompany">
         <ion-label position="floating">Followup interval</ion-label>
         <ion-input type="text" formControlName="followup_interval_weeks"></ion-input>
       </ion-item>
@@ -92,16 +96,15 @@
         </ion-toggle>
       </ion-item>
 
-      <ion-item *ngIf="!isSubCompany">
-        <ion-label position="floating">Email</ion-label>
-        <ion-input type="text" formControlName="email"></ion-input>
-      </ion-item>
-
-      <ion-item *ngIf="!isSubCompany">
+      <ion-item class="input-wrapper" *ngIf="!isSubCompany">
         <ion-label>Approved to hire?</ion-label>
         <ion-toggle slot="end" formControlName="approved_to_hire"></ion-toggle>
       </ion-item>
 
-    </ion-list>
+      <ion-button class="btn-save" [disabled]="!form.valid || loading" (click)="save()">
+        <span *ngIf="!loading">{{ operation }}</span>
+        <ion-spinner *ngIf="loading"></ion-spinner>
+      </ion-button>
+
   </form>
 </ion-content>

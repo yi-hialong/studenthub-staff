@@ -32,39 +32,6 @@ ion-title {
     color: #23233d;
 }
 
-ion-item {
-    --background: #fff;
-    --height: 48px;
-    margin-bottom: 16px;
-    --border-color: #e2e2e6;
-    --border-width: 1px;
-    --border-radius: 8px;
-    background: #fff;
-
-    ion-input {
-        font-size: 14px;
-        font-weight: 500;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.43;
-        letter-spacing: normal;
-        text-align: left;
-        color: #23233d;
-    }
-
-    ion-label {
-        font-family: Inter;
-        font-size: 14px;
-        font-weight: 500;
-        font-stretch: normal;
-        font-style: normal;
-        line-height: 1.43;
-        letter-spacing: normal;
-        text-align: left;
-        color: #68687a;
-    }
-}
-
 .btn-save {
     height: 56px;
     border-radius: 12px;

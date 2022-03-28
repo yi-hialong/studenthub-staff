@@ -100,7 +100,7 @@ export class CompanyFormPage implements OnInit {
 
     if (!this.model.company_id) { // Show Create Form
 
-      this.operation = (this.isSubCompany) ? 'Create Sub-company' : 'Create Company';
+      this.operation = (this.isSubCompany) ? 'Add Sub-company' : 'Add New Client';
 
       if (this.isSubCompany) {
         this.form = this._fb.group({
@@ -134,7 +134,7 @@ export class CompanyFormPage implements OnInit {
         });
       }
     } else { // Show Update Form
-      this.operation = (this.isSubCompany) ? 'Update  Sub-company' : 'Update Company';
+      this.operation = (this.isSubCompany) ? 'Update  Sub-company' : 'Update Client';
       if (this.isSubCompany) {
         this.form = this._fb.group({
           name: [this.model.company_name, Validators.required],

@@ -105,9 +105,12 @@
       </ion-card>
     </ng-container>
   </div>
-  <div class="container" *ngIf="request && story && segment == 'invited'">
-    <h2>Invited Candidates</h2>
-    <no-items message="~ No Invitations ~" *ngIf="allInvitedCandidates.length == 0"></no-items>
+  <div class="container invite-tab" *ngIf="request && story && segment == 'invited'">
+    <h2>Invited Candidates <span class="count">({{allInvitedCandidates.length}})</span></h2>
+    <div *ngIf="allInvitedCandidates.length == 0" class="ion-text-center no-invi">
+      <img src="assets/images/no-invitation.png"/>
+      <p class="ion-text-center">There are no invited candidates!</p>
+    </div>
     <invitation *ngFor="let invitation of allInvitedCandidates" (onUpdate)="loadData()" [model]="invitation"></invitation>
   </div>
   <div class="container" *ngIf="request && story && segment == 'suggestion'">

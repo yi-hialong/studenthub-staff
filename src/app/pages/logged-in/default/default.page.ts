@@ -4,6 +4,7 @@ import { NavController } from '@ionic/angular';
 import { AuthService } from 'src/app/providers/auth.service';
 import { EventService } from 'src/app/providers/event.service';
 import { StatisticService } from 'src/app/providers/logged-in/statistic.service';
+import {AccountService} from "../../../providers/logged-in/account.service";
 
 
 @Component({
@@ -34,6 +35,7 @@ export class DefaultPage implements OnInit {
   constructor(
     public navCtrl: NavController,
     public authService: AuthService,
+    public accountService: AccountService,
     public statisticService: StatisticService,
     private _events: EventService,
   ) { }
@@ -54,6 +56,7 @@ export class DefaultPage implements OnInit {
     }) => {
       this.statistics = response;
     });
+    this.getAccountInfo();
   }
 
   /**
@@ -134,7 +137,15 @@ export class DefaultPage implements OnInit {
       }
     );
   }
-
+  async getAccountInfo() {
+    this.accountService.accountInfo().subscribe( res => {
+      console.log(res);
+      if (res && res.story) {
+        this.authService.story = res.story;
+        this.authService.saveInStorage();
+      }
+    });
+  }
   logout() {
     this.authService.logout();
   }

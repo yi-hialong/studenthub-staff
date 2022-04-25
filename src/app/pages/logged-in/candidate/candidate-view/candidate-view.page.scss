@@ -9,6 +9,11 @@ ion-header {
           padding: 0;
       }
   }
+
+  .btn-copy {
+    position: relative;
+    top: -7px;
+  }
 }
 
 ion-content {
@@ -19,35 +24,35 @@ ion-content {
 }
 
 ion-thumbnail {
-  width: 136px;
-  height: 136px;
+  width: 80px;
+  height: 80px;
   --border-radius: 100%;
-  margin: 38px 0 32px 0;
+  margin-inline-end: 16px;
 }
 
 h2.candidate-name {
-  margin: 32px 0 3px 0;
-  font-size: 48px;
+  margin: 10px 0 0 0;
+  font-size: 24px;
   font-weight: bold;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
   letter-spacing: normal;
-  color: black;
+  color: #23233d;
   text-transform: capitalize;
 }
 
 h4.candidate-name {
-  margin: 5px 0 5px 0;
+  margin: 4px 0 4px 0;
   font-family: 'Droid Arabic Kufi', 'effra', sans-serif !important;
   --ion-font-family: 'Droid Arabic Kufi', 'effra', sans-serif !important;
-  font-size: 24px;
+  font-size: 16px;
   font-weight: normal;
   font-stretch: normal;
   font-style: normal;
   line-height: normal;
   letter-spacing: normal;
-  color: black;
+  color: #23233d;
 }
 
 .hourly-rate {
@@ -154,10 +159,7 @@ h4.candidate-name {
   }
 }
 
-.work-history-wrapper ion-item,
-.phone,
-.email,
-.whatsapp {
+.work-history-wrapper ion-item {
   --padding-start: 46px;
   --inner-border-width: 0;
   --padding-start: 58px;
@@ -208,6 +210,31 @@ h4.candidate-name {
   ion-item {
     --padding-start: 0;
     --background: none;
+  }
+}
+
+.personal-details {
+  
+  h5 {
+    margin-bottom: 16px;
+  }
+
+  a {
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    color: #23233d;
+    text-decoration: none;
+    padding-inline-start: 32px;
+    clear: both;
+    display: block;
+
+    ion-button {
+      float: right;
+    }
   }
 }
 
@@ -323,7 +350,7 @@ h4.candidate-name {
 }
 
 .video {
-  --background: url('src/assets/images/ic_video.svg') no-repeat 0px 11px;
+  background: url('src/assets/images/ic_video.svg') no-repeat 0 2px;
 
   img {
     width: 90px;
@@ -332,65 +359,60 @@ h4.candidate-name {
 }
 
 .resume {
-  --background: url('src/assets/images/ic_ad.svg') no-repeat 0px 11px;
+  background: url('src/assets/images/ic_ad.svg') no-repeat 0 2px;
 }
 
 .skills {
-  --background: url('src/assets/images/ic_food_tools.svg') no-repeat 0px 11px;
+  background: url('src/assets/images/ic_food_tools.svg') no-repeat 0 2px;
 }
 
 .experiences {
-  --background: url('src/assets/images/ic_suitcase.svg') no-repeat 0px 11px;
+  background: url('src/assets/images/ic_suitcase.svg') no-repeat 0 2px;
 }
 
 .area {
-  --background: url('src/assets/images/ic_home_2.svg') no-repeat 0px 11px;
+  background: url('src/assets/images/ic_home_2.svg') no-repeat 0 2px;
 }
 
 .phone {
-  --background: url('src/assets/images/ic_phone.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/icon-phone.svg') no-repeat 0px -1px;
 }
 
 .whatsapp {
-  --padding-start: 0px;
-  --background: none;
-
-  ion-icon {
-    color: #000;
-  }
+  background: url('src/assets/images/icon-phone.svg') no-repeat 0 -1px;
 }
 
 .email {
-  --background: url('src/assets/images/ic_message.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/icon-email.svg') no-repeat 0 2px;
 }
 
 .nationality {
-  --background: url('src/assets/images/ic_globe.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/ic_globe.svg') no-repeat 0 2px;
 }
 
 .gender {
-  --background: url('src/assets/images/ic_swipe.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/ic_swipe.svg') no-repeat 0 2px;
 }
 
 .university {
-  --background: url('src/assets/images/md-school.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/md-school.svg') no-repeat 0 2px;
 }
 
 .driving-license {
-  --background: url('src/assets/images/ic_car.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/ic_car.svg') no-repeat 0 2px;
 }
 
 .mother-nationality {
-  --background: url('src/assets/images/ic_username.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/ic_username.svg') no-repeat 0 2px;
 }
 
 .id-number {
-  --background: url('src/assets/images/ic_feed.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/ic_feed.svg') no-repeat 0 2px;
 }
 
 .civil-front,
 .civil-back {
-  --background: url('src/assets/images/ic_profile_info.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/ic_profile_info.svg') no-repeat 0 2px;
 
   p {
     margin-bottom: 7px;
@@ -398,7 +420,7 @@ h4.candidate-name {
 }
 
 .bank {
-  --background: url('src/assets/images/ic_bank.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/ic_bank.svg') no-repeat 0 2px;
 
   h5,
   p {
@@ -407,7 +429,7 @@ h4.candidate-name {
 }
 
 .created-at {
-  --background: url('src/assets/images/ic_timer.svg') no-repeat 0px 15px;
+  background: url('src/assets/images/ic_timer.svg') no-repeat 0 2px;
 
   p {
     margin-bottom: 0 !important;
@@ -525,6 +547,10 @@ ion-footer {
   opacity: 0.5;
 }
 
+ion-segment {
+  margin-top: 16px;
+}
+
 ion-segment-button {
   text-transform: inherit;
   font-family: Inter;
@@ -567,3 +593,99 @@ h5.title {
   margin-bottom: 32px;
 }
 
+ion-content { 
+  h5 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.56;
+    letter-spacing: normal;
+    color: #23233d;
+
+    ion-icon {
+      margin-inline-end: 4px;
+    }
+  }
+
+  .item-salary {
+    height: 80px;
+    flex-grow: 0;  
+    border-radius: 8px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    --inner-border-width: 0;
+    margin-top: 16px;
+
+    ion-label {
+      margin-top: 16px;
+    }
+
+    h5 {
+      font-size: 18px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.33;
+      letter-spacing: normal;
+      color: #23233d;
+      margin-bottom: 4px;
+    }
+
+    p {
+      font-size: 14px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      color: #4b4b61;
+    }
+
+    ion-badge {
+      padding: 4px 8px;
+      border-radius: 8px;
+      background-color: #edfcf3;
+      font-size: 14px;
+      font-weight: 600;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      color: #29b564;
+    }
+
+    .badge-unpaid {
+      background-color: #fff7f0;
+      color: #ca7f3e;
+    }
+  }
+
+  .bank-detail {
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    color: #4b4b61;
+    margin-top: 32px;
+    
+    p {
+      margin: 0;
+      margin-inline-start: 32px;
+    }
+  }
+}
+
+.icon-bank,
+.icon-salary {
+  font-size: 24px;
+  position: relative;
+  top: 5px;
+}
+
+.txt-general-info {
+  margin-top: 32px;
+}

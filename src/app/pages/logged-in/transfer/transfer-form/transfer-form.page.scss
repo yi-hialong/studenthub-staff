@@ -2,29 +2,345 @@ ion-back-button {
   display: block;
 }
 
-ion-footer {
-  div {
-    font-size: 1.1em;
-  }
+ion-content {
+  --padding-start: 20px;
+  --padding-end: 20px;
+  --padding-top: 20px;
 }
 
-h4 {
-  //padding: 0 21px;
-  //margin: 13px 0 0 0;
-  color: #000;
+ion-content, ion-list, ion-footer{
+  background: #f7f8fa;
+  --background: #f7f8fa;
+}
+
+ion-title {
+  font-family: Inter;
+  font-size: 20px !important;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-align: left;
+  color: #23233d;
+  padding-inline-end: 24px;
+  padding-inline-start: 24px;
+}
+
+.cancel {
+  font-family: Inter;
   font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: left;
+  color: #4c70f2;
 }
 
-.card-date-range {
-  p {
-    margin-bottom: 0;
+ion-segment {
+  margin: 0 24px;
+}
+
+ion-segment-button {
+  text-transform: inherit;
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #68687a;
+}
+
+ion-segment-button.segment-button-checked {
+  font-weight: 600;
+  color: #263879;
+  --indicator-color	:#263879;
+  --border-color	:#263879;
+}
+
+.txt-date-range {
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 0;
+  height: auto;
+  margin: 0 24px 16px 24px;
+
+  ion-icon {
+    position: absolute;
+    right: 0;
+    top: 15px;
   }
+}
+
+ion-item-divider {
+  font-size: 20px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.4;
+  letter-spacing: normal;
+  text-align: left;
+  color: #23233d;
+  --inner-border-width: 0;
+  border: none;
+  margin-bottom: 16px;
+  padding: 0 4px;
+  --background: transparent;
+}
+
+ion-card {
+  border-radius: 8px;
+  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+  background-color: #fff;
+  margin: 4px 4px 16px 4px;
+  padding: 16px 0 8px;
   
-  .btn-clear-date-range {
-    --padding-start: 0;
-    --padding-end: 5px;
+
+  ion-item {
+    --inner-border-width: 0;
+
+    ion-avatar {
+      width: 48px;
+      height: 48px;
+      flex-grow: 0;
+      border-radius: 44px;
+      background-color: #eeeef0;
+      margin-top: 0;
+    }
+
+    h2 {
+      font-size: 16px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.5;
+      letter-spacing: normal;
+      text-align: left;
+      color: #23233d;
+      margin: 0;
+    }
+  }
+
+  .subtotal-wrapper {
+    h5 {
+      font-size: 14px;
+      font-weight: bold;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.43;
+      letter-spacing: normal;
+      text-align: left;
+      color: #23233d;
+    }
+    
+    p {
+      font-size: 10px;
+      font-weight: 500;
+      font-stretch: normal;
+      font-style: normal;
+      line-height: 1.4;
+      letter-spacing: 0.5px;
+      text-align: left;
+      color: #68687a;
+    }
+  }
+}
+
+ion-grid {
+  margin: 0 4px;
+  padding-bottom: 0;
+}
+
+.total-wrapper {
+  margin-bottom: 24px;
+
+  ion-button {
+    width: 190px;
+    height: 56px;
+    margin: 0 0 0 24px;
+    border-radius: 12px;
+    --background: #4c70f2;
+    text-transform: none;
+    font-size: 16px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: center;
+    color: #fff;
+    float: right;
+    --box-shadow: none;
+  }
+
+  h4 {
+    font-size: 18px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.56;
+    letter-spacing: normal;
+    text-align: left;
+    color: #23233d;
+    margin: 0 4px;
+  }
+
+  p {
+    font-size: 14px;
+    font-weight: 500;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: left;
+    color: #68687a;
+    margin: 0 4px;
+  }
+}
+
+.title-toolbar-wrapper {
+  padding-inline-end: 12px;
+}
+
+.upload {
+  opacity: 0;
+}
+
+.progress-wrapper {
+  h4 {
+    font-size: 14px;
+    line-height: 1.41;
+    color: #292f38;
+    font-weight: normal;
+    margin: 0;
+    width: calc(100% - 50px);
+
+    span {
+      float: var(--end);
+    }
+  }
+
+  .progress-box {
+    width: 313px;
+    height: 60px;
+    border-radius: 4px;
+    border: solid 1px #bdbdbd;
+    padding: 10px 13px;
     position: relative;
-    top: -5px;
-    left: 5px;
+    margin: auto;
+    text-align: center;
+
+    .progress-bar {
+      width: 233px;
+      height: 5px;
+      border-radius: 15px;
+      background-color: rgba(242, 68, 89, 0.2);
+      margin-top: 10px;
+    }
+
+    .progress {
+      width: 0%;
+      height: 5px;
+      border-radius: 15px;
+      background-color: #f24459;
+    }
+
+    ion-icon {
+      position: absolute;
+      top: 20px;
+    }
+  }
+}
+
+.progress-wrapper ion-icon {
+  right: 20px;
+}
+
+[dir="rtl"] .progress-wrapper ion-icon {
+  left: 20px;
+}
+
+.btn-download {
+  font-size: 16px;
+  font-weight: 600;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #4c70f2;
+  margin: 16px auto;
+  display: block;
+}
+
+.image-upload {
+  --background: transparent;
+  --inner-border-width: 0;
+  --padding-start: 0;
+  margin-bottom: 12px;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+
+  #btn-download {
+    margin-inline-end: 16px;
+  }
+
+  #btn-download,
+  #btn-upload-pic {
+    font-size: 14px;
+    font-weight: 600;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.43;
+    letter-spacing: normal;
+    text-align: left;
+    color: #4b4b61;
+    text-decoration: none;
+  }
+
+  h5 {
+    font-size: 16px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 1.5;
+    letter-spacing: normal;
+    text-align: left;
+    color: #4b4b61;
+  }
+}
+
+.have-image {
+  ion-thumbnail {
+    border-radius: 10px;
+    box-shadow: 0 2px 4px 0 rgb(0 0 0 / 10%);
+    background-color: #fff;
+    height: 97px;
+    width: 97px;
+    overflow: hidden;
+  }
+  a {
+    color: #4c70f2 !important;
+    margin-top: 4px;
+  }
+}
+
+.no-image ion-thumbnail {
+  border: 1px dashed blue;
+  text-align: center;
+  width: 97px;
+  height: 97px;
+  border-radius: 10px;
+  padding: 14px 0;
+
+  ion-icon {
+    font-size: 65px;
   }
 }

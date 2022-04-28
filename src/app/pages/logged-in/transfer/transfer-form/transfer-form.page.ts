@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import {
   AlertController,
   IonContent,
@@ -11,6 +11,8 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { CustomValidator } from 'src/app/validators/custom.validator';
+import { CalendarModal, CalendarModalOptions } from 'ion2-calendar';
+import { Subscription } from 'rxjs';
 // models
 import { Transfer } from 'src/app/models/transfer';
 import { Candidate } from 'src/app/models/candidate';
@@ -22,7 +24,9 @@ import { CompanyService } from 'src/app/providers/logged-in/company.service';
 import { AwsService } from 'src/app/providers/aws.service';
 import { AuthService } from '../../../../providers/auth.service';
 import { EventService } from '../../../../providers/event.service';
-import {CalendarModal, CalendarModalOptions, CalendarResult} from 'ion2-calendar';
+import { TranslateLabelService } from 'src/app/providers/translate-label.service';
+import { SentryErrorhandlerService } from 'src/app/providers/sentry.errorhandler.service';
+
 
 @Component({
   selector: 'app-transfer-form',
@@ -60,14 +64,31 @@ export class TransferFormPage implements OnInit {
 
   public segment = 'manual';
 
+  public range;
+
+  // File input used for browser fallback when no capacitor is available
+  @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
+
+  public browserUploadSubscription: Subscription;
+
+  public uploading: Boolean = false;
+
+  public currentTarget; 
+
+  public progress = null;
+
+  public loading = false;
+
   constructor(
     public activatedRoute: ActivatedRoute,
     public navCtrl: NavController,
     public platform: Platform,
-    public aws: AwsService,
+    public awsService: AwsService,
+    public translateService: TranslateLabelService,
     public transferService: TransferService,
     public candidateService: CandidateService,
     public companyService: CompanyService,
+    public sentryService: SentryErrorhandlerService,
     // private _viewCtrl: ViewController,
     private _loadingCtrl: LoadingController,
     private _alertCtrl: AlertController,
@@ -77,7 +98,6 @@ export class TransferFormPage implements OnInit {
     private modalCtrl: ModalController,
     private eventService: EventService
   ) {
-
   }
 
   ngOnInit() {
@@ -181,6 +201,10 @@ export class TransferFormPage implements OnInit {
     // Calculate transfer total
     this.calculateTotal();
 
+    if(this.form.value.start_date && this.form.value.end_date) {
+      this.range = this.form.value.start_date + '-' + this.form.value.end_date;
+    }
+
     this.ready = true;
   }
 
@@ -231,6 +255,16 @@ export class TransferFormPage implements OnInit {
       this.save();
     }
   }
+
+  /**
+   * trigger click event on change logo button
+   */
+   triggerUpload($event) {
+    $event.stopPropagation();
+    document.getElementById('btn-upload-pic').click();
+    // this.fileInput.nativeElement.click();
+  }
+
 
   /**
    * Save the model
@@ -388,7 +422,7 @@ export class TransferFormPage implements OnInit {
     });
   }
 
-  async openCalendarPopup(event, field) {
+  async openCalendarPopup(event) {
 
     let fromDate = new Date();
 
@@ -397,7 +431,7 @@ export class TransferFormPage implements OnInit {
 
     const options: CalendarModalOptions = {
       canBackwardsSelected: true,
-      pickMode: 'single',
+      pickMode: 'range',
       title: '',
       defaultScrollTo: new Date(),
       defaultDateRange: {
@@ -415,18 +449,202 @@ export class TransferFormPage implements OnInit {
     myCalendar.present();
 
     const eventCloseData: any = await myCalendar.onDidDismiss();
+
+    console.log(eventCloseData);
+
     const date = eventCloseData.data;
 
     if (date) {
       // this.form.value.start_date
-      if (field == 'start_date') {
-        this.form.controls.start_date.setValue(date.string);
-      } else {
-        this.form.controls.end_date.setValue(date.string);
-      }
+      this.form.controls.start_date.setValue(date.from.string);
+      this.form.controls.end_date.setValue(date.to.string);
+
+      this.range = date.from.string + '-' + date.to.string;
     }
   }
   
+  ngOnDestroy() {
+    if (!!this.browserUploadSubscription) {
+      this.browserUploadSubscription.unsubscribe();
+    }
+  }
+
+  /**
+   * cancel file upload
+   */
+   cancelUpload() {
+    if (this.fileInput && this.fileInput.nativeElement) {
+      this.fileInput.nativeElement.value = null;
+    }
+
+    this.progress = null;
+
+    this.loading = false;
+
+    this.currentTarget.abort();
+  }
+
+  upload() {
+    this.fileInput.nativeElement.click();
+  }
+
+  /**
+   * Upload photo from browser
+   * @param event
+   */
+  async browserUpload(event) {
+
+    const fileList: FileList = event.target.files;
+
+    if (fileList.length == 0) {
+      return false;
+    }
+
+    this.uploading = true;
+
+    this.browserUploadSubscription = this.awsService.uploadFile(fileList[0]).subscribe(event => {
+
+      this._handleUpload(event);
+
+    }, async err => {
+
+      //log to slack/sentry to know how many user getting file upload error
+
+      this.sentryService.handleError(err);
+
+      if (this.fileInput && this.fileInput.nativeElement)
+        this.fileInput.nativeElement.value = null;
+
+      const alert = await this._alertCtrl.create({
+        header: 'Error',
+        message: 'Error while uploading file!',
+        buttons: ['Okay']
+      });
+
+      await alert.present();
+
+      this.uploading = false;
+    });
+  }
+
+  /**
+   * Handle successfull file upload
+   * @param event
+   */
+  _handleUpload(event) {
+
+    // Via this API, you get access to the raw event stream.
+    // Look for upload progress events.
+    if (event.type === 'progress') {
+      // This is an upload progress event. Compute and show the % done:
+      //this.progress = Math.round(100 * event.loaded / event.total);
+    } else if (event.Key && event.Key.length > 0) {
+
+      if (this.fileInput && this.fileInput.nativeElement)
+        this.fileInput.nativeElement.value = null;
+
+      if (this.transfer.transfer_id) {
+        this.editTransferUpload(event.Key);
+      } else {
+        this.newTransferUpload(event.Key);
+      }
+    }
+  }
+
+  /**
+   * new transfer upload excel
+   * @param file
+   */
+  async newTransferUpload(file) {
+
+    this.transferService.uploadTransferExcel(file, this.form.value.start_date, this.form.value.end_date, this.transfer.company_id).subscribe(async data => {
+
+      this.uploading = false;
+
+      if (data.operation == 'success') {
+
+        this.eventService.reloadStats$.next({
+          company_id: this.transfer.company_id
+        });
+
+        let prompt = await this._alertCtrl.create({
+          message: data.message,
+          buttons: ["Ok"]
+        });
+        prompt.present();
+
+        this.close({ refresh: true });
+      }
+
+      // On Failure
+      if (data.operation == "error") {
+
+        let prompt = await this._alertCtrl.create({
+          message: this.translateService.errorMessage(data.message),
+          buttons: ["Ok"]
+        });
+        prompt.present();
+      }
+    }, () => {
+      this.uploading = false;
+    });
+  }
+
+  /**
+   * edit transfer upload excel
+   * @param event
+   */
+  async editTransferUpload(file) {
+
+    this.transferService
+      .updateTransferUploadExcel(file, this.transfer.transfer_id, this.form.value.start_date, this.form.value.end_date)
+      .subscribe(async data => {
+
+        this.uploading = false;
+
+        if (data.operation == 'success') {
+
+          this.eventService.reloadStats$.next({
+            company_id: this.transfer.company_id
+          });
+
+          let prompt = await this._alertCtrl.create({
+            message: data.message,
+            buttons: ["Ok"]
+          });
+          prompt.present();
+
+          this.close({ refresh: true });
+
+          // this.navCtrl.push(TransferViewPage, {
+          //   'model': this.transfer.transfer_id
+          // });
+        }
+
+        // On Failure
+        if (data.operation == "error") {
+          let prompt = await this._alertCtrl.create({
+            message: this.translateService.errorMessage(data.message),
+            buttons: ["Ok"]
+          });
+          prompt.present();
+        }
+      }, () => {
+        this.uploading = false;
+      });
+  }
+
+  /**
+   * download transfer template invoice
+   */
+  async downloadTemplate() {
+    let loader = await this._loadingCtrl.create();
+    loader.present();
+    this.transferService.downloadTransferTemplate(this.transfer.company_id).subscribe(response => {
+      loader.dismiss();
+    });
+  }
+
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 20);
   }

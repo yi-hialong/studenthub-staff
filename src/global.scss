@@ -42,6 +42,12 @@ body {
   }
 }
 
+.clearfix {
+  clear: both;
+  display: table;
+  content: "";
+}
+
 ion-tabs ion-back-button {
   display: none !important;
 }
@@ -618,7 +624,6 @@ ion-item.input-wrapper {
       font-weight: 500;
       font-stretch: normal;
       font-style: normal;
-      line-height: 1.43;
       letter-spacing: normal;
       text-align: left;
       color: #23233d;
@@ -630,13 +635,23 @@ ion-item.input-wrapper {
       font-weight: 500;
       font-stretch: normal;
       font-style: normal;
-      line-height: 1.43;
       letter-spacing: normal;
       text-align: left;
       color: #68687a;
       --color: #68687a;
   }
 }
+/*
+ion-item.input-wrapper:not(.item-has-value) {
+  ion-label {
+    transform: translateY(75%);
+  }
+}*/
+
 .store-option .popover-content {
   box-shadow: 0 8px 25px 0 rgba(0, 0, 0, 0.1)
+}
+
+.pull-left {
+  float: left;
 }

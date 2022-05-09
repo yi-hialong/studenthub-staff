@@ -3,6 +3,10 @@
 <ion-card>
   <ion-card-content>
     
+    <ion-button fill="clear" class="btn-actions" (click)="showActions($event)">
+      <ion-icon class="setting-icon" name="ellipsis-vertical-outline"></ion-icon>
+    </ion-button>
+
     <p class="note">
       <b *ngIf="note.updatedBy">{{ note.updatedBy.staff_name? note.updatedBy.staff_name: note.updatedBy.candidate_name }}:&nbsp;</b>
       <ng-container *ngIf="note.note_text.length > 100"><span [innerHTML]="note.note_text | slice:0:100"></span>...</ng-container>

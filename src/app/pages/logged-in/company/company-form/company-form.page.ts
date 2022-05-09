@@ -100,7 +100,7 @@ export class CompanyFormPage implements OnInit {
 
     if (!this.model.company_id) { // Show Create Form
 
-      this.operation = (this.isSubCompany) ? 'Add Sub-company' : 'Add New Client';
+      this.operation = (this.isSubCompany) ? 'Add New Subcompany' : 'Add New Client';
 
       if (this.isSubCompany) {
         this.form = this._fb.group({

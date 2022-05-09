@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ModalController, AlertController, ToastController, IonContent } from '@ionic/angular';
+import { ModalController, AlertController, ToastController, IonContent, PopoverController } from '@ionic/angular';
 // services
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
 import { NoteService } from 'src/app/providers/logged-in/note.service';
@@ -23,6 +23,7 @@ import { CompanyMallsPage } from '../company-malls/company-malls.page';
 import { CompanySubcompaniesPage } from '../company-subcompanies/company-subcompanies.page';
 import { CompanyStoresPage } from '../company-stores/company-stores.page';
 import {ModalPopPage} from "../../modal-pop/modal-pop.page";
+import { ActionComponent } from 'src/app/components/action/action.component';
 
 
 @Component({
@@ -70,6 +71,7 @@ export class CompanyViewPage implements OnInit {
     public modalCtrl: ModalController,
     public toastCtrl: ToastController,
     public alertCtrl: AlertController,
+    public popoverCtrl: PopoverController,
     public activatedRoute: ActivatedRoute,
     public companyService: CompanyService,
     public aws: AwsService,
@@ -567,6 +569,53 @@ export class CompanyViewPage implements OnInit {
       event.target.complete();
     }, () => {
     });
+  }
+
+  /**
+   * show action popover
+   * @param event 
+   */
+   async showActions(event) {
+    
+    event.preventDefault();
+    event.stopPropagation();
+
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const actions = [
+      {
+        name: "Edit Client",
+        icon: 'assets/icon/icon-edit-2.svg',
+        trigger: 'edit'
+      },
+    ];
+
+    const modal = await this.popoverCtrl.create({
+      component: ActionComponent,
+      componentProps: {
+        actions: actions
+      },
+      cssClass: 'store-option',
+      event,
+      translucent: true,
+      showBackdrop: false
+    });
+    modal.present();
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+    });
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data && data.action) {
+      if(data.action.trigger == 'edit') {
+        this.update();
+      }  
+    }
   }
 
   /**

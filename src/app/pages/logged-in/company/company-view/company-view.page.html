@@ -6,8 +6,8 @@
     </ion-buttons>
 
     <ion-buttons slot="end" *ngIf="company && !loading">
-      <ion-button (click)="update()">
-        Update
+      <ion-button fill="clear" class="btn-actions" (click)="showActions($event)">
+        <ion-icon class="setting-icon" name="ellipsis-vertical-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
     <!-- <ion-buttons slot="end" *ngIf="company && !loading">

@@ -71,6 +71,8 @@ import { CalendarModule } from 'ion2-calendar';
 import {CompanyFilterPageModule} from './pages/logged-in/company/company-list/company-filter/company-filter.module';
 import { StoreOptionPageModule } from './pages/logged-in/store/store-option/store-option.module';
 import { StoreModule } from './components/store/store.module';
+import { ActionComponent } from './components/action/action.component';
+import { ActionComponentModule } from './components/action/action.module';
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -82,7 +84,9 @@ export function createTranslateLoader(http: HttpClient) {
 
 @NgModule({
   declarations: [AppComponent],
-  entryComponents: [],
+  entryComponents: [
+    ActionComponent
+  ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -152,7 +156,11 @@ export function createTranslateLoader(http: HttpClient) {
     StaffPageModule,
     StoreOptionPageModule,
     StoreModule,
-    CompanyFilterPageModule
+    CompanyFilterPageModule,
+    ActionComponentModule
+  ],
+  exports: [
+    ActionComponentModule
   ],
   providers: [
     {

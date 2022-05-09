@@ -1,10 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { AlertController, ModalController, Platform } from '@ionic/angular';
+import { AlertController, ModalController, Platform, PopoverController } from '@ionic/angular';
 //models
 import { Note } from 'src/app/models/note';
 import { CompanyNoteFormPage } from 'src/app/pages/logged-in/company/company-note-form/company-note-form.page';
 //services
 import { NoteService } from 'src/app/providers/logged-in/note.service';
+import { ActionComponent } from '../action/action.component';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class NoteComponent implements OnInit {
   constructor(
     public platform: Platform,
     public modalCtrl: ModalController,
+    public popoverCtrl: PopoverController,
     public alertCtrl: AlertController,
     public noteService: NoteService
   ) { }
@@ -50,6 +52,60 @@ export class NoteComponent implements OnInit {
   doNothing(event) {
     event.preventDefault();
     event.stopPropagation();
+  }
+
+  /**
+   * show action popover
+   * @param event 
+   */
+  async showActions(event) {
+    
+    event.preventDefault();
+    event.stopPropagation();
+
+    window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
+
+    const actions = [
+      {
+        name: "Edit Note",
+        icon: 'assets/icon/icon-edit-2.svg',
+        trigger: 'edit'
+      },
+      {
+        name: "Delete Note",
+        icon: 'assets/icon/icon-trash-2.svg',
+        trigger:  'delete'
+      }
+    ];
+
+    const modal = await this.popoverCtrl.create({
+      component: ActionComponent,
+      componentProps: {
+        actions: actions
+      },
+      cssClass: 'store-option',
+      event,
+      translucent: true,
+      showBackdrop: false
+    });
+    modal.present();
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+    });
+
+    const { data } = await modal.onWillDismiss();
+
+    if (data && data.action) {
+      if(data.action.trigger == 'edit') {
+        this.edit(event);
+      } else if(data.action.trigger == 'delete') {
+        this.delete(event);
+      } 
+    }
   }
 
   /**

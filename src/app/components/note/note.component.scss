@@ -76,26 +76,6 @@ ion-card {
 }
 
 ion-button {
-    --border-radius: 5px;
-    --box-shadow: none;
-    font-size: 16px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: 1.65;
-    letter-spacing: normal;
-    text-align: center;
-    color: #ffffff;
-    text-transform: none;
-    height: 45px;
-    width: 152px;
-    margin: 0 10px 0 0;
-  }
-
-  .btn-accept {
-    --background: #219653;
-  }
-
-  .btn-reject {
-    --background: #eb5757;
-  }
+  position: absolute;
+  right: 0;
+}

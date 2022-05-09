@@ -1,0 +1,9 @@
+<ion-content>
+  
+  <ion-item (click)="onSelected(action)" *ngFor="let action of actions" tappable>
+    <div tabindex="0"></div>
+    <ion-icon [src]="action.icon"></ion-icon>
+    {{ action.name }}
+  </ion-item>
+</ion-content>
+

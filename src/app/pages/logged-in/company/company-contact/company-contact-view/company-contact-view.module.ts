@@ -9,8 +9,9 @@ import { CompanyContactViewPageRoutingModule } from './company-contact-view-rout
 import { CompanyContactViewPage } from './company-contact-view.page';
 import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
 import { PipesModule } from 'src/app/pipes/pipes.module';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { NoteModule } from 'src/app/components/note/note.module';
+import { RequestListingComponent } from 'src/app/components/request-listing/request-listing.component';
+import { RequestListingModule } from 'src/app/components/request-listing/request-listing.module';
 
 @NgModule({
   imports: [
@@ -18,10 +19,10 @@ import { NoteModule } from 'src/app/components/note/note.module';
     FormsModule,
     ReactiveFormsModule,
     IonicModule,
-    PipesModule,
-    CKEditorModule,
+    PipesModule, 
     LoadingModalModule,
     NoteModule,
+    RequestListingModule,
     CompanyContactViewPageRoutingModule
   ],
   declarations: [CompanyContactViewPage]

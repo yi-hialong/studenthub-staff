@@ -1,62 +1,42 @@
+ion-title {
+  font-size: 24px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+  text-align: left;
+  color: #23233d;
 
-h4 {
-    font-size: 14px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    text-align: left;
-    color: #000;
+  .active {
+    color:#29b564;
   }
-  h2{
-    //margin: 21px 0 0;
-    font-size: 16px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    text-align: left;
-    margin-bottom: 16px;
-  }
-  p {
-    margin-bottom: 4px;
-    a {
-      //margin: 0 0 0 10px;
-      font-size: 14px;
-      font-weight: normal;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: normal;
-      letter-spacing: normal;
-      text-align: left;
-      color: #000;
-      text-decoration: none;
-      ion-icon {
-        font-size:18px;
-        margin-right: 10px;
-      }
-    }
-  }
-  
-  .counts {
-    margin-top: 13px;
-  }
-  
-  ion-icon {
-    position: relative;
-  }
-  
-  ion-icon[name="mail-outline"] {
-    top: 4px;
-  }
-  
-  ion-icon[name="call-outline"] {
-    top: 4px;
-  }
-  
-  ion-icon[name="time-outline"] {
-    top: 4px;
-  }
-  
+}
+
+ion-segment-button {
+  text-transform: inherit;
+  font-family: Inter;
+  font-size: 16px;
+  font-weight: 500;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: 1.5;
+  letter-spacing: normal;
+  text-align: center;
+  color: #68687a;
+}
+
+ion-segment-button.segment-button-checked {
+  font-weight: 600;
+  color: #263879;
+  --indicator-color: #263879;
+  --border-color: #263879;
+}
+
+ion-content {
+    --padding-start: 20px;
+    --padding-end: 20px;
+    --padding-top: 20px;
+    background: #f7f8fa;
+    --background: #f7f8fa;
+}

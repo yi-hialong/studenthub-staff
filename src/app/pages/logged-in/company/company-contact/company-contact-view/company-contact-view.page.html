@@ -1,150 +1,144 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="clear-header">
+<ion-header [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container">
+
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/view/company-list"></ion-back-button>
     </ion-buttons>
 
-    <ion-buttons slot="end">
-      <ion-button (click)="edit()">
-        <ion-icon slot="start" name="pencil-outline"></ion-icon>
-        Edit
-      </ion-button>
-
-      <ion-button (click)="delete()">
-        <ion-icon slot="start" name="trash-outline"></ion-icon>
-        Delete
-      </ion-button>
-      <ion-button (click)="sendVerificationMail()" *ngIf="contact && !contact.contact_email_verification">
-        <ion-icon slot="start" name="mail-open-outline"></ion-icon>
-        Send Verification email
-      </ion-button>
-      <ion-button *ngIf="contact" [routerLink]="'/view/company-request-dashboard/' + contact.contact_uuid">
-        <ion-icon slot="start" name="eye-outline"></ion-icon>
-        View Requests
+    <ion-buttons slot="end" *ngIf="company && !loading">
+      <ion-button fill="clear" class="btn-actions" (click)="showActions($event)">
+        <ion-icon class="setting-icon" name="ellipsis-vertical-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
+
+  <ion-toolbar *ngIf="contact">
+    <ion-title>
+      {{ contact.contact_name }}
+    </ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar class="container"> 
+    <ion-segment mode="md" [(ngModel)]="segment">
+
+      <ion-segment-button mode="md" value="details">
+        <ion-label>Details</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="notes">
+        <ion-label>Notes</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="requests">
+        <ion-label>Requests</ion-label>
+      </ion-segment-button>
+
+    </ion-segment>
+  </ion-toolbar>
+
 </ion-header>
 
-<ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
 
   <div class="container">
-    <ion-card *ngIf="contact" class="ion-padding">
-      <div tabindex="0"></div>
+    
+    <loading-modal [loading]="loading" type="text-list"></loading-modal>
 
-      <h4>{{ contact.contact_name }}</h4>
+    <div *ngIf="segment == 'details' && contact">
+      <h5>Contact Details</h5>
+      
+      <ul>
+        
+        <li>
+          <ion-icon src="assets/images/icon-followup.svg"></ion-icon> <b>last update</b>
+          <ion-note>Updated {{ contact.contact_updated_at | timeAgo }}</ion-note>
+        </li>
 
-      <p *ngIf="contact.contact_email">
-        <a href="mailto:{{ contact.contact_email }}">
-          <ion-icon name="mail-outline"></ion-icon> {{ contact.contact_email }}
-        </a>
-      </p>
+        <li>
+          <ion-icon src="assets/images/Icon_Status.svg"></ion-icon> <b>Added</b>
+          <ion-note>{{ toDate(contact.contact_created_at) | date: 'MMM d, y, h:mm:ss a' }}</ion-note>
+        </li>
+      </ul>
 
-      <p>
-        <a href="mailto:{{ contactEmail.email_address }}"
-          *ngFor="let contactEmail of contact.contactEmails">
-          <ion-icon name="mail-outline"></ion-icon> {{ contactEmail.email_address }}
-        </a>
-      </p>
+      <ion-grid>
+        <ion-row>
+          <ion-col *ngIf="companyContact.contact_position" size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center">
+            Position<br /> <b>{{ companyContact.contact_position }}</b>
+          </ion-col>
 
-      <p>
-        <a href="tel:{{ contactPhone.phone_number }}"
-          *ngFor="let contactPhone of contact.contactPhones">
-          <ion-icon name="call-outline"></ion-icon> {{ contactPhone.phone_number }}
-        </a>
-      </p>
+          <ion-col size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center">
+            Email <br /> 
+            <b>{{ contact.contact_email }}</b>
+            <!--
+            <a href="mailto:{{ contactEmail.email_address }}" *ngFor="let contactEmail of contact.contactEmails">
+              <ion-icon name="mail-outline"></ion-icon> {{ contactEmail.email_address }}
+            </a> -->
+          </ion-col>
 
-      <ion-item *ngIf="companyContact">
-        <div tabindex="0"></div>
-        <ion-label>
-          <h4>Allow access?</h4>
-          <p *ngIf="companyContact.allow_access">Yes</p>
-          <p *ngIf="!companyContact.allow_access">No</p>
-        </ion-label>
-      </ion-item>
+          <ion-col size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center" *ngIf="contact.contactPhones.length > 0">
+            Phone <br /> 
+            <a href="tel:{{ contactPhone.phone_number }}" *ngFor="let contactPhone of contact.contactPhones">
+              <ion-icon name="call-outline"></ion-icon> {{ contactPhone.phone_number }}
+            </a> 
+          </ion-col>
+          
+          <ion-col size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center">
+            Allow access?<br />
+            <b *ngIf="companyContact.allow_access">Yes</b>
+            <b *ngIf="!companyContact.allow_access">No</b>
+          </ion-col>
 
-      <ion-item>
-        <div tabindex="0"></div>
-        <ion-label>
-          <h4>Receive Email?</h4>
-          <p *ngIf="contact.contact_receive_email">Yes</p>
-          <p *ngIf="!contact.contact_receive_email">No</p>
-        </ion-label>
-      </ion-item>
+          <ion-col size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center">
+            Receive Email?<br />
+            <b *ngIf="companyContact.contact_receive_email">Yes</b>
+            <b *ngIf="!companyContact.contact_receive_email">No</b>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-      <ion-item *ngIf="companyContact && companyContact.contact_position">
-        <div tabindex="0"></div>
-        <ion-label>
-          <h4>Position</h4>
-          <p>{{companyContact.contact_position}}</p>
-        </ion-label>
-      </ion-item>
-
-      <!--
-      <ion-item>
-        <div tabindex="0"></div>
-        <ion-label>
-          <h4>Receive notification?</h4>
-          <p *ngIf="contact.contact_receive_notification">Yes</p>
-          <p *ngIf="!contact.contact_receive_notification">No</p>
-        </ion-label>
-      </ion-item>-->
-
-      <ion-item lines="none">
-        <div tabindex="0"></div>
-        <ion-label>
-          <p *ngIf="contact.contact_created_at">Added at {{ toDate(contact.contact_created_at) | date: 'MMM d, y, h:mm:ss a' }}</p>
-          <p *ngIf="contact.contact_updated_at">Updated {{ contact.contact_updated_at | timeAgo }}</p>
-        </ion-label>
-      </ion-item>
-    </ion-card>
-
-    <div>
-      <h2>Notes</h2>
+      <ion-button class="btn-verify" (click)="sendVerificationMail()" *ngIf="contact && !contact.contact_email_verification">
+        Send Verification email
+      </ion-button>
     </div>
 
-    <form [class.editor-inactive]="!editorFocused" [class.editor-focused]="editorFocused" [formGroup]="noteForm" *ngIf="noteForm">
-      <ion-item *ngIf="['Suggested', 'Accepted', 'Rejected'].indexOf(noteForm.controls.type.value) == -1">
-        <div tabindex="0"></div>
-        <ion-label position="floating">Type</ion-label>
-        <ion-select formControlName="type">
-          <ion-select-option>Internal Note</ion-select-option>
-          <ion-select-option>Phone Call</ion-select-option>
-          <ion-select-option>Email</ion-select-option>
-          <ion-select-option>Meeting</ion-select-option>
-          <ion-select-option>Interview</ion-select-option>
-          <ion-select-option>Task</ion-select-option>
-        </ion-select>
-      </ion-item>
+    <div *ngIf="segment == 'requests'">
 
-      <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (focus)="onEditorFocus()"
-                (change)="onChange($event)"></ckeditor>
+      <h5>Request Lists <span>({{ totalRequests }})</span></h5>
 
-      <ion-item>
-        <div tabindex="0"></div>
+      <request-listing *ngFor="let request of requests" tappable (click)="requestDetail(request)"
+        [request]="request" [showStatus]="false"></request-listing>
 
-        <ion-buttons slot="start">
+      <loading-modal [loading]="loadingRequests" type="request-list"></loading-modal>
 
-          <ion-button [disabled]="addingNote || !noteForm.valid" (click)="save()">
-            <span *ngIf="!addingNote">
-              <ng-container *ngIf="this.editNoteData && !this.editNoteData.note_uuid">Submit</ng-container>
-              <ng-container *ngIf="this.editNoteData && this.editNoteData.note_uuid">Update</ng-container>
-            </span>
-            <ion-spinner *ngIf="addingNote"></ion-spinner>
-          </ion-button>
+      <ion-infinite-scroll *ngIf="currentPageRequest < pageCountRequest" (ionInfinite)="doInfiniteRequests($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
 
-          <ion-button color="danger" (click)="resetNoteForm()">
-            <span>Cancel</span>
-          </ion-button>
+      <!--
+      <ion-button *ngIf="contact" [routerLink]="'/view/company-request-dashboard/' + contact.contact_uuid">
+        <ion-icon slot="start" name="eye-outline"></ion-icon>
+        View Requests
+      </ion-button>-->
+    </div>
 
-        </ion-buttons>
-      </ion-item>
-    </form>
+    <div *ngIf="segment == 'notes'">
+ 
+      <h5>Last Activity <span>({{ notesTotal }})</span></h5>
 
-    <ion-list *ngIf="this.editNoteData && !this.editNoteData.note_uuid && notes.length > 0">
-      <note *ngFor="let note of notes" [routerLink]="'/note-view/' + note.note_uuid" [note]="note" (onChange)="loadNotes()" (onDelete)="loadNotes()"></note>
-    </ion-list>
+      <note tappable *ngFor="let note of notes" [routerLink]="'/note-view/' + note.note_uuid"
+        from="company-view" [note]="note" (onChange)="loadNotes()" (onDelete)="loadNotes()"></note>
+      
+      <loading-modal [loading]="loadingNotes" type="note-list"></loading-modal>
 
-    <loading-modal [loading]="loading" type="text-list"></loading-modal>
+      <ion-button class="btn-add-note" *ngIf="notes.length == 0" (click)="addNote()">
+        Post a Note
+      </ion-button>
+
+      <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
+       
+    </div>
+
   </div>
 </ion-content>

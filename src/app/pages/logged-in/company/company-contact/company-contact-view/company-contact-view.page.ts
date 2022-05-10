@@ -32,7 +32,7 @@ export class CompanyContactViewPage implements OnInit {
 
   public company_id;
 
-  public loadingNotes: boolean = false; 
+  public loadingNotes: boolean = false;
 
   public loading: boolean = false;
 
@@ -47,8 +47,8 @@ export class CompanyContactViewPage implements OnInit {
   public notes: Note[] = [];
   public notesTotal;
 
-  loadingRequests = false; 
-    
+  loadingRequests = false;
+
   pageCountRequest;
   currentPageRequest;
   totalRequests;
@@ -89,7 +89,7 @@ export class CompanyContactViewPage implements OnInit {
     const model = window.history.state.model;
 
     /*if(model) {
-      // this.companyContact = model; 
+      // this.companyContact = model;
       this.loadNotes();
       this.loadRequests();
 
@@ -111,12 +111,12 @@ export class CompanyContactViewPage implements OnInit {
 
     this.eventService.requestCountUpdated$.subscribe((data: any) => {
       this.loadRequests();
-    }); 
+    });
   }
 
   /**
-   * load more requests on scroll to bottom 
-   * @param event 
+   * load more requests on scroll to bottom
+   * @param event
    */
   doInfiniteRequests(event) {
 
@@ -124,11 +124,11 @@ export class CompanyContactViewPage implements OnInit {
 
     this.currentPage++;
 
-    this.loadingRequests = true; 
-    
+    this.loadingRequests = true;
+
     this.requestService.listWithPagination(this.currentPage, searchParams).subscribe(response => {
-      this.loadingRequests = false; 
-    
+      this.loadingRequests = false;
+
       this.pageCountRequest = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPageRequest = parseInt(response.headers.get('X-Pagination-Current-Page'));
       this.totalRequests = parseInt(response.headers.get('X-Pagination-Total-Count'));
@@ -136,17 +136,17 @@ export class CompanyContactViewPage implements OnInit {
       this.requests = this.requests.concat(response.body);
     },
     error => { },
-    () => { 
-      this.loadingRequests = false; 
-  
-      event.target.complete(); 
+    () => {
+      this.loadingRequests = false;
+
+      event.target.complete();
     });
   }
 
   /**
-   * load requests 
+   * load requests
    */
-  loadRequests() 
+  loadRequests()
   {
     this.loadingRequests = true;
 
@@ -219,7 +219,7 @@ export class CompanyContactViewPage implements OnInit {
 
     this.companyContactService.view(this.contact_uuid).subscribe(data => {
       this.contact = data;
-      
+
       this.loadNotes();
       this.loadRequests();
     }, () => {
@@ -389,12 +389,12 @@ export class CompanyContactViewPage implements OnInit {
   loadNotes() {
     const searchParams = this.urlParams();
 
-    this.loadingNotes = true; 
-    
+    this.loadingNotes = true;
+
     this.noteService.list(searchParams, 1).subscribe(async response => {
 
-      this.loadingNotes = false; 
-    
+      this.loadingNotes = false;
+
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
       this.notesTotal = parseInt(response.headers.get('X-Pagination-Total-Count'));
@@ -418,25 +418,29 @@ export class CompanyContactViewPage implements OnInit {
     const searchParams = this.urlParams();
 
     this.currentPage++;
-    this.loadingNotes = true; 
-    
+    this.loadingNotes = true;
+
     this.noteService.list(searchParams, this.currentPage).subscribe(response => {
-      this.loadingNotes = false; 
-    
+      this.loadingNotes = false;
+
       this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
       this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
 
       this.notes = this.notes.concat(response.body);
     },
     error => { },
-    () => { 
-      this.loadingNotes = false; 
-  
-      event.target.complete(); 
+    () => {
+      this.loadingNotes = false;
+
+      event.target.complete();
     });
   }
 
   logScrolling(e) {
     this.borderLimit = (e.detail.scrollTop > 0) ?  true : false;
+  }
+
+  showActions(event) {
+
   }
 }

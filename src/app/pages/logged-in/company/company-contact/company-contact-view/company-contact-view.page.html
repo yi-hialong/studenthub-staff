@@ -5,7 +5,7 @@
       <ion-back-button defaultHref="/view/company-list"></ion-back-button>
     </ion-buttons>
 
-    <ion-buttons slot="end" *ngIf="company && !loading">
+    <ion-buttons slot="end" *ngIf="this.contact.company && !loading">
       <ion-button fill="clear" class="btn-actions" (click)="showActions($event)">
         <ion-icon class="setting-icon" name="ellipsis-vertical-outline"></ion-icon>
       </ion-button>
@@ -18,7 +18,7 @@
     </ion-title>
   </ion-toolbar>
 
-  <ion-toolbar class="container"> 
+  <ion-toolbar class="container">
     <ion-segment mode="md" [(ngModel)]="segment">
 
       <ion-segment-button mode="md" value="details">
@@ -41,14 +41,14 @@
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
 
   <div class="container">
-    
+
     <loading-modal [loading]="loading" type="text-list"></loading-modal>
 
     <div *ngIf="segment == 'details' && contact">
       <h5>Contact Details</h5>
-      
+
       <ul>
-        
+
         <li>
           <ion-icon src="assets/images/icon-followup.svg"></ion-icon> <b>last update</b>
           <ion-note>Updated {{ contact.contact_updated_at | timeAgo }}</ion-note>
@@ -67,7 +67,7 @@
           </ion-col>
 
           <ion-col size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center">
-            Email <br /> 
+            Email <br />
             <b>{{ contact.contact_email }}</b>
             <!--
             <a href="mailto:{{ contactEmail.email_address }}" *ngFor="let contactEmail of contact.contactEmails">
@@ -76,12 +76,12 @@
           </ion-col>
 
           <ion-col size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center" *ngIf="contact.contactPhones.length > 0">
-            Phone <br /> 
+            Phone <br />
             <a href="tel:{{ contactPhone.phone_number }}" *ngFor="let contactPhone of contact.contactPhones">
               <ion-icon name="call-outline"></ion-icon> {{ contactPhone.phone_number }}
-            </a> 
+            </a>
           </ion-col>
-          
+
           <ion-col size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center">
             Allow access?<br />
             <b *ngIf="companyContact.allow_access">Yes</b>
@@ -122,12 +122,12 @@
     </div>
 
     <div *ngIf="segment == 'notes'">
- 
+
       <h5>Last Activity <span>({{ notesTotal }})</span></h5>
 
       <note tappable *ngFor="let note of notes" [routerLink]="'/note-view/' + note.note_uuid"
         from="company-view" [note]="note" (onChange)="loadNotes()" (onDelete)="loadNotes()"></note>
-      
+
       <loading-modal [loading]="loadingNotes" type="note-list"></loading-modal>
 
       <ion-button class="btn-add-note" *ngIf="notes.length == 0" (click)="addNote()">
@@ -137,7 +137,7 @@
       <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
       </ion-infinite-scroll>
-       
+
     </div>
 
   </div>

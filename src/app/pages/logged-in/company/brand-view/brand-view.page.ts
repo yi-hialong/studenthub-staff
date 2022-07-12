@@ -43,6 +43,7 @@ export class BrandViewPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Brand View Page');
 
     if(!this.brand_uuid)
       this.brand_uuid = this.activatedRoute.snapshot.paramMap.get('id');

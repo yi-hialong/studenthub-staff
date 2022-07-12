@@ -42,6 +42,7 @@ export class AssignedIdleCandidatesPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Assigned Idle Candidates Page');
   }
 
   ionViewWillEnter() {

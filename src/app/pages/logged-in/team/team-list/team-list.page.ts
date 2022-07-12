@@ -31,6 +31,8 @@ export class TeamListPage implements OnInit {
   ) { }
 
   ngOnInit() { 
+    window.analytics.page('Team List Page');
+
     this.loadData(this.currentPage);
   }
 

@@ -38,6 +38,7 @@ export class LoginPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Login Page');
   }
 
   /**

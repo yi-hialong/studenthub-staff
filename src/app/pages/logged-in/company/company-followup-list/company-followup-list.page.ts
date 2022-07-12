@@ -34,6 +34,8 @@ export class CompanyFollowupListPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Followup List Page');
+
     this.loadCompanyList(1);
 
     this.eventService.reloadFollowupList$.subscribe(() => {

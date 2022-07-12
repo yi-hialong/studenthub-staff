@@ -68,13 +68,15 @@ export class CompanyRequestDashboardPage implements OnInit {
   ngOnInit() {
     this.contact_uuid = this.activatedRoute.snapshot.paramMap.get('id');
 
-    const state = window.history.state;
+    window.analytics.page('Company Request Dashboard Page');
+
+    /*const state = window.history.state;
 
     if(state && state.requestStatus) {
       this.filters.requestStatus = state.requestStatus;
     } else {
       this.loadAllRequest();
-    }
+    }*/
 
     this.eventService.companyRequestUpdate$.subscribe(() => {
       this.loadAllRequest();

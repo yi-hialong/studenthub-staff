@@ -37,6 +37,7 @@ export class StoreManagerFormPage implements OnInit {
     if (this.navParams && this.navParams.data && this.navParams.data.view) {
       this.directView = true;
     }
+    window.analytics.page('Store Manager Form Page');
 
     this.loadData();
   }

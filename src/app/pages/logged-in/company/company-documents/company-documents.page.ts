@@ -33,6 +33,8 @@ export class CompanyDocumentsPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Document List Page');
+
     this.loadData();
   }
 

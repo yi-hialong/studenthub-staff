@@ -83,6 +83,7 @@ export class CandidateSearchPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Candidate Search Page');
 
     this.platform.ready().then(() => {
       if (this.platform.is('mobile')) {

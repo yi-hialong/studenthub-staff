@@ -62,6 +62,7 @@ export class CompanyFormPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Form Page');
 
     if (this.company_id && !this.model) {
       this.loadData(this.company_id);

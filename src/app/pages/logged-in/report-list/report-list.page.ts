@@ -17,7 +17,7 @@ export class ReportListPage implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    window.analytics.page('Report List Page');
   }
 
   logScrolling(e) {

@@ -30,6 +30,7 @@ export class ExperienceFormPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Experience Form Page');
 
     if (this.experienceList.length > 0) {
       this.experienceList.map((data, index) => {

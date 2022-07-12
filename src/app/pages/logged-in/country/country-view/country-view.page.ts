@@ -42,6 +42,7 @@ export class CountryViewPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Company View Page');
 
     if(!this.country_id)
       this.country_id = this.activatedRoute.snapshot.paramMap.get('id');

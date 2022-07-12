@@ -27,6 +27,8 @@ export class CompanyMallsPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Mall List Page');
+
     this.loadData();
   }
 

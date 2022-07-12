@@ -46,6 +46,7 @@ export class UploadCvPage implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Upload CV Page');
   }
 
   ngOnDestroy() {

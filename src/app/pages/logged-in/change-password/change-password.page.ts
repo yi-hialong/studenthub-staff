@@ -33,6 +33,8 @@ export class ChangePasswordPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Change Password Page');
+
     this.form = this._fb.group({
       password: ['', Validators.required],
       newPassword: ['', Validators.required],

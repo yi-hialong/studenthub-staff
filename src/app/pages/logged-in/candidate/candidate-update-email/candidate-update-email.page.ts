@@ -50,6 +50,8 @@ export class CandidateUpdateEmailPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Candidate Update Email Page');
+
     // Initialize the Login Form
     this.form = this.fb.group({
       email: [this.candidate.candidate_email, [Validators.required, Validators.email]]

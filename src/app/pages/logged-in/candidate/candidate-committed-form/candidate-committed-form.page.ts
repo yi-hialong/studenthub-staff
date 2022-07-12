@@ -46,6 +46,8 @@ export class CandidateCommittedFormPage implements OnInit {
   }
 
   ngOnInit() { 
+    window.analytics.page('Candidate Committed Form Page');
+
     this.form = this.fb.group({
       note: ['', Validators.required],
       type: ['Internal Note', Validators.required],

@@ -93,6 +93,8 @@ export class FulltimeLocationPage implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
+    window.analytics.page('Fulltimer Location Page');
+
     if (!this.from) {
       this.from = this.activatedRoute.snapshot.paramMap.get('from');
     }

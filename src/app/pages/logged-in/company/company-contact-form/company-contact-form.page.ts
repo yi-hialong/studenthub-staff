@@ -49,6 +49,7 @@ export class CompanyContactFormPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Contact Form Page');
 
     const state = window.history.state;
 

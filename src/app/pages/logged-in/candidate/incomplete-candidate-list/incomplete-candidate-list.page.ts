@@ -44,6 +44,7 @@ export class IncompleteCandidateListPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Incomplete Candidate List Page');
   }
 
   /**

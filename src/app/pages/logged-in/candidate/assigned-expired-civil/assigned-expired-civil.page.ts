@@ -37,6 +37,8 @@ export class AssignedExpiredCivilPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Assigned Expired Civil Page');
+
     this.loadData(1);
   }
 

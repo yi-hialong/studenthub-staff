@@ -34,6 +34,8 @@ export class StorePage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Store Page');
+
     this.loadData(this.currentPage);
   }
 

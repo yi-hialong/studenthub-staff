@@ -58,6 +58,8 @@ export class InvitePage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Invite Page');
+
     this.initForm();
     this.loadRequests();
   }

@@ -43,6 +43,8 @@ export class CompanyStoresPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Stores Page');
+
     this.loadData();
   }
 

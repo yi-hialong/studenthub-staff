@@ -44,6 +44,7 @@ export class StoreFormPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Store Form Page');
 
     if(!this.store_id)
       this.store_id = this.activatedRoute.snapshot.paramMap.get('id');

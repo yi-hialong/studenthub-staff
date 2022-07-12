@@ -123,6 +123,7 @@ export class CandidateViewPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Candidate View Page');
 
     const state = window.history.state;
 

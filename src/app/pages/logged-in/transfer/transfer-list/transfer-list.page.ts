@@ -35,6 +35,8 @@ export class TransferListPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Transfer List Page');
+
     this.loadData();
 
     this.eventService.transferDeleted$.subscribe(() => {

@@ -25,6 +25,7 @@ export class UniversityViewPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('University View Page');
 
     if(!this.university_id)
       this.university_id = this.activatedRoute.snapshot.paramMap.get('id');

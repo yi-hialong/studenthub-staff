@@ -32,6 +32,7 @@ export class CompanyFollowupNotePage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Followup Note Page');
 
     this.form = this.fb.group({
       note: ['', Validators.required],

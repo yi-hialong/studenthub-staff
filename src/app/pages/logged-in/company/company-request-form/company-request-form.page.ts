@@ -56,6 +56,7 @@ export class CompanyRequestFormPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Company Request Form Page');
 
     if (this.request) {
       this.model = this.request;

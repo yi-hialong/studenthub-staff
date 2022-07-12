@@ -64,6 +64,7 @@ export class CompanyRequestListPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Request List Page');
 
     this.list();
 

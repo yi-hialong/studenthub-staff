@@ -39,6 +39,8 @@ export class CompanyContactListPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Company Contact List Page');
+
     if (this.company && this.company.companyContacts) {
       this.contactList = this.company.contacts;
     } else 

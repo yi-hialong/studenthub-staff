@@ -29,6 +29,8 @@ export class SkillFormPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Skill Form Page');
+
     if (this.skillList.length > 0) {
       this.skillList.map((data, index) => {
         // initializing skill list and loop count

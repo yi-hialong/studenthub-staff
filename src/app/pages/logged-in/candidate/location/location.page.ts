@@ -64,6 +64,8 @@ export class LocationPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Location Page');
+
     this._initForm();
     if (
         this.candidate &&

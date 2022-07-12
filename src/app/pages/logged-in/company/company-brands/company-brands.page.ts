@@ -36,6 +36,7 @@ export class CompanyBrandsPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Brands Page');
 
     // if (this.company) {
     //   this.brands = this.company.brands;

@@ -55,6 +55,7 @@ export class CandidateFormPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Candidate Form Page');
 
     if(!this.candidate_id)
       this.candidate_id = this.activatedRoute.snapshot.paramMap.get('id');

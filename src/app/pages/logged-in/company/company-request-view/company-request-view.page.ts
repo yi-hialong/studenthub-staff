@@ -93,6 +93,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    window.analytics.page('Company Request View Page');
 
     if (!this.request_uuid)
       this.request_uuid = this.route.snapshot.params.request_uuid;

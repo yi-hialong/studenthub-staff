@@ -49,6 +49,7 @@ export class TeamViewPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Team View Page');
 
     if(!this.staff_id)
       this.staff_id = this.activatedRoute.snapshot.paramMap.get('id');

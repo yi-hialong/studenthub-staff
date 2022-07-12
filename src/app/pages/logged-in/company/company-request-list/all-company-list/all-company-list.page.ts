@@ -40,7 +40,9 @@ export class AllCompanyListPage implements OnInit {
   }
 
   ngOnInit() {
-      this.loadData(1);
+    window.analytics.page('All Company List Page');
+
+    this.loadData(1);
   }
 
   /**

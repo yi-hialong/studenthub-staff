@@ -41,6 +41,8 @@ export class DefaultPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Home Page');
+
     this._events.statistics$.subscribe((response: {
         id_need_generated: any;
         totalExpiredCards: any;

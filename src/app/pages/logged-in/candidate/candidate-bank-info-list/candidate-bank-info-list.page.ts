@@ -42,6 +42,7 @@ export class CandidateBankInfoListPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Candidate Bank Info List Page');
   }
 
   ionViewWillEnter() {

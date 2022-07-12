@@ -39,6 +39,7 @@ export class CandidateSuggestionsPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Candidate Suggestions Page');
 
     if (!this.candidate_id) {
       this.candidate_id = this.activatedRoute.snapshot.paramMap.get('candidate_id');

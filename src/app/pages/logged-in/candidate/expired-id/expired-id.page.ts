@@ -41,6 +41,7 @@ export class ExpiredIdPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Expired Id Page');
 
     this.form = this._fb.group({
       candidates: [],

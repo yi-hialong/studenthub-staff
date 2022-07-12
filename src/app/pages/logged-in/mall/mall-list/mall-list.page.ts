@@ -33,6 +33,8 @@ export class MallListPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Mall List Page');
+
     this.loadData(this.currentPage);
   }
 

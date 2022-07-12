@@ -83,6 +83,8 @@ export class FulltimerSearchPage implements OnInit {
 
   ngOnInit() {
 
+    window.analytics.page('Fulltimer Search Page');
+
     this.platform.ready().then(() => {
       if (this.platform.is('mobile')) {
         this.isMobile = true;

@@ -36,6 +36,7 @@ export class MallFormPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Mall Form Page');
 
     if(!this.mallUUID)
       this.mallUUID = this.activatedRoute.snapshot.paramMap.get('id');

@@ -43,6 +43,7 @@ export class FulltimerListPage implements OnInit {
     if (state.story) {
       this.story = state.story;
     }
+    window.analytics.page('Fulltimer List Page');
 
     this.loadData(this.currentPage);
   }

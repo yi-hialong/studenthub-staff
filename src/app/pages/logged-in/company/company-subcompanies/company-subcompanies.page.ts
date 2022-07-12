@@ -33,6 +33,8 @@ export class CompanySubcompaniesPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Sub Companies Page');
+
     this.loadData();
   }
 

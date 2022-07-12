@@ -64,6 +64,7 @@ export class CompanyRequestListPopupPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Request List Popup Page');
   }
 
   ionViewWillEnter() {

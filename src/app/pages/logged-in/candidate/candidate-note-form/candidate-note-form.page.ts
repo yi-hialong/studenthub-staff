@@ -56,6 +56,8 @@ export class CandidateNoteFormPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Candidate Note Form Page');
+
     if (this.note) {
       this.model = this.note;
     }

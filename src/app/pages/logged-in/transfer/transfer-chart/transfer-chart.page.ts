@@ -28,6 +28,7 @@ export class TransferChartPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Transfer Chart Page');
 
     if (this.platform.is('mobile')) {
       this.legendDisplay = false;

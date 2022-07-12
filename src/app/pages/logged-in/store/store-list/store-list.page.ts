@@ -59,6 +59,7 @@ export class StoreListPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Store List Page');
 
     if(!this.company_id)
       this.company_id = this.activatedRoute.snapshot.paramMap.get('id');

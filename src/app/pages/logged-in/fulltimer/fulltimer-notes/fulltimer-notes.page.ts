@@ -39,6 +39,8 @@ export class FulltimerNotesPage implements OnInit {
 
   ngOnInit() {
 
+    window.analytics.page('Fulltimer Notes Page');
+
     if(!this.fulltimer_uuid)
       this.fulltimer_uuid = this.activatedRoute.snapshot.paramMap.get('fulltimer_uuid');
 

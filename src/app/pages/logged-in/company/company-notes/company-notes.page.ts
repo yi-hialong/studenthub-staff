@@ -71,6 +71,7 @@ export class CompanyNotesPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Note List Page');
 
     this.initNoteForm();
     this.loadNotes();

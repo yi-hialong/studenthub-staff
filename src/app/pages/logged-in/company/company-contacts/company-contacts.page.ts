@@ -41,7 +41,8 @@ export class CompanyContactsPage implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    window.analytics.page('Company Contact List Page');
+    
     this.loadContacts();
 
     if (!this.company)

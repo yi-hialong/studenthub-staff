@@ -81,6 +81,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    window.analytics.page('Fulltimer Form Page');
 
     this.fulltimerUUID = this.activatedRoute.snapshot.paramMap.get('id');
 

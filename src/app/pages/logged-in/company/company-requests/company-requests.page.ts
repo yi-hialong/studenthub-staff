@@ -43,6 +43,7 @@ export class CompanyRequestsPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Company Requests Page');
   }
 
   ionViewDidEnter() {

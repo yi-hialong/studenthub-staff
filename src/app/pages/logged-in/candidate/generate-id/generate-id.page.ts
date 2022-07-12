@@ -37,6 +37,8 @@ export class GenerateIdPage implements OnInit {
   }
 
   ngOnInit() {
+    window.analytics.page('Generate ID Page');
+
     this.loadData(this.currentPage);
   }
 

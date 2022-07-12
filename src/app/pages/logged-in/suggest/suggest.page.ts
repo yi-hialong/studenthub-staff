@@ -44,6 +44,8 @@ export class SuggestPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Suggest Page');
+
     this.initForm();
     this.loadRequests();
   }

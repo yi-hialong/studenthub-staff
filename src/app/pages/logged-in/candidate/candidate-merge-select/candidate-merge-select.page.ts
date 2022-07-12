@@ -17,6 +17,7 @@ export class CandidateMergeSelectPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Candidate Merge Select Page');
   }
 
   dismiss(event, candidate = null) {

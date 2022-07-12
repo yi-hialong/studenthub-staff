@@ -66,6 +66,8 @@ export class FulltimerLocationPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    window.analytics.page('Fulltimer Location Page');
+
     this._initForm();
 
     if (

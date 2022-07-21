@@ -80,6 +80,11 @@
     <div class="desc">
       <h2>Job Description</h2>
       <p [innerHtml]="request.request_job_description"></p>
+
+      <p class="txt-additional-info">
+        {{ request.no_of_employees_per_story }} no of employees per story
+      </p>
+
     </div>
 
     <div class="requested-by">
@@ -98,18 +103,22 @@
         <ion-card-content>
           <p class="activity">
             
-            <span *ngIf="activity.activity_status == 0">Story generated</span>
+            <span *ngIf="activity.activity_status == 0 && !activity.staff">Story generated</span>
+            
+            <span *ngIf="activity.activity_status == 0 && activity.staff">
+              Story stopped by <b>{{activity.staff.staff_name}}</b>
+            </span>
 
             <span *ngIf="activity.activity_status == 1 && activity.staff">
-              {{activity.staff.staff_name}} started working on story
+              <b>{{activity.staff.staff_name}}</b> started working on story
             </span>
 
             <span *ngIf="activity.activity_status == 2 && activity.staff">
-              {{activity.staff.staff_name}} has stopped working on story
+              <b>{{activity.staff.staff_name}}</b> has stopped working on story
             </span>
             
             <span *ngIf="activity.activity_status == 3 && activity.staff">
-              {{activity.staff.staff_name}} delivered story
+              <b>{{activity.staff.staff_name}}</b> delivered story
             </span>
             
             <span *ngIf="activity.activity_status == 4">
@@ -120,8 +129,11 @@
               Story Accepted
             </span>
 
-            <span>{{activity.activity_created_at | timeAgo}}</span> on <span>{{activity.activity_created_at |
-              date}}</span>
+            <br />
+
+            <span><b>{{ activity.activity_created_at | timeAgo}}</b></span> on 
+            <span><b>{{ toDate(activity.activity_created_at) | date : 'MMM d, y, h:mm:ss a' }}</b></span>
+            
           </p>
 
           <ion-badge *ngIf="activity.activity_time_spent">

@@ -95,6 +95,7 @@ export class RequestFormPage implements OnInit {
       job_description: [this.model.request_job_description, Validators.required],
       compensation: [this.model.request_compensation, Validators.required],
       number_of_employees: [this.model.request_number_of_employees, Validators.required],
+      no_of_employees_per_story: [this.model.no_of_employees_per_story, Validators.required],
       location: [this.model.request_location],
       additional_info: [this.model.request_additional_info]
     });
@@ -115,6 +116,7 @@ export class RequestFormPage implements OnInit {
     this.model.request_job_description = this.form.value.job_description;
     this.model.request_compensation = this.form.value.compensation;
     this.model.request_location = this.form.value.location;
+    this.model.no_of_employees_per_story = this.form.value.no_of_employees_per_story;
   }
 
   /**
@@ -271,6 +273,7 @@ export class RequestFormPage implements OnInit {
     this.form.controls.additional_info.setValue(null);
     this.form.controls.company_name.setValue(null);
     this.form.controls.location.setValue(null);
+    this.form.controls.no_of_employees_per_story.setValue(null);
   }
 
   onEditorReady() {

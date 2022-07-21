@@ -61,6 +61,10 @@
         {{ request.request_position_title }}
       </b>
 
+      <p class="txt-additional-info">
+        {{ request.no_of_employees_per_story }} no of employees per story
+      </p>
+
       <p class="txt-additional-info" [innerHtml]="request.request_additional_info"></p>
 
       <p class="txt-additional-info" *ngIf="request.request_location">

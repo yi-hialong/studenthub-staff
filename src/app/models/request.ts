@@ -15,6 +15,7 @@ export class Request {
     request_position_type: number;
     request_position_title: string;
     request_number_of_employees: number;
+    no_of_employees_per_story: number;
     request_location: string;
     request_additional_info: string;
     request_job_description: string;

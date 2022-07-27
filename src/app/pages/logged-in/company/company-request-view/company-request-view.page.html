@@ -1,26 +1,70 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="clear-header">
+<ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container">
+
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/ic_cancel.svg" defaultHref="/view/company-request-dashboard"></ion-back-button>
     </ion-buttons>
 
-    <ion-button fill="clear" (click)="update()" slot="end" class="btn-update"
-      *ngIf="request && ['delivered', 'cancelled'].indexOf(request.request_status) == -1">
-      Update
-    </ion-button>
-
-    <ion-button fill="clear" (click)="cancelledRequest($event, request)" slot="end" class="btn-cancel"
-      *ngIf="request">
-      Cancel Request
-    </ion-button>
-
+    <ion-buttons slot="end" *ngIf="request && !loading">
+      <ion-button fill="clear" class="btn-actions" (click)="openPopover($event)">
+        <ion-icon class="setting-icon" name="ellipsis-vertical-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
+  
+  <ion-toolbar *ngIf="request" class="container title-name"  [class.hidden]="borderLimit">
+    <h1>{{request.request_position_title}}</h1>
+    <p tappable [routerLink]="['/company-view/' +  request.company.company_id]">
+      {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
+      <ion-icon name="checkmark-outline"  *ngIf="request.company && request.company.company_approved_to_hire"></ion-icon>
+      <ion-icon name="close-outline"  *ngIf="request.company && !request.company.company_approved_to_hire"></ion-icon>
+    </p>
+  </ion-toolbar>
+
+  <ion-toolbar class="container">
+    <!--(ionChange)="segmentChanged($event)"-->
+    <ion-segment mode="md" [(ngModel)]="segment">
+
+      <ion-segment-button mode="md" value="details">
+        <ion-label>Details</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="activities">
+        <ion-label>Updates</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="stories">
+        <ion-label>Stories</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button *ngIf="invitedCandidates.length > 0 || rejectedCandidates.length > 0 || acceptedInvitations.length > 0" mode="md" value="invited">
+        <ion-label>Invited</ion-label>
+      </ion-segment-button>
+      
+      <ion-segment-button *ngIf="acceptedInvitations.length > 0" mode="md" value="accepted-invitation">
+        <ion-label>Accepted Invitation</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button *ngIf="suggestedSuggestions.length > 0 || rejectedSuggestions.length > 0 || acceptedSuggestions.length > 0" mode="md" value="suggested">
+        <ion-label>Suggested</ion-label>
+      </ion-segment-button>
+
+      <ion-segment-button mode="md" value="accepted" *ngIf="acceptedSuggestions.length > 0">
+        <ion-label>Accepted</ion-label>
+      </ion-segment-button>
+      
+      <ion-segment-button mode="md" value="rejected" *ngIf="rejectedSuggestions.length > 0">
+        <ion-label>Rejected</ion-label>
+      </ion-segment-button>
+      
+    </ion-segment>
+  </ion-toolbar>
+
 </ion-header>
 
 <ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
   <div class="container">
-    <loading-modal [loading]="loading" type="request-detail"></loading-modal>
-
+    <!--
     <ion-button *ngIf="request && (request.request_status == 'started' || request.request_status == 'pending')"
                 class="btn-cv-search" routerLink="/view/candidate-search">
       {{"CV Search: Invite candidates to apply for this position"}}
@@ -28,170 +72,94 @@
 
     <ion-button (click)="assign()" class="pull-right" *ngIf="authService.role == 1 && request && !request.staff">
       Assign staff
-    </ion-button>
+    </ion-button>-->
 
-    <br/>
+    <div *ngIf="request && segment == 'details'">
+      <h2>Job Details</h2>
+      <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
+      <ion-badge *ngIf="request.request_location">{{request.request_location}}</ion-badge>
+      <ion-badge *ngIf="request.request_position_type == 2">Part-time</ion-badge>
+      
+      <!-- todo: should have staff who started working in story -->
 
-    <div *ngIf="request && !loading">
-
-      <ion-badge slot="end" color="success" *ngIf="request.company && request.company.company_approved_to_hire">
-        <ion-icon name="checkmark-outline"></ion-icon> Approved to hire
+      <ion-badge *ngFor="let staff of request.staffs">
+        {{ staff.staff_name }}
       </ion-badge>
-
-      <ion-badge slot="end" color="dark" class="old_request" *ngIf="request.is_old">
-        <ion-icon name="checkmark-outline"></ion-icon> Old Request
-      </ion-badge>
-
-      <ion-badge slot="end" color="warning" *ngIf="request.company && !request.company.company_approved_to_hire">
-        <ion-icon name="close-outline"></ion-icon> Not approved to hire
-      </ion-badge>
-
-      <h4 class="company-name" tappable [routerLink]="'/company-view/' + request.company_id">
-        {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
-         <ion-note>&nbsp;|&nbsp;&nbsp;Request {{ request.request_status }}</ion-note>
-      </h4>
-
-      <p class="txt-looking" *ngIf="request.request_status == 'started'">is looking for </p>
-      <p class="txt-looking" *ngIf="request.request_status != 'started'">was looking for </p>
-
-      <b class="requirement">
-        {{ request.request_number_of_employees }}
-        <span *ngIf="request.request_position_type == 1">Full-time</span>
-        <span *ngIf="request.request_position_type == 2">Part-time</span>
-        {{ request.request_position_title }}
-      </b>
-
-      <p class="txt-additional-info">
-        {{ request.no_of_employees_per_story }} no of employees per story
-      </p>
-
-      <p class="txt-additional-info" [innerHtml]="request.request_additional_info"></p>
-
-      <p class="txt-additional-info" *ngIf="request.request_location">
-        {{ request.request_location }}
-      </p>
-
-      <p class="txt-additional-info" [innerHtml]="request.request_job_description"></p>
-      <p class="txt-additional-info">{{ request.request_compensation }}</p>
-
-      <p class="txt-additional-info">Status: {{getStatus(request.request_status)}}</p>
-      <p *ngIf="updatingInterval" class="txt-additional-info">Number of Hours to Followup Interval: <ion-spinner></ion-spinner></p>
-      <p *ngIf="!updatingInterval && request.num_hours_followup_interval" class="txt-additional-info">Number of Hours to Followup Interval: <strong>{{request.num_hours_followup_interval}} hours</strong> &nbsp;&nbsp;&nbsp;<ion-badge tappable (click)="updateValue($event)" color="primary">Update Interval</ion-badge></p>
-
+  
+      <ion-grid>
+        <ion-row>
+          <ion-col class="lbl">
+            <ion-icon src="assets/images/Icon_Status.svg"></ion-icon>&nbsp;Status
+          </ion-col>
+          <ion-col class="value">
+            <span *ngIf="request.request_status == 'pending'"> Unstarted </span>
+            <span *ngIf="request.request_status == 'started'"> Started </span>
+            <span *ngIf="request.request_status == 'delivered'"> Delivered </span>
+            <span *ngIf="request.request_status == 'cancelled'"> Cancelled </span>
+            <span *ngIf="request.request_status == 'finished_by_recruitment'"> Finished by recruitment </span>
+            <span *ngIf="request.request_status == 're_work'">Re-work </span>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="lbl">
+            <ion-icon src="assets/images/icon-followup.svg"></ion-icon>&nbsp;Follow-up
+          </ion-col>
+          <ion-col class="value">{{request.num_hours_followup_interval}}</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col class="lbl">
+            <ion-icon src="assets/images/Icon_Date_Compensation.svg"></ion-icon> &nbsp;Compensation
+          </ion-col>
+          <ion-col class="value">{{request.request_compensation}}</ion-col>
+        </ion-row>
+      </ion-grid>
+  
+      <div class="desc">
+        <h2>Job Description</h2>
+        <p [innerHtml]="request.request_job_description"></p>
+  
+        <p class="txt-additional-info">
+          {{ request.no_of_employees_per_story }} no of employees per story
+        </p>
+  
+      </div>
+  
       <div class="requested-by">
-        Requested <ng-container *ngIf="request.contact">by <span class="requested-by-staff" tappable [routerLink]="'/company-contact-view/' + request.contact_uuid">{{ request.contact.contact_name }}</span></ng-container>
-        <div class="requested-by-time">on {{ toDate(request.request_created_datetime) | date: 'MMM d, y' }} </div>
-      </div>
-
-      <p *ngIf="request.request_started_at && request.staff">
-        Started {{ request.request_started_at | timeAgo }} By {{ request.staff.staff_name }}
-      </p>
-
-      <p *ngIf="request.request_started_at && request.request_cancelled_at">
-        Cancelled after {{ request.request_started_at | duration : translateService.currentLang : request.request_cancelled_at }}
-      </p>
-
-      <p *ngIf="request.request_started_at && request.request_delivered_at">
-        Took {{ request.request_started_at | duration : translateService.currentLang : request.request_delivered_at }} to complete
-      </p>
-
-    </div>
-
-    <ion-segment (ionChange)="segmentChanged($event)" value="activities">
-
-      <ion-segment-button value="activities">
-        <ion-label>Recent Activity</ion-label>
-      </ion-segment-button>
-
-      <ion-segment-button *ngIf="invitedCandidates.length > 0 || rejectedCandidates.length > 0 || acceptedInvitations.length > 0" value="invitations">
-        <ion-label>Invitations</ion-label>
-      </ion-segment-button>
-
-      <ion-segment-button *ngIf="suggestedSuggestions.length > 0 || rejectedSuggestions.length > 0 || acceptedSuggestions.length > 0" value="suggestions">
-        <ion-label>Suggestions</ion-label>
-      </ion-segment-button>
-
-      <ion-segment-button value="story-owners">
-        <ion-label>Story Owners</ion-label>
-      </ion-segment-button>
-    </ion-segment>
-
-    <div *ngIf="segment == 'story-owners'">
-
-      <ion-list *ngIf="request.stories && request.stories.length > 0">
-        <div *ngFor="let story of request.stories" (click)="(story.staff) ? staffSelected(story.staff) : storySelected(story)">
-          <ion-item tappable class="story">
-            <ng-container *ngIf="story.staff">
-              <div tabindex="0"></div>
-              <ion-label>
-                {{ story.staff.staff_name }}
-                <span *ngIf="authService.staff_id == story.staff.staff_id">&nbsp;•&nbsp;You</span>
-                <br/>
-                <small>{{ story.staff.staff_email }}</small><br/>
-                <small *ngIf="story.story_status == 0">Status : Un started</small>
-                <small *ngIf="story.story_status == 1">Status : Started</small>
-                <small *ngIf="story.story_status == 2">Status : Finished</small>
-                <small *ngIf="story.story_status == 3">Status : Delivered</small>
-                <small *ngIf="story.story_status == 4">Status : Rejected</small>
-                <small *ngIf="story.story_status == 5">Status : Accepted</small>
-                <small *ngIf="story.story_status == 6">Status : Cancelled </small>
-                <br/>
-                <ion-note>
-                  Time spent : {{ story.story_time_spent | timeSpent }}
-                </ion-note>
-              </ion-label>
-              <ion-badge class="company_status_badge" slot="end" color="danger" *ngIf="!story.staff.staff_status">
-                Inactive
-              </ion-badge>
-              <ion-badge class="company_status_badge" slot="end" color="success" *ngIf="story.staff.staff_status">
-                Active
-              </ion-badge>
-              <br/>
-            </ng-container>
-            <ng-container *ngIf="!story.staff">
-              No one working on this story
-            </ng-container>
-          </ion-item>
-          <ng-container *ngIf="story.staff">
-            <ion-item class="activity" *ngFor="let activity of story.storyActivities">
-              <small>Started Working <span *ngIf="activity.staff">by <strong>{{activity.staff.staff_name}}</strong> </span> at {{activity.activity_created_at | date: 'medium'}} and stopped at {{activity.activity_last_updated_at | date : 'medium'}}</small>
-            </ion-item>
-          </ng-container>
-        </div>
-
-      </ion-list>
-    </div>
-
-    <div *ngIf="segment == 'suggestions'">
-      <div *ngIf="suggestedSuggestions.length > 0">
-        <h4 class="txt-suggested-candidates">Suggested Candidates ({{ suggestedSuggestions.length }})</h4>
-
-        <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of suggestedSuggestions" [model]="suggestion"></suggestion>
-      </div>
-
-      <div *ngIf="rejectedSuggestions.length > 0">
-        <h4 class="txt-suggested-candidates">Rejected Suggestions ({{ rejectedSuggestions.length }})</h4>
-
-        <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of rejectedSuggestions" [model]="suggestion"></suggestion>
-      </div>
-
-      <div *ngIf="acceptedSuggestions.length > 0">
-        <h4 class="txt-suggested-candidates">Accepted Suggestions ({{ acceptedSuggestions.length }})</h4>
-
-        <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of acceptedSuggestions" [model]="suggestion"></suggestion>
+        Requested <ng-container *ngIf="request.contact">by <span class="requested-by-staff" tappable
+            [routerLink]="'/company-contact-view/' + request.contact_uuid">{{ request.contact.contact_name }}</span>
+          on {{ request.request_created_datetime | timeAgo }}
+        </ng-container>
       </div>
     </div>
 
-    <div *ngIf="segment == 'invitations'">
+    <div *ngIf="segment == 'activities'" class="activity-container">
+      
+      <h2>Recent Updates <span class="count">({{ requestActivities.length}})</span></h2>
+
+      <ng-container *ngFor="let requestActivity of requestActivities">
+        <app-recent-activity tappable [routerLink]="'/note-view/' + requestActivity.note_uuid" [activity]="requestActivity"></app-recent-activity>
+      </ng-container>
+    </div>
+
+    <div *ngIf="segment == 'stories' && request.stories">
+      
+      <h2>Stories <span class="count">({{ request.stories.length}})</span></h2>
+
+      <app-story-item *ngFor="let story of request.stories" [story]="story" [request]="request" 
+        (click)="storySelected(story)"></app-story-item>
+
+    </div>
+
+    <div *ngIf="segment == 'invited'">
 
       <div *ngIf="invitedCandidates.length > 0">
-        <h4 class="txt-suggested-candidates">Invited Candidates ({{ invitedCandidates.length }})</h4>
+        <h4 class="txt-suggested-candidates">Invited Candidates <span class="count">({{ invitedCandidates.length }})</span></h4>
 
         <invitation *ngFor="let invitation of invitedCandidates" [model]="invitation"></invitation>
       </div>
 
       <div *ngIf="rejectedCandidates.length > 0">
-        <h4 class="txt-suggested-candidates">Rejected Invitations by Candidates ({{ rejectedCandidates.length }})</h4>
+        <h4 class="txt-suggested-candidates">Rejected Invitations by Candidates <span class="count">({{ rejectedCandidates.length }})</span></h4>
 
         <invitation *ngFor="let invitation of rejectedCandidates" [model]="invitation"></invitation>
       </div>
@@ -199,85 +167,71 @@
       <!-- - ability to move to suggestion -->
 
       <div *ngIf="acceptedInvitations.length > 0">
-        <h4 class="txt-suggested-candidates">Accepted Invitations by Candidates ({{ acceptedInvitations.length }})</h4>
+        <h4 class="txt-suggested-candidates">Accepted Invitations by Candidates <span class="count">({{ acceptedInvitations.length }})</span></h4>
 
         <invitation *ngFor="let invitation of acceptedInvitations" (onUpdate)="onInvitationUpdated()" [model]="invitation"></invitation>
       </div>
 
     </div>
 
-    <div *ngIf="segment == 'activities'" class="activity-container">
+    <div *ngIf="segment == 'accepted-invitation'">
 
-      <br />
+      <h4 class="txt-suggested-candidates">Accepted Invitations <span class="count">({{ acceptedInvitations.length }})</span></h4>
 
-      <ng-container *ngFor="let requestActivity of requestActivities;let i = index;">
-        <app-recent-activity tappable [routerLink]="'/note-view/' + requestActivity.note_uuid" [activity]="requestActivity" *ngIf="activityExpanded || i < 2"></app-recent-activity>
-      </ng-container>
+      <invitation *ngFor="let invitation of acceptedInvitations" (onUpdate)="onInvitationUpdated()" [model]="invitation"></invitation>
+    
+    </div>
 
-      <ion-button class="btn-view-notes" *ngIf="requestActivities.length > 2" (click)="toggleActivityExpanded()">
-        <span *ngIf="!activityExpanded">View all {{ requestActivities.length }} notes</span>
-        <span *ngIf="activityExpanded">Collapse</span>
-      </ion-button>
+    <div *ngIf="segment == 'suggested'">
+
+      <div *ngIf="suggestedSuggestions.length > 0">
+        <h4 class="txt-suggested-candidates">Suggested Candidates <span class="count">({{ suggestedSuggestions.length }})</span></h4>
+
+        <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of suggestedSuggestions" [model]="suggestion"></suggestion>
+      </div>
+
+      <div *ngIf="rejectedSuggestions.length > 0">
+        <h4 class="txt-suggested-candidates">Rejected Suggestions <span class="count">({{ rejectedSuggestions.length }})</span></h4>
+
+        <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of rejectedSuggestions" [model]="suggestion"></suggestion>
+      </div>
+
+      <div *ngIf="acceptedSuggestions.length > 0">
+        <h4 class="txt-suggested-candidates">Accepted Suggestions <span class="count">({{ acceptedSuggestions.length }})</span></h4>
+
+        <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of acceptedSuggestions" [model]="suggestion"></suggestion>
+      </div>
+    </div>
+
+    <div *ngIf="segment == 'rejected'">
+
+      <div *ngIf="rejectedSuggestions.length > 0">
+        <h4 class="txt-suggested-candidates">Rejected Suggestions <span class="count">({{ rejectedSuggestions.length }})</span></h4>
+
+        <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of rejectedSuggestions" [model]="suggestion"></suggestion>
+      </div>
+
+    </div>
+
+    <div *ngIf="segment == 'accepted'">
+
+      <div *ngIf="acceptedSuggestions.length > 0">
+        <h4 class="txt-suggested-candidates">Accepted Suggestions <span class="count">({{ acceptedSuggestions.length }})</span></h4>
+
+        <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of acceptedSuggestions" [model]="suggestion"></suggestion>
+      </div>
     </div>
 
   </div>
 </ion-content>
-<ion-footer *ngIf="request && (request.request_status == 'started' || request.request_status == 'pending' || request.request_status == 'finished_by_recruitment' || request.request_status == 're_work')">
-  <ion-grid class="container">
-    <ion-row *ngIf="request.request_position_type == 1">
-      <ion-col size-xs="3">
-        <ion-button (click)="suggestCandidate($event)">
-          Suggest a fulltimer
-        </ion-button>
-      </ion-col>
+<ion-footer *ngIf="segment == 'details' || segment == 'activities'"> 
 
-      <ion-col size-xs="3">
-        <ion-button (click)="showUpdateAlert()">
-          Post an update
-        </ion-button>
-      </ion-col>
-    </ion-row>
+  <ion-button *ngIf="segment == 'details'" class="btn-update" (click)="update()">
+    Edit Request Details
+  </ion-button>
 
-    <ion-row *ngIf="request.request_position_type == 2">
-      <ion-col size-xs="3" *ngIf="(request.request_status == 'started' || request.request_status == 'pending'  || request.request_status == 're_work') && suggestedSuggestions.length > 0" >
-        <ion-button (click)="deliveredRequest($event, request)">
-          Mark delivered
-        </ion-button>
-      </ion-col>
-      <ion-col size-xs="3" *ngIf="((request.request_status == 'started' || request.request_status == 're_work' ) && request.request_status != 'delivered')" >
-        <ion-button (click)="statusUpdate($event, 'finished_by_recruitment')">
-          Finished by recruitment
-        </ion-button>
-      </ion-col>
-      <ion-col size-xs="3" *ngIf="request.request_status == 'finished_by_recruitment'">
-        <ion-button  (click)="statusUpdate($event, 're_work')">
-          Re-work
-        </ion-button>
-      </ion-col>
-    </ion-row>
-
-    <ion-row *ngIf="request.request_position_type == 2">
-      <ion-col size-xs="4">
-        <ion-button (click)="showUpdateAlert()">
-          Post an update
-        </ion-button>
-      </ion-col>
-
-      <ion-col size-xs="4" *ngIf="(request.request_status == 'started' || request.request_status == 'pending' || request.request_status == 're_work' ) &&  suggestedSuggestions.length > 0" >
-        <ion-button (click)="deliveredRequest($event, request)">
-          Mark delivered
-        </ion-button>
-      </ion-col>
-      <ion-col size-xs="4" *ngIf="((request.request_status == 'started' || request.request_status == 're_work' ) && request.request_status != 'delivered')">
-        <ion-button (click)="statusUpdate($event, 'finished_by_recruitment')">
-          Finished by recruitment
-        </ion-button>
-      </ion-col>
-      <ion-col size-xs="4" *ngIf="request.request_status == 'finished_by_recruitment'" >
-        <ion-button (click)="statusUpdate($event, 're_work')">
-          Re-work
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <ion-button *ngIf="segment == 'activities'" class="btn-post-update" (click)="showUpdateAlert()">
+    Post update
+  </ion-button>
+  
 </ion-footer>

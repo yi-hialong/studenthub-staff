@@ -29,7 +29,6 @@ import { StoryDeliveredComponent } from './story-delivered.component';
     NoItemsModule,
     LoadingModalModule,
     SuggestionModule,
-    PipesModule
   ],
   declarations: [
     StoryViewPage,

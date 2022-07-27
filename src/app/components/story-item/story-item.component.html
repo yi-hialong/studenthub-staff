@@ -1,9 +1,11 @@
 <ion-card tappable>
   <ion-card-content>
     <div class="inner-card-content">
-      <h1>({{ story.request.request_number_of_employees }}) {{story.request.request_position_title}}</h1>
-      <h3 *ngIf="story.request.company">
-        {{ story.request.company.company_common_name_en? story.request.company.company_common_name_en: story.request.company.company_name }}
+      
+      <h1>({{ request.request_number_of_employees }}) {{request.request_position_title}}</h1>
+
+      <h3 *ngIf="request.company">
+        {{ request.company.company_common_name_en? request.company.company_common_name_en: request.company.company_name }}
       </h3>
 
       <div class="badge-section">
@@ -15,14 +17,15 @@
           <span *ngIf="story.story_status == 5"> Accepted </span>
           <span *ngIf="story.story_status == 6"> Cancelled </span>
         </ion-badge>
-        <ng-container *ngIf="story.request">
+        <ng-container *ngIf="request">
           
-          <ion-badge *ngIf="story.request.request_position_type == 1">Full-time</ion-badge>
-          <ion-badge *ngIf="story.request.request_location">{{story.request.request_location}}</ion-badge>
-          <ion-badge *ngIf="story.request.request_position_type == 2">Part-time</ion-badge>
+          <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
+          <ion-badge *ngIf="request.request_location">{{request.request_location}}</ion-badge>
+          <ion-badge *ngIf="request.request_position_type == 2">Part-time</ion-badge>
           
-          <ng-container *ngIf="story.request.staffs"> 
-            <ion-badge *ngFor="let staff of story.request.staffs">
+          <!-- todo: should have staff who started working in story -->
+          <ng-container *ngIf="request.staffs"> 
+            <ion-badge *ngFor="let staff of request.staffs">
               {{ staff.staff_name }}
             </ion-badge>
           </ng-container>

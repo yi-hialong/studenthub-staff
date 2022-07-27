@@ -9,7 +9,8 @@ import {
   ModalController,
   NavController,
   Platform,
-  IonContent
+  IonContent,
+  PopoverController
 } from '@ionic/angular';
 // services
 import { AuthService } from 'src/app/providers/auth.service';
@@ -29,6 +30,7 @@ import { CompanyNoteFormPage } from '../company-note-form/company-note-form.page
 import { CompanyRequestFormPage } from '../company-request-form/company-request-form.page';
 import { FulltimerSearchPage } from '../../fulltimer/fulltimer-search/fulltimer-search.page';
 import { StaffPage } from '../../pickers/staff/staff.page';
+import { RequestOptionPage } from './company-request-option.page';
 
 
 @Component({
@@ -69,11 +71,12 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
   public internvalSubscribe;
 
-  public segment: string = 'activities';
+  public segment: string = 'details';
 
   public activeStory: Story;
 
   constructor(
+    public popoverCtrl: PopoverController,
     public modalCtrl: ModalController,
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
@@ -562,6 +565,31 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
         }
       ]
     }).then(alert => { alert.present(); });
+  }
+
+  /**
+   * view request detail page
+   * @param e
+   */
+  async openPopover(e) {
+    const popover = await this.popoverCtrl.create({
+      component: RequestOptionPage,
+      componentProps: {
+        request: this.request
+      },
+      event: e
+    });
+    popover.present();
+    popover.onDidDismiss().then(e => {
+      if (!e.data) 
+        return null; 
+        
+      if(e.data.action == 'update') {
+        this.update();
+      } else if(e.data.action == 'cancel') {
+        this.cancelledRequest(e, this.request);
+      }
+    });
   }
 
   /**

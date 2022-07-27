@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import {Story} from '../../models/request';
+import {Request, Story} from '../../models/request';
 
 
 @Component({
@@ -10,13 +10,19 @@ import {Story} from '../../models/request';
 })
 export class StoryItemComponent implements OnInit {
 
+  @Input() request: Request;
+
   @Input() story: Story;
 
   constructor(
   ) {
   }
 
-  ngOnInit() { }
+  ngOnInit() { 
+    if(!this.request && this.story.request) {
+      this.request = this.story.request;
+    }
+  }
 
   /**
    * Make date readable by Safari

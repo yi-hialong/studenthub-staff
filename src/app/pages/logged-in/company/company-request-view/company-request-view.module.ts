@@ -12,6 +12,10 @@ import { PipesModule } from 'src/app/pipes/pipes.module';
 import { RecentActivityComponent } from 'src/app/components/recent-activity/recent-activity.component';
 import { SuggestionModule } from 'src/app/components/suggestion/suggestion.module';
 import { InvitationModule } from 'src/app/components/invitation/invitation.module';
+import { RequestOptionPage } from './company-request-option.page';
+import { NoteModule } from 'src/app/components/note/note.module';
+import { NoItemsModule } from 'src/app/components/no-items/no-items.module';
+import { StoryItemModule } from 'src/app/components/story-item/story-item.module';
 
 @NgModule({
   imports: [
@@ -22,11 +26,17 @@ import { InvitationModule } from 'src/app/components/invitation/invitation.modul
     SuggestionModule,
     InvitationModule,
     LoadingModalModule,
+    NoteModule,
+    NoItemsModule,
+    LoadingModalModule,
+    SuggestionModule,
+    StoryItemModule,
     CompanyRequestViewRoutingModule
   ],
   declarations: [
     CompanyRequestViewPage, 
-    RecentActivityComponent
+    RecentActivityComponent,
+    RequestOptionPage
   ]
 })
 export class CompanyRequestViewPageModule { }

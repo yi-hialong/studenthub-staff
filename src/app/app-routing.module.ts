@@ -473,13 +473,6 @@ const routes: Routes = [
     }
   },
   {
-    path: 'app-error',
-    loadChildren: () => import('./pages/errors/app-error/app-error.module').then( m => m.AppErrorPageModule)
-  },
-  {
-    path: '**',
-    redirectTo: 'not-found'
-  },  {
     path: 'store-option',
     loadChildren: () => import('./pages/logged-in/store/store-option/store-option.module').then( m => m.StoreOptionPageModule)
   },
@@ -487,7 +480,22 @@ const routes: Routes = [
     path: 'mall-option',
     loadChildren: () => import('./pages/logged-in/mall/mall-option/mall-option.module').then( m => m.MallOptionPageModule)
   },
-
+  {
+    path: 'transfer-list',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/transfer/transfer-list-all/transfer-list-all.module').then( m => m.TransferListAllPageModule),
+    data: {
+      name: 'TransferListAllPage'
+    }
+  },
+  {
+    path: 'app-error',
+    loadChildren: () => import('./pages/errors/app-error/app-error.module').then( m => m.AppErrorPageModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'not-found'
+  },
 ];
 
 @NgModule({

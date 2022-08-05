@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/icon-back.svg" defaultHref="/">
       </ion-back-button>
-    </ion-buttons> 
+    </ion-buttons>
   </ion-toolbar>
   <ion-toolbar class="container">
     <ion-title>
@@ -12,14 +12,14 @@
         - KWD {{ transfer.company_total | number:'1.0-3' }}
       </span>
     </ion-title>
-    <ion-buttons slot="end" *ngIf="transfer && transfer.transfer_status==10">
+    <ion-buttons slot="end" *ngIf="!viewOnly && transfer && transfer.transfer_status==10">
       <ion-button color="danger" *ngIf="transfer && (transfer.transfer_status==10)"
         (click)="delete(transfer)">
         Delete
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  
+
   <ion-toolbar class="container" >
     <!--(ionChange)="segmentChanged($event)"-->
     <ion-segment mode="md" [(ngModel)]="segment">
@@ -31,16 +31,16 @@
       <ion-segment-button mode="md" value="invoices">
         <ion-label>Invoices</ion-label>
       </ion-segment-button>
- 
+
     </ion-segment>
   </ion-toolbar>
 
 </ion-header>
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
-  
+
   <div class="container">
-   
+
     <ng-container *ngIf="!loading">
 
       <div class="invoices" *ngIf="transfer && segment == 'details'">
@@ -53,7 +53,7 @@
 
           <p>{{transferStatusDescription}}</p>
 
-          <section *ngIf="transfer">
+          <section *ngIf="transfer && !viewOnly">
             <!-- If Transfer Locked -->
             <ion-button fill="outline" (click)="paymentSent(transfer)"
               *ngIf="transfer && (transfer.transfer_status==5)">
@@ -67,7 +67,7 @@
               <ion-icon name="create" slot="start"></ion-icon>
               Edit Transfer
             </ion-button>
-            
+
             <ion-button fill="outline" (click)="importTransfer(transfer)"
               *ngIf="transfer && (transfer.transfer_status==10)">
               <ion-icon name="create" slot="start"></ion-icon>
@@ -89,7 +89,7 @@
         <p class="txt-time">
           <ion-icon src="assets/images/icon-transfer-time.svg"></ion-icon>  Created on <span>{{ transfer.transfer_created_at}}</span>
         </p>
-        
+
           <ion-grid>
             <ion-row>
               <ion-col size-lg="2" size-md="2" size-sm="6" size-xs="6" class="ion-align-self-center">
@@ -110,12 +110,12 @@
               </ion-col>
             </ion-row>
           </ion-grid>
-        
+
       </div>
 
       <!--Invoices -->
       <div class="invoices" *ngIf="segment == 'invoices'">
-        
+
         <!-- Transfer Details made to each Candidate -->
         <ion-list *ngIf="transfer">
           <!-- store_name pipe returns the transferCandidates grouped by store as object of following format: -->
@@ -138,7 +138,7 @@
                 <h2 class="candidate_name" *ngIf="resource.candidate">
                   {{ resource.candidate.candidate_name? resource.candidate.candidate_name: resource.candidate.candidate_name_ar }}
                 </h2>
-                
+
                 <h2 class="candidate_name txt-color-warning" *ngIf="!resource.candidate">
                   Deleted Account
                 </h2>
@@ -147,7 +147,7 @@
                   {{ resource.company_hourly_rate | number:'1.0-3' }} per hour</p>
                 <p *ngIf="resource.bonus">Bonus KD {{resource.bonus | number}}</p>
                 <p class="txt-total"><b>KD {{ total(resource) }}</b></p>
-    
+
                 <ion-badge slot="start" color="dark" *ngIf="resource.paid != '1' && resource.company_total > 0 && (transfer.transfer_status==3 || transfer.transfer_status==4)">
                   Transfer in progress
                 </ion-badge>
@@ -168,7 +168,7 @@
 
   </div>
 </ion-content>
-<ion-footer class="ion-no-border" *ngIf="segment == 'invoices' && transfer.invoices && transfer.invoices.length > 0"> 
+<ion-footer class="ion-no-border" *ngIf="segment == 'invoices' && transfer.invoices && transfer.invoices.length > 0">
   <div class="container">
     <ion-button (click)="downloadLatestInvoice()" >
       Download Invoice

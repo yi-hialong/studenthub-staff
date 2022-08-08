@@ -36,7 +36,7 @@ export class CompanyListPage implements OnInit {
     approved_to_hire: number
   } = {
       name: null,
-      status: 6,
+      status: 100,
       approved_to_hire: null
     };
 
@@ -100,7 +100,7 @@ export class CompanyListPage implements OnInit {
   resetStatus() {
     this.filters = {
       name: this.filters.name,
-      status: 5,
+      status: 100,
       approved_to_hire: null
     };
 
@@ -114,7 +114,7 @@ export class CompanyListPage implements OnInit {
     this.filters = {
       approved_to_hire: null,
       name: null,
-      status: 5
+      status: 100
     };
 
     this.loadData(1); // reload all result

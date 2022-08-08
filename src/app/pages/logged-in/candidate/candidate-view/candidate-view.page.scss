@@ -110,7 +110,7 @@ h4.candidate-name {
   color: #fff;
   background-color: #eb5757;
 }
- 
+
 
 .details ion-item {
   --inner-border-width: 0;
@@ -214,7 +214,7 @@ h4.candidate-name {
 }
 
 .personal-details {
-  
+
   h5 {
     margin-bottom: 16px;
   }
@@ -252,7 +252,7 @@ h4.candidate-name {
   }
 
   .image-id {
-    width: 342px; 
+    width: 342px;
     border-radius: 16px;
     background-color: #fff;
   }
@@ -401,7 +401,7 @@ h4.candidate-name {
   .btn-certificate {
     height: 40px;
     flex-grow: 0;
-    margin: 14px 0 0 0; 
+    margin: 14px 0 0 0;
     --border-radius: 8px;
     --background: #f5f7ff;
     --box-shadow: none;
@@ -719,7 +719,7 @@ h5.title {
   margin-bottom: 32px;
 }
 
-ion-content { 
+ion-content {
   h5 {
     margin: 0;
     font-size: 18px;
@@ -756,7 +756,7 @@ ion-content {
 
     ion-badge {
     height: 32px;
-    flex-grow: 0; 
+    flex-grow: 0;
     align-items: center;
     gap: 10px;
     padding: 6px 12px;
@@ -772,12 +772,12 @@ ion-content {
     color: #4b4b61;
     margin-inline-end: 8px;
     margin-bottom: 8px;
-  } 
+  }
   }
 
   .item-salary {
     height: 80px;
-    flex-grow: 0;  
+    flex-grow: 0;
     border-radius: 8px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
     background-color: #fff;
@@ -837,7 +837,7 @@ ion-content {
     letter-spacing: normal;
     color: #4b4b61;
     margin-top: 32px;
-    
+
     p {
       margin: 0;
       margin-inline-start: 32px;
@@ -866,7 +866,7 @@ ion-content {
 .btn-resume,
 .btn-video {
   width: 163px;
-    height: 56px; 
+    height: 56px;
     --padding: 16px;
     border-radius: 8px;
     --box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
@@ -877,13 +877,17 @@ ion-content {
     font-stretch: normal;
     font-style: normal;
     line-height: 1.43;
-    letter-spacing: normal; 
+    letter-spacing: normal;
     color: #4b4b61;
     text-transform: none;
     margin-inline-end: 16px;
 
     ion-icon {
-      margin-right: 7px; 
+      margin-right: 7px;
       font-size: 24px;
     }
+}
+
+.verified {
+  font-size: 20px;
 }

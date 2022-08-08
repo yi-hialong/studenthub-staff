@@ -29,7 +29,8 @@
 
     <h4 class="candidate-name" *ngIf="candidate.candidate_name_ar">
       {{ candidate.candidate_name_ar }}
-
+      &nbsp;
+      <ion-icon class="verified" src="../../../../assets/images/ic_verified.svg" *ngIf="candidate.isProfileCompleted" title="Completed Profile"></ion-icon>
       <ion-button size="small" class="btn-copy" (click)="copy($event, candidate.candidate_name_ar)">
         <ion-icon slot="icon-only" name="copy-outline"></ion-icon>
       </ion-button>
@@ -198,7 +199,7 @@
                 Your browser does not support HTML5 video tags
               </video>
             </ng-container> -->
-     
+
       <div class="work-experience-wrapper"
         *ngIf="candidate.candidateExperiences && candidate.candidateExperiences.length > 0">
         <h5>
@@ -262,12 +263,12 @@
         </h5>-->
 
         <h5 class="heading" *ngIf="workHistory.length > 0"><ion-icon src="assets/images/icon-assignment.svg"></ion-icon> Assignments</h5>
-      
+
         <ion-card class="card-history" *ngFor="let history of workHistory">
           <ion-card-header>
             <ion-item lines="none" *ngIf="history.store">
               <div tabindex="0"></div>
-              
+
               <ion-thumbnail *ngIf="history.company && history.company.company_logo">
                 <img src="{{ awsService.cloudinaryUrl + history.company.company_logo }}" (error)="imageError(history)">
               </ion-thumbnail>
@@ -276,11 +277,11 @@
                 <h5 *ngIf="history.store">{{ history.store.store_name }}</h5>
                 <a [routerLink]="'/company-view/' + history.company_id">{{ history.company.company_name }}</a>
               </ion-label>
-              
+
               <ion-button (click)="toggleOpen(history, $event)" [class.is-open]="history.isOpen">
                 <ion-icon src="assets/images/icon-arrow-down.svg"></ion-icon>
               </ion-button>
-              
+
             </ion-item>
           </ion-card-header>
           <ion-card-content *ngIf="history.isOpen">
@@ -293,22 +294,22 @@
               {{ toDate(history.start_date) | date }} to
               <ng-container *ngIf="history.end_date">{{ toDate(history.end_date) | date }}</ng-container>
               <ng-container *ngIf="!history.end_date">now</ng-container>
-            </p> 
-              
+            </p>
+
             <ion-button class="btn-certificate" (click)="downloadCertification(history)">
               <ion-icon name="cloud-download-outline"></ion-icon>&nbsp;Certificate
-            </ion-button> 
+            </ion-button>
 
             <ion-button *ngIf="!history.end_date" class="btn-unassign"
               (click)="unassignCandidateFromStore(history.store_id)">&nbsp;
               Unassign
             </ion-button>
-          
+
           </ion-card-content>
         </ion-card>
-        
+
       </div>
-      
+
       <div class="suggestion-wrapper">
 
         <h5 class="heading"><ion-icon src="assets/images/icon-star.svg"></ion-icon> Activity</h5>
@@ -406,7 +407,7 @@
     <loading-modal [loading]="loading" type="candidate-view"></loading-modal>
   </div><!-- END .container -->
 </ion-content>
-<ion-footer class="ion-no-border" *ngIf="candidate && candidate.isProfileCompleted && authService.story && authService.story.request && authService.story.story_status == 1 
+<ion-footer class="ion-no-border" *ngIf="candidate && candidate.isProfileCompleted && authService.story && authService.story.request && authService.story.story_status == 1
   && authService.story.staff_id == authService.staff_id && ['cancelled', 'delivered'].indexOf(authService.story.request.request_status) == -1">
   <div class="container">
     <ion-button class="btn-invite" [disabled]="candidate.isAlreadyInvited" (click)="invite()">

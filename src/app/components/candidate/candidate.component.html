@@ -13,20 +13,23 @@
 
       <h2 class="candidate_name">
         {{ candidate.candidate_name ? candidate.candidate_name : candidate.candidate_name_ar }}
+        &nbsp;
+        <ion-icon class="verified" src="../../assets/images/ic_verified.svg" *ngIf="candidate.isProfileCompleted" title="Completed Profile"></ion-icon>
       </h2>
 
       <p>{{ candidate.age }} years old <span class="sep">•</span>
         {{ candidate.candidate_hourly_rate }} KD /hour</p>
 
+
       <p *ngIf="candidate.store">
         {{ candidate.store.store_name }}
 
         <span *ngIf="candidate.company">@ {{ candidate.company.company_name }} </span>
-        
+
         <br/>
 
-        <small *ngIf="latestWorkStartedOn"> 
-          Latest Work Started on {{ toDate(latestWorkStartedOn) | date }} 
+        <small *ngIf="latestWorkStartedOn">
+          Latest Work Started on {{ toDate(latestWorkStartedOn) | date }}
         </small>
       </p>
 
@@ -47,5 +50,4 @@
   </ion-item>
 
 </ion-card>
- 
- 
+

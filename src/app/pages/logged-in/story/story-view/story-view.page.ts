@@ -95,6 +95,10 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+  }
+
+  ionViewWillEnter(){
+
     if (!this.story_uuid)
       this.story_uuid = this.activatedRoute.snapshot.paramMap.get('id');
 
@@ -129,6 +133,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
     //   .subscribe(x => { this.getTimeDifference(); });
   }
 
+
   ngOnDestroy() {
     this.destroyed$.next();
     this.destroyed$.complete();
@@ -143,15 +148,13 @@ export class StoryViewPage implements OnInit, OnDestroy {
       this.loading = false;
       this.story = res;
       this.request = this.story.request;
-      
+
       this.loadStoryInvitations();
-      
       this.loadSuggestions();
-      
       this.loadNotes();
 
-      if(this.story.story_status == 1 && this.story.staff_id == this.authService.staff_id && 
-        ['cancelled', 'delivered'].indexOf(this.story.request.request_status) == -1) 
+      if(this.story.story_status == 1 && this.story.staff_id == this.authService.staff_id &&
+        ['cancelled', 'delivered'].indexOf(this.story.request.request_status) == -1)
       {
         this.authService.story = this.story;
         this.authService.saveInStorage();
@@ -240,20 +243,20 @@ export class StoryViewPage implements OnInit, OnDestroy {
         // story work started
         if (status == 1) {
           this.story.staff_id = this.authService.staff_id;
-            this.authService.story = this.story; 
+            this.authService.story = this.story;
             this.authService.saveInStorage();
         }
 
         // story work stopped
         if (status == 0 || status == 3) {
-            this.authService.story = null; 
+            this.authService.story = null;
             this.authService.saveInStorage();
         }
 
         if(status == 3) {
           this.showStoryDelivered(
             response.newStoryActivity,
-            response.totalDelivered, 
+            response.totalDelivered,
             response.total,
             response.nextStory
           );
@@ -306,7 +309,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
   }
 
   logScrolling(e) {
-    this.borderLimit = (e.detail.scrollTop > 20);
+    // this.borderLimit = (e.detail.scrollTop > 20);
   }
 
   /**
@@ -357,7 +360,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
   showCandidates() {
 
     if ([2, '2'].indexOf(this.request.request_position_type) > -1) {
-      this.navCtrl.navigateForward('candidate-list', {
+      this.navCtrl.navigateForward('view/candidate-search', {
         state: {
           story: this.story
         }
@@ -401,7 +404,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
     const modal = await this._modalCtrl.create({
       component: StoryDeliveredComponent,
       componentProps: {
-        totalDelivered: totalDelivered, 
+        totalDelivered: totalDelivered,
         total: total,
         storyActivity: storyActivity,
         //nextStory: nextStory
@@ -413,15 +416,15 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
     const { data } = await modal.onWillDismiss();
 
-    if (data.action == "request") 
+    if (data.action == "request")
     {
       this.navCtrl.navigateForward(['request-view', this.story.request_uuid]);
     }
-    else if (data.action == "next") 
+    else if (data.action == "next")
     {
       this.navCtrl.navigateForward(['story-view', nextStory.story_uuid]);
     }
-    else if (data.action = "back") 
+    else if (data.action = "back")
     {
       this.navCtrl.back();
     }

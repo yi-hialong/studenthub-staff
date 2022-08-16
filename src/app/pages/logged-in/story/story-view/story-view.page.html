@@ -1,4 +1,4 @@
-<ion-header mode="md" [class.add-border]="borderLimit" class="clear-header">
+<ion-header mode="md">
   <ion-toolbar class="container">
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/icon-back.svg" defaultHref="/view/company-request-dashboard">
@@ -10,13 +10,13 @@
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
-  
-  <ion-toolbar *ngIf="request" class="container title-name"  [class.hidden]="borderLimit">
+
+  <ion-toolbar *ngIf="request" class="container title-name" >
     <h1>{{request.request_position_title}}</h1>
     <p tappable [routerLink]="['/request-view/' +  request.request_uuid]">View main request</p>
   </ion-toolbar>
 
-  <ion-toolbar class="container"  [class.hidden]="borderLimit">
+  <ion-toolbar class="container">
     <ion-segment mode="md" (ionChange)="segmentChanged($event)" value="detail">
 
       <ion-segment-button mode="md" value="detail">
@@ -41,17 +41,17 @@
 
 <ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
   <div class="container" *ngIf="request && story && segment == 'detail'">
-    
+
     <h2>Job Details</h2>
 
     <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
     <ion-badge *ngIf="request.request_location">{{story.request.request_location}}</ion-badge>
     <ion-badge *ngIf="request.request_position_type == 2">Part-time</ion-badge>
-    
+
     <ion-badge *ngIf="story.staff">
       {{ story.staff.staff_name }}
-    </ion-badge> 
-    
+    </ion-badge>
+
     <ion-grid>
       <ion-row>
         <ion-col class="lbl">
@@ -105,9 +105,9 @@
       <ion-card *ngFor="let activity of story.storyActivities" class="activity-list">
         <ion-card-content>
           <p class="activity">
-            
+
             <span *ngIf="activity.activity_status == 0 && !activity.staff">Story generated</span>
-            
+
             <span *ngIf="activity.activity_status == 0 && activity.staff">
               Story stopped by <b>{{activity.staff.staff_name}}</b>
             </span>
@@ -119,13 +119,13 @@
             <span *ngIf="activity.activity_status == 2 && activity.staff">
               <b>{{activity.staff.staff_name}}</b> has stopped working on story
             </span>
-            
+
             <span *ngIf="activity.activity_status == 3 && activity.staff">
               <b>{{activity.staff.staff_name}}</b> delivered story
             </span>
-            
+
             <span *ngIf="activity.activity_status == 4">
-              Story rejected 
+              Story rejected
             </span>
 
             <span *ngIf="activity.activity_status == 5">
@@ -134,9 +134,9 @@
 
             <br />
 
-            <span><b>{{ activity.activity_created_at | timeAgo}}</b></span> on 
+            <span><b>{{ activity.activity_created_at | timeAgo}}</b></span> on
             <span><b>{{ toDate(activity.activity_created_at) | date : 'MMM d, y, h:mm:ss a' }}</b></span>
-            
+
           </p>
 
           <ion-badge *ngIf="activity.activity_time_spent">
@@ -183,12 +183,12 @@
 
 </ion-content>
 <ion-footer class="ion-no-border ion-text-center clear-header" *ngIf="story">
-  
+
   <ion-grid class="container">
-     
+
     <ion-row>
-      
-      <ion-col size="6" size-sm="12" size-md="12" *ngIf="story.story_status == 1 && story.request && story.staff_id == authService.staff_id && 
+
+      <ion-col size="6" size-sm="12" size-md="12" *ngIf="story.story_status == 1 && story.request && story.staff_id == authService.staff_id &&
         ['cancelled', 'delivered'].indexOf(story.request.request_status) == -1">
         <ion-button class="invite-btn" (click)="showCandidates()">
           Invite Candidates
@@ -201,10 +201,10 @@
         </ion-button>
       </ion-col>
 
-      <ion-col *ngIf="story.request && ['cancelled', 'delivered'].indexOf(story.request.request_status) == -1 && 
+      <ion-col *ngIf="story.request && ['cancelled', 'delivered'].indexOf(story.request.request_status) == -1 &&
         (
-          story.story_status == 0 || 
-          (story.story_status == 1 && story.staff_id == authService.staff_id && allSuggestions.length == 0) || 
+          story.story_status == 0 ||
+          (story.story_status == 1 && story.staff_id == authService.staff_id && allSuggestions.length == 0) ||
           (story.story_status < 3 && allSuggestions.length > 0)
         )">
 

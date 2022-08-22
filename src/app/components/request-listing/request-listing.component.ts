@@ -28,6 +28,7 @@ export class RequestListingComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.request);
     if (this.request) {
       const time = this.getHours(this.request.request_updated_datetime);
       const minutes = this.getMinutes(this.request.request_updated_datetime);
@@ -50,9 +51,9 @@ export class RequestListingComponent implements OnInit {
    * @param date
    */
   toDate(date) {
-    if (!date) 
+    if (!date)
       return null;
-      
+
     if (date) {
       return new Date(date.replace(/-/g, '/'));
     }

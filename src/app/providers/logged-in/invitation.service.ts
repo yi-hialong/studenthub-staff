@@ -21,7 +21,7 @@ export class InvitationService {
    * @returns {Observable<any>}
    */
   list(params: string = ''): Observable<any> {
-    let url = this._endpoint + '?expand=story,candidate,request,note,updatedBy' + params;
+    let url = this._endpoint + '?expand=story,candidate,request,note,request.storyOwners,updatedBy' + params;
     return this._authhttp.get(url);
   }
 
@@ -48,8 +48,8 @@ export class InvitationService {
 
   /**
    * check if invitation already sent
-   * @param candidate_id 
-   * @param story 
+   * @param candidate_id
+   * @param story
    */
   isAlreadyInvited(candidate_id, story: Story) {
     const url = this._endpoint + '/is-already-invited?candidate_id=' + candidate_id + '&story_uuid=' + story.story_uuid

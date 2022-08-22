@@ -168,10 +168,6 @@ export class CandidateViewPage implements OnInit {
 
     this.loadStoreData();
     this.loadTransfersData();
-
-    if(this.story) {
-      this.checkAlreadyInvited();
-    }
   }
 
   /**
@@ -423,7 +419,7 @@ export class CandidateViewPage implements OnInit {
 
   /**
    * load candidate details
-   * @param loading 
+   * @param loading
    */
   loadCandidateDetail(loading = true) {
     this.loading = loading;
@@ -435,6 +431,10 @@ export class CandidateViewPage implements OnInit {
       this.candidate = response;
       if (this.candidate && this.candidate.pendingField && this.candidate.pendingField.length > 0) {
         this.pendingData = 'Total ' + this.candidate.pendingField.length + ' pending fields\n ' + this.candidate.pendingField.join(',');
+      }
+
+      if(this.story) {
+        this.checkAlreadyInvited();
       }
 
       setTimeout(_ => {
@@ -513,12 +513,12 @@ export class CandidateViewPage implements OnInit {
       if (e.data && e.data.updateEmail) {
         this.updateEmailForm();
       }
-      
+
       if (e.data && e.data.exportCV) {
         this.exportOption();
       }
 
-      
+
     });
   }
 
@@ -596,7 +596,7 @@ export class CandidateViewPage implements OnInit {
               // On Success
               if (response.operation == 'success') {
 
-                this.candidate.isAlreadyInvited = true; 
+                this.candidate.isAlreadyInvited = true;
 
                 this.candidate.invited = response.invitedCount;
 
@@ -679,7 +679,7 @@ export class CandidateViewPage implements OnInit {
       translucent: true
     });
     selectPage.onDidDismiss().then(e => {
-  
+
       if (e.data) {
         this.assignCandidateToStore(e.data.store_id);
       }
@@ -1003,7 +1003,7 @@ export class CandidateViewPage implements OnInit {
     //console.log(event);
 
     this.borderLimit = (event.detail.scrollTop > 20);
-    
+
     //console.log(event.detail.scrollTop, event);
 
     //if (event.detail.offsetHeight + event.detail.scrollTop >= event.detail.scrollHeight) {
@@ -1011,7 +1011,7 @@ export class CandidateViewPage implements OnInit {
     //  console.log(event.target.offsetTop, event.target.clientHeight, event.target.offsetHeight)
     //}
 
-    //scrollHeight 544 
+    //scrollHeight 544
 
     //offsetTop 266
 
@@ -1253,7 +1253,10 @@ export class CandidateViewPage implements OnInit {
    */
   checkAlreadyInvited() {
     this.invitationService.isAlreadyInvited(this.candidate_id, this.story).subscribe(res => {
-      this.candidate.isAlreadyInvited = res.isAlreadyInvited;
+      if (this.candidate) {
+        this.candidate.isAlreadyInvited = res.isAlreadyInvited;
+      }
+      console.log(this.candidate);
     });
   }
 

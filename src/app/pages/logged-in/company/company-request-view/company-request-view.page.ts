@@ -56,7 +56,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public rejectedCandidates: Invitation[] = [];
 
   public acceptedInvitations: Invitation[] = [];
-
+  public section = 'invited';
   public request_uuid;
   public loading = false;
   public loadingInvoice = false;
@@ -583,9 +583,9 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     });
     popover.present();
     popover.onDidDismiss().then(e => {
-      if (!e.data) 
-        return null; 
-        
+      if (!e.data)
+        return null;
+
       if(e.data.action == 'update') {
         this.update();
       } else if(e.data.action == 'cancel') {
@@ -889,5 +889,9 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     } else {
       return request_status;
     }
+  }
+
+  changeSection(sec) {
+    this.section = sec;
   }
 }

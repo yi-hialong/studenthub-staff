@@ -31,12 +31,14 @@ export class CandidateListPage implements OnInit {
     name: string,
     email: string,
     phone: number,
-    type: string
+    type: string,
+    page: number
   } = {
       name: null,
       email: null,
       phone: null,
-      type: null
+      type: null,
+      page: 1
     };
 
   public searchName = null;
@@ -98,6 +100,9 @@ export class CandidateListPage implements OnInit {
     if (this.filters.type) {
       urlParams += '&type=' + this.filters.type;
     }
+    if (this.filters.page) {
+      urlParams += '&export_page=' + this.filters.page;
+    }
 
     return urlParams;
   }
@@ -110,7 +115,8 @@ export class CandidateListPage implements OnInit {
       name: null,
       email: null,
       phone: null,
-      type: null
+      type: null,
+      page: 1
     };
     this.loadData(1); // reload all result
   }

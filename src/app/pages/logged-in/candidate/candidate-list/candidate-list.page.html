@@ -54,19 +54,28 @@
                 <ion-input type="text" [(ngModel)]="filters.email"></ion-input>
               </ion-item>
             </ion-col>
-            <ion-col size-md="3" size-lg="3" size-sm="6" size-xs="12">
+            <ion-col size-md="2" size-lg="2" size-sm="6" size-xs="12">
               <!-- Filter by Tag -->
               <ion-item>
                 <ion-label position="floating" color="primary">Phone</ion-label>
                 <ion-input type="text" [(ngModel)]="filters.phone"></ion-input>
               </ion-item>
             </ion-col>
-            <ion-col size-md="3" size-lg="3" size-sm="6" size-xs="12">
+            <ion-col size-md="2" size-lg="2" size-sm="6" size-xs="12">
               <ion-item>
                 <ion-label position="floating" color="primary">Type</ion-label>
                 <ion-select [(ngModel)]="filters.type" [value]="filters.type" okText="Okay" cancelText="Dismiss">
                   <ion-select-option value="assigned">Assigned</ion-select-option>
                   <ion-select-option value="un-assigned">UnAssigned</ion-select-option>
+                </ion-select>
+              </ion-item>
+            </ion-col>
+            <ion-col size-md="2" size-lg="2" size-sm="6" size-xs="12">
+              <ion-item>
+                <ion-label position="floating" color="primary">Export data</ion-label>
+                <ion-select [(ngModel)]="filters.page" [value]="filters.page" okText="Okay" cancelText="Dismiss">
+                  <ion-select-option [selected]="filters.page == 1" value="1">0 - 20,000</ion-select-option>
+                  <ion-select-option [selected]="filters.page == 2" value="2">20,001 - 40,000</ion-select-option>
                 </ion-select>
               </ion-item>
             </ion-col>

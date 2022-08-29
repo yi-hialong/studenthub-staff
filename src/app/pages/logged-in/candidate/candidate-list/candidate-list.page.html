@@ -14,6 +14,12 @@
         <ion-spinner *ngIf="downloading"></ion-spinner>
       </ion-button>
 
+      <ion-button color="primary" [disabled]="exporting"
+        (click)="export()">
+        <span *ngIf="!exporting">Export Data</span>
+        <ion-spinner *ngIf="exporting"></ion-spinner>
+      </ion-button>
+
       <ion-button color="primary" [disabled]="candidateService.candidates.length != 2 || merging || downloading"
         (click)="merge($event)">
         <span *ngIf="!merging">Merge</span>

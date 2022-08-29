@@ -80,6 +80,15 @@ export class CandidateService {
   }
 
   /**
+   * List of all candidates
+   * @returns {Observable<any>}
+   */
+  export(search: string, page: number = 1): Observable<any> {
+    const url = this._candidateEndpoint + '/export-candidate?page=' + page + search;
+    return this._authhttp.excelget(url, 'candidate-data.xlsx');
+  }
+
+  /**
    * List of all candidates asigned to store
    * @returns {Observable<any>}
    */

@@ -5,6 +5,7 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { Note } from 'src/app/models/note';
 //services
 import { CompanyService } from 'src/app/providers/logged-in/company.service';
+import {AuthService} from "../../../../providers/auth.service";
 
 
 @Component({
@@ -16,7 +17,7 @@ export class CompanyFollowupNotePage implements OnInit {
 
   public company_id;
 
-  public saving: boolean = false; 
+  public saving: boolean = false;
 
   public form: FormGroup;
 
@@ -27,6 +28,7 @@ export class CompanyFollowupNotePage implements OnInit {
   constructor(
     private fb: FormBuilder,
     public modalCtrl: ModalController,
+    public authService: AuthService,
     public alertCtrl: AlertController,
     public companyService: CompanyService
   ) { }
@@ -53,14 +55,14 @@ export class CompanyFollowupNotePage implements OnInit {
    * add follow up note for company
    */
   save() {
-    
+
     this.updateModelDataFromForm();
 
-    this.saving = true; 
+    this.saving = true;
 
     this.companyService.addFollowupNote(this.model).subscribe(async jsonResponse => {
 
-      this.saving = false; 
+      this.saving = false;
 
       // On Success
       if (jsonResponse.operation == "success") {
@@ -72,19 +74,19 @@ export class CompanyFollowupNotePage implements OnInit {
       // On Failure
       if (jsonResponse.operation == "error") {
         let prompt = await this.alertCtrl.create({
-          message: JSON.stringify(jsonResponse.message),
+          message: this.authService.errorMessage(jsonResponse.message),
           buttons: ["Ok"]
         });
         prompt.present();
       }
     }, () => {
 
-      this.saving = false; 
+      this.saving = false;
     });
   }
 
   /**
-   * dismiss popup 
+   * dismiss popup
    */
   close() {
     this.modalCtrl.getTop().then(o => {

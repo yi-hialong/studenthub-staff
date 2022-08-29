@@ -113,6 +113,7 @@ export class CandidateListPage implements OnInit {
     if (this.filters.page) {
       urlParams += '&export_page=' + this.filters.page;
     }
+    urlParams += '&export_limit=5000';
 
     return urlParams;
   }

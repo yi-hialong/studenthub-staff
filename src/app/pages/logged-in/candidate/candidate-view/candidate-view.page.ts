@@ -519,6 +519,14 @@ export class CandidateViewPage implements OnInit {
         this.exportOption();
       }
 
+      if (e.data && e.data.unassign) {
+        this.unassignCandidateFromStore(e.data.store_id);
+      }
+
+      if (e.data && e.data.assing) {
+        this.assingToStore(true);
+      }
+
 
     });
   }

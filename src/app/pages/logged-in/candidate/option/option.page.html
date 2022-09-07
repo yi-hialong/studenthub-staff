@@ -1,5 +1,5 @@
 <ion-content [attr.dir]="translateService.direction()">
-  
+
   <ion-item [disabled]="updatingEmail" (click)="updateEmail()" tappable>
     <div tabindex="0"></div>
     <span *ngIf="!updatingEmail"><ion-icon src="assets/images/icon-update-email.svg"></ion-icon>
@@ -49,7 +49,7 @@
       Generate ID Card
     </span>
   </ion-item>
-  
+
   <ng-container *ngIf="candidate && !candidate.candidate_job_search_status">
     <ion-item [disabled]="updatingJobSearchStatus" (click)="toggleJobSearchStatus('mark_as_looking')" tappable>
       <div tabindex="0"></div>
@@ -83,6 +83,22 @@
     <ion-label *ngIf="!candidate.candidate_committed">
       <ion-icon name="person-outline" class="warning"></ion-icon>
       <span>Mark as committed</span>
+    </ion-label>
+  </ion-item>
+
+  <ion-item *ngIf="candidate.store" tappable>
+    <div tabindex="0"></div>
+    <ion-label (click)="unassignCandidateFromStore(candidate.store.store_id)">
+      <span *ngIf="!unassinging">Unassign from {{ candidate.store.store_name }}</span>
+      <ion-spinner *ngIf="unassinging"></ion-spinner>
+    </ion-label>
+  </ion-item>
+
+  <ion-item *ngIf="candidate.isProfileCompleted && !candidate.store" tappable>
+    <div tabindex="0"></div>
+    <ion-label (click)="assingToStore()">
+      <span *ngIf="!assigning">Assign to store</span>
+      <ion-spinner *ngIf="assigning"></ion-spinner>
     </ion-label>
   </ion-item>
 

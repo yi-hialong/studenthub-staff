@@ -286,7 +286,7 @@ export class OptionPage implements OnInit {
       if(o) {
         o.dismiss({ suggess: true });
       }
-    }); 
+    });
   }
 
   toggleCommitted() {
@@ -294,7 +294,7 @@ export class OptionPage implements OnInit {
       if(o) {
         o.dismiss({ toggleCommitted: true });
       }
-    }); 
+    });
   }
 
   async updateEmail() {
@@ -302,15 +302,15 @@ export class OptionPage implements OnInit {
       if(o) {
         o.dismiss({ updateEmail: true });
       }
-    }); 
+    });
   }
-  
+
   exportCv() {
     this.popoverCtrl.getTop().then(o => {
       if(o) {
         o.dismiss({ exportCV: true });
       }
-    }); 
+    });
   }
 
   /**
@@ -323,5 +323,21 @@ export class OptionPage implements OnInit {
       }
     });
     this.dismiss();
+  }
+
+  unassignCandidateFromStore(id) {
+    this.popoverCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ unassign: true, store_id: id });
+      }
+    });
+  }
+
+  assingToStore() {
+    this.popoverCtrl.getTop().then(o => {
+      if(o) {
+        o.dismiss({ assing: true });
+      }
+    });
   }
 }

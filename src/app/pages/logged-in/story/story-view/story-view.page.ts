@@ -25,6 +25,7 @@ import {NoteService} from '../../../../providers/logged-in/note.service';
 import {Note} from '../../../../models/note';
 import { StoryDeliveredComponent } from './story-delivered.component';
 import { StaffPage } from '../../pickers/staff/staff.page';
+import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
 
 
 export interface TimeSpan {
@@ -77,9 +78,12 @@ export class StoryViewPage implements OnInit, OnDestroy {
   public hoursToDday;
   public daysToDday;
 
+  public alertRequestUpdated: boolean = false; 
+  
   constructor(
     private activatedRoute: ActivatedRoute,
     public suggestionService: SuggestionService,
+    public requestService: CompanyRequestService,
     private storyService: StoryService,
     public navCtrl: NavController,
     private modalCtrl: ModalController,
@@ -97,12 +101,29 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.internvalSubscribe = setInterval(_ => {
-      this.isStoryUpdated();
+      //this.isStoryUpdated();
+      this.isRequestUpdated();
     }, 6 * 1000); // every 6 seconds
-
   }
 
-  ionViewWillEnter(){
+  /**
+   * check if request updated, if so reload details
+   */
+  isRequestUpdated() {
+
+    if (!this.story || this.alertRequestUpdated) {
+      return null;
+    }
+
+    this.requestService.isRequestUpdated(this.story.request_uuid).subscribe(data => {
+      if (data.request_updated_datetime != this.request.request_updated_datetime) {
+        //this.loadDetail(false);//refresh without showing loader
+        this.alertRequestUpdated = true;
+      }
+    });
+  }
+
+  ionViewWillEnter() {
 
     if (!this.story_uuid) {
       this.story_uuid = this.activatedRoute.snapshot.paramMap.get('id');
@@ -139,20 +160,26 @@ export class StoryViewPage implements OnInit, OnDestroy {
     //   .subscribe(x => { this.getTimeDifference(); });
   }
 
-
   ngOnDestroy() {
     this.destroyed$.next();
     this.destroyed$.complete();
     this.stopTimer();
     if (this.internvalSubscribe) {
-      clearInterval(  this.internvalSubscribe);
+      clearInterval(this.internvalSubscribe);
     }
   }
 
+  /**
+   * load story details
+   */
   loadData() {
     this.loading = true;
 
     this.storyService.detail(this.story_uuid, '?expand=staff,storyActivities,storyActivities.staff,request,request.contact,request.staffs,request.company').subscribe(res => {
+
+      //hide update alert 
+
+      this.alertRequestUpdated = false; 
 
       this.loading = false;
       this.story = res;
@@ -529,18 +556,23 @@ export class StoryViewPage implements OnInit, OnDestroy {
    */
   isStoryUpdated() {
 
-    if (!this.story || this.alertConfirmReload) {
+    if (!this.story || this.alertConfirmReload || this.alertRequestUpdated) {
       return null;
     }
 
     this.storyService.isUpdated(this.story_uuid).subscribe(data => {
       if (data.story_last_updated_at != this.story.story_last_updated_at) {
-        this.confirmReload(data.story_last_updated_at);
+        //this.confirmReload(data.story_last_updated_at);
+        this.alertRequestUpdated = true;
       }
     }, () => {
     }, () => {
       this.loading = false;
     });
+  }
+
+  closeAlert() {
+    this.alertRequestUpdated = false;
   }
 
   /**

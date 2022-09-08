@@ -7,6 +7,7 @@ import { AwsService } from 'src/app/providers/aws.service';
 import { EventService } from 'src/app/providers/event.service';
 import { CandidateIdCardService } from 'src/app/providers/logged-in/candidate.id.card.service';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
+import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class CandidateComponent implements OnInit {
     public navCtrl: NavController,
     public candidateService: CandidateService,
     public eventService: EventService,
+    public translateService: TranslateLabelService,
     public candidateIdCardService: CandidateIdCardService,
     public aws: AwsService
   ) {

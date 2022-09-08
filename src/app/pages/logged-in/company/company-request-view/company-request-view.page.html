@@ -148,6 +148,11 @@
 
     <div *ngIf="segment == 'invited'">
 
+      <div *ngIf="allInvitedCandidates.length == 0" class="ion-text-center no-invi">
+        <img src="assets/images/no-invitation.png"/>
+        <p class="ion-text-center">There are no invited candidates!</p>
+      </div>
+
         <div *ngIf="invitedCandidates.length > 0">
           <h4 class="txt-suggested-candidates">Invited Candidates <span class="count">({{ invitedCandidates.length }})</span></h4>
 
@@ -171,6 +176,11 @@
     </div>
 
     <div *ngIf="segment == 'suggested'">
+
+      <div *ngIf="allSuggestions.length == 0" class="ion-text-center no-invi">
+        <img src="assets/images/no-invitation.png"/>
+        <p class="ion-text-center">There are no suggested candidates!</p>
+      </div>
 
         <div>
           <div *ngIf="suggestedSuggestions.length > 0">
@@ -205,3 +215,18 @@
     </ion-button>
   </div>
 </ion-footer>
+
+<div class="update-alert" dir="ltr" *ngIf="alertRequestUpdated">
+  <span class="wrapper">
+      <span class="title">Requests updated</span>
+      <span class="btn-refresh">
+          &nbsp;
+          <span class="ag a8k" tabindex="0" role="link" tappable (click)="loadDetail()">
+            Refresh
+          </span>
+      </span>
+  </span>
+  <div tabindex="0" role="button" class="btn-close" tappable (click)="closeAlert()">
+      <ion-icon name="close"></ion-icon>
+  </div>
+</div>

@@ -174,18 +174,22 @@
   </div>
   <div class="container invite-tab" *ngIf="request && story && segment == 'invited'">
     <h2>Invited Candidates <span class="count">({{allInvitedCandidates.length}})</span></h2>
+    
     <div *ngIf="allInvitedCandidates.length == 0" class="ion-text-center no-invi">
       <img src="assets/images/no-invitation.png"/>
       <p class="ion-text-center">There are no invited candidates!</p>
     </div>
+
     <invitation *ngFor="let invitation of allInvitedCandidates" (onUpdate)="loadData()" [model]="invitation"></invitation>
   </div>
   <div class="container" *ngIf="request && story && segment == 'suggestion'">
     <h2>Suggested Candidates <span class="count">({{allSuggestions.length}})</span></h2>
+    
     <div *ngIf="allSuggestions.length == 0" class="ion-text-center no-invi">
       <img src="assets/images/no-invitation.png"/>
       <p class="ion-text-center">There are no suggested candidates!</p>
     </div>
+
     <suggestion *ngFor="let suggestion of allSuggestions" [model]="suggestion" [showBadge]="false"></suggestion>
   </div>
 
@@ -264,3 +268,18 @@
     </ion-button>
   </div>
 </ion-footer>
+
+<div class="update-alert" dir="ltr" *ngIf="alertRequestUpdated">
+  <span class="wrapper">
+      <span class="title">Requests updated</span>
+      <span class="btn-refresh">
+          &nbsp;
+          <span class="ag a8k" tabindex="0" role="link" tappable (click)="loadData()">
+            Refresh
+          </span>
+      </span>
+  </span>
+  <div tabindex="0" role="button" class="btn-close" tappable (click)="closeAlert()">
+      <ion-icon name="close"></ion-icon>
+  </div>
+</div>

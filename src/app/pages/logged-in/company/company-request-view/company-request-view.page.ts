@@ -46,6 +46,10 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public request: Request;
   public requestActivities: Note[] = [];
 
+  public allInvitedCandidates = [];
+  
+  public allSuggestions = [];
+
   public suggestedSuggestions = [];
 
   public acceptedSuggestions = [];
@@ -57,6 +61,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public rejectedCandidates: Invitation[] = [];
 
   public acceptedInvitations: Invitation[] = [];
+
   public section = 'invited';
   public request_uuid;
   public loading = false;
@@ -69,6 +74,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public backState = null;
 
   public activityExpanded: boolean = false;
+
+  public alertRequestUpdated: boolean = false; 
 
   public internvalSubscribe;
 
@@ -153,6 +160,11 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
       this.loading = true;
 
     this.requestService.view(this.request_uuid).subscribe(data => {
+      
+      //hide update alert 
+
+      this.alertRequestUpdated = false; 
+
       this.request = data;
 
       //my active story
@@ -178,16 +190,22 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    * check if request updated, if so reload details
    */
   isRequestUpdated() {
-    if (!this.request) {
+
+    if (!this.request || this.alertRequestUpdated) {
       return null;
     }
 
     this.requestService.isRequestUpdated(this.request_uuid).subscribe(data => {
       if (data.request_updated_datetime != this.request.request_updated_datetime) {
-        this.loadDetail(false);//refresh without showing loader
+        //this.loadDetail(false);//refresh without showing loader
+        this.alertRequestUpdated = true;
       }
       this.loading = false;
     });
+  }
+
+  closeAlert() {
+    this.alertRequestUpdated = false;
   }
 
   /**
@@ -203,6 +221,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   loadInvitations(loading = true) {
 
     this.invitationService.list('&request_uuid=' + this.request_uuid).subscribe(invitations => {
+
+      this.allInvitedCandidates = invitations;
 
       this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
 
@@ -253,6 +273,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     const params = '&request_uuid=' + this.request_uuid;
 
     this.suggestionService.listAll(params).subscribe(data => {
+
+      this.allSuggestions = data; 
 
       this.suggestedSuggestions = [];
 

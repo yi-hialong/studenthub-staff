@@ -92,7 +92,7 @@ export class InvitationComponent implements OnInit {
         {
           text: 'Ok',
           handler: async (data) => {
-            
+
             this.loading = true;
 
             const param = {
@@ -129,6 +129,67 @@ export class InvitationComponent implements OnInit {
                 });
                 prompt.present();
               }
+            }, () => {
+              this.loading = false;
+            });
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
+  /**
+   * move to suggestion
+   */
+  async resend() {
+
+    if (this.model.is_suggested || !this.authService.story) {
+      return false;
+    }
+
+    const confirm = await this.alertCtrl.create({
+      header: 'Do you really wants to resend this invitation?',
+      inputs: [
+        {
+          name: 'feedback',
+          type: 'textarea',
+          placeholder: 'Reason'
+        }
+      ],
+      buttons: [
+        {
+          text: 'No',
+          handler: () => {
+            // Handle the functionality when user click on 'cancel' button
+          }
+        },
+        {
+          text: 'Yes',
+          handler: async (data) => {
+
+            this.loading = true;
+
+            const param = {
+              reason: data.feedback,
+              request_uuid: this.model.request_uuid,
+              invitation_uuid: this.model.invitation_uuid,
+              story_uuid: this.authService.story.story_uuid,
+              fulltimer_uuid: null,
+              candidate_id: this.model.candidate_id
+            };
+
+            this.invitationService.recreate(param).subscribe(async response => {
+
+              if (response.operation == 'success') {
+                this.model.invitation_status = 1;
+              }
+              this.loading = false;
+              const prompt = await this.alertCtrl.create({
+                message: this.authService.errorMessage(response.message),
+                buttons: ['Okay']
+              });
+              prompt.present();
             }, () => {
               this.loading = false;
             });

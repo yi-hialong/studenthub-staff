@@ -1,16 +1,16 @@
 <ion-card tappable>
-  <!-- <ion-badge *ngIf="model.invitation_status == 1">
-    Invited a candidate
+  <ion-badge *ngIf="model.invitation_status == 1"  class="invited">
+    Invited
   </ion-badge>
 
-  <ion-badge *ngIf="model.invitation_status == 2">
-    Rejected by candidate
+  <ion-badge *ngIf="model.invitation_status == 2" class="rejected" (click)="resend()">
+    Rejected
   </ion-badge>
 
-  <ion-badge *ngIf="model.invitation_status == 3">
-    Accepted by candidate
+  <ion-badge *ngIf="model.invitation_status == 3" class="accepted">
+    Accepted
   </ion-badge>
--->
+
   <ion-item lines="none" *ngIf="model.candidate">
     <div tabindex="0"></div>
 
@@ -25,14 +25,14 @@
       <h5>{{ model.candidate.candidate_name ?model.candidate.candidate_name : model.candidate.candidate_name_ar }}</h5>
       <p *ngIf="model.note">{{model.note.note_text}}</p>
     </ion-label>
-      
+
     <span class="txt-time">
       {{ model.invitation_created_at | timeAgo }}
     </span>
   </ion-item>
 
   <p class="invitation-time" *ngIf="model">
- 
+
     <ng-container *ngIf="
         model.invitation_app_seen_at &&
         (

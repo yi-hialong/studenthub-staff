@@ -47,6 +47,19 @@ export class InvitationService {
   }
 
   /**
+   * create new invitation_uuid for request
+   * @param params
+   */
+  recreate(params) {
+    return this._authhttp.patch(this._endpoint + '/resend/' + params.invitation_uuid, {
+      request_uuid: params.request_uuid,
+      candidate_id: params.candidate_id,
+      story_uuid: params.story_uuid,
+      reason: params.reason
+    });
+  }
+
+  /**
    * check if invitation already sent
    * @param candidate_id
    * @param story

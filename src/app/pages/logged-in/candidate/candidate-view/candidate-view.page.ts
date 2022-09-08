@@ -36,6 +36,7 @@ import { CompanyNoteFormPage } from '../../company/company-note-form/company-not
 import { ModalPopPage } from "../../modal-pop/modal-pop.page";
 import { StoreViewPage } from "../../store/store-view/store-view.page";
 import { InvitePage } from '../../invite/invite.page';
+import {Invitation} from "../../../../models/invitation";
 
 
 @Component({
@@ -69,6 +70,7 @@ export class CandidateViewPage implements OnInit {
   public unapproving = false;
   public downloading = false;
   public inviting = false;
+  public invitation: Invitation = [];
 
   public processing = null;
 
@@ -1276,8 +1278,10 @@ export class CandidateViewPage implements OnInit {
     this.invitationService.isAlreadyInvited(this.candidate_id, this.story).subscribe(res => {
       if (this.candidate) {
         this.candidate.isAlreadyInvited = res.isAlreadyInvited;
+        this.invitation = res.model;
       }
-      console.log(this.candidate);
+      // console.log(this.candidate);
+      console.log(this.invitation);
     });
   }
 

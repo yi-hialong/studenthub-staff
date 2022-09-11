@@ -110,8 +110,12 @@
         <h2>Job Description</h2>
         <p [innerHtml]="request.request_job_description"></p>
 
+        <h2>Additional Info</h2>
+        <p [innerHtml]="request.request_additional_info"></p>
+
         <p class="txt-additional-info">
-          {{ request.no_of_employees_per_story }} no of employees per story
+          {{ request.no_of_employees_per_story }} no of employees per story<br/>
+          {{ request.request_number_of_employees }} Total Requested Employee
         </p>
 
       </div>
@@ -144,6 +148,11 @@
 
     <div *ngIf="segment == 'invited'">
 
+      <div *ngIf="allInvitedCandidates.length == 0" class="ion-text-center no-invi">
+        <img src="assets/images/no-invitation.png"/>
+        <p class="ion-text-center">There are no invited candidates!</p>
+      </div>
+
         <div *ngIf="invitedCandidates.length > 0">
           <h4 class="txt-suggested-candidates">Invited Candidates <span class="count">({{ invitedCandidates.length }})</span></h4>
 
@@ -163,10 +172,15 @@
 
           <invitation *ngFor="let invitation of acceptedInvitations" (onUpdate)="onInvitationUpdated()" [model]="invitation"></invitation>
         </div>
-        
+
     </div>
 
     <div *ngIf="segment == 'suggested'">
+
+      <div *ngIf="allSuggestions.length == 0" class="ion-text-center no-invi">
+        <img src="assets/images/no-invitation.png"/>
+        <p class="ion-text-center">There are no suggested candidates!</p>
+      </div>
 
         <div>
           <div *ngIf="suggestedSuggestions.length > 0">
@@ -190,14 +204,50 @@
     </div>
   </div>
 </ion-content>
-<ion-footer class="ion-no-border" *ngIf="segment == 'details' || segment == 'activities'">
-  <div class="container">
-    <ion-button *ngIf="segment == 'details'" class="btn-update" (click)="update()">
-      Edit Request Details
-    </ion-button>
 
-    <ion-button *ngIf="segment == 'activities'" class="btn-post-update" (click)="showUpdateAlert()">
-      Post update
-    </ion-button>
-  </div>
+<ion-footer *ngIf="request && (request.request_status == 'started' || request.request_status == 'pending' || request.request_status == 'finished_by_recruitment' || request.request_status == 're_work')">
+  <ion-grid class="container">
+    <ion-row>
+      <ion-col size-xs="6" size-md="6" size-lg="6">
+        <ion-button *ngIf="segment == 'details' && request.request_status != 'finished_by_recruitment' " class="btn-update" (click)="update()">
+          Edit Request
+        </ion-button>
+
+        <ion-button *ngIf="segment == 'activities'" class="btn-post-update" (click)="showUpdateAlert()">
+          Post update
+        </ion-button>
+      </ion-col>
+      <ion-col size-xs="6" size-md="6" size-lg="6" *ngIf="(request.request_status == 'started' || request.request_status == 'pending' || request.request_status == 're_work' ) &&  suggestedSuggestions.length > 0" >
+        <ion-button class="btn-update" (click)="deliveredRequest($event, request)">
+          Mark delivered
+        </ion-button>
+      </ion-col>
+      <ion-col  size-xs="6" size-md="6" size-lg="6" *ngIf="(request.request_status == 'started' && request.request_status != 'delivered')" >
+        <ion-button  class="btn-update" (click)="statusUpdate($event, 'finished_by_recruitment')">
+          Finished by recruitment
+        </ion-button>
+      </ion-col>
+      <ion-col size-xs="6" size-md="6" size-lg="6" *ngIf="request.request_status == 'finished_by_recruitment'" >
+        <ion-button  class="btn-update" (click)="statusUpdate($event, 're_work')">
+          Re-work
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 </ion-footer>
+
+
+<div class="update-alert" dir="ltr" *ngIf="alertRequestUpdated">
+  <span class="wrapper">
+      <span class="title">Requests updated</span>
+      <span class="btn-refresh">
+          &nbsp;
+          <span class="ag a8k" tabindex="0" role="link" tappable (click)="loadDetail()">
+            Refresh
+          </span>
+      </span>
+  </span>
+  <div tabindex="0" role="button" class="btn-close" tappable (click)="closeAlert()">
+      <ion-icon name="close"></ion-icon>
+  </div>
+</div>

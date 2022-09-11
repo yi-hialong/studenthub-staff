@@ -31,6 +31,7 @@ import { CompanyRequestFormPage } from '../company-request-form/company-request-
 import { FulltimerSearchPage } from '../../fulltimer/fulltimer-search/fulltimer-search.page';
 import { StaffPage } from '../../pickers/staff/staff.page';
 import { RequestOptionPage } from './company-request-option.page';
+import {StoryService} from "../../../../providers/logged-in/story.service";
 
 
 @Component({
@@ -45,6 +46,10 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public request: Request;
   public requestActivities: Note[] = [];
 
+  public allInvitedCandidates = [];
+  
+  public allSuggestions = [];
+
   public suggestedSuggestions = [];
 
   public acceptedSuggestions = [];
@@ -56,6 +61,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public rejectedCandidates: Invitation[] = [];
 
   public acceptedInvitations: Invitation[] = [];
+
   public section = 'invited';
   public request_uuid;
   public loading = false;
@@ -68,6 +74,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public backState = null;
 
   public activityExpanded: boolean = false;
+
+  public alertRequestUpdated: boolean = false; 
 
   public internvalSubscribe;
 
@@ -91,7 +99,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     public invitationService: InvitationService,
     public eventService: EventService,
     public translateService: TranslateLabelService,
-    public platform: Platform
+    public platform: Platform,
+    public storyService: StoryService
   ) {
   }
 
@@ -151,6 +160,11 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
       this.loading = true;
 
     this.requestService.view(this.request_uuid).subscribe(data => {
+      
+      //hide update alert 
+
+      this.alertRequestUpdated = false; 
+
       this.request = data;
 
       //my active story
@@ -176,16 +190,22 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    * check if request updated, if so reload details
    */
   isRequestUpdated() {
-    if (!this.request) {
+
+    if (!this.request || this.alertRequestUpdated) {
       return null;
     }
 
     this.requestService.isRequestUpdated(this.request_uuid).subscribe(data => {
       if (data.request_updated_datetime != this.request.request_updated_datetime) {
-        this.loadDetail(false);//refresh without showing loader
+        //this.loadDetail(false);//refresh without showing loader
+        this.alertRequestUpdated = true;
       }
       this.loading = false;
     });
+  }
+
+  closeAlert() {
+    this.alertRequestUpdated = false;
   }
 
   /**
@@ -201,6 +221,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   loadInvitations(loading = true) {
 
     this.invitationService.list('&request_uuid=' + this.request_uuid).subscribe(invitations => {
+
+      this.allInvitedCandidates = invitations;
 
       this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
 
@@ -251,6 +273,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     const params = '&request_uuid=' + this.request_uuid;
 
     this.suggestionService.listAll(params).subscribe(data => {
+
+      this.allSuggestions = data; 
 
       this.suggestedSuggestions = [];
 
@@ -590,6 +614,10 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
         this.update();
       } else if(e.data.action == 'cancel') {
         this.cancelledRequest(e, this.request);
+      } else if(e.data.action == 'rework') {
+        this.statusUpdate(null, 're_work');
+      } else if(e.data.action == 'create_story') {
+        this.createStory();
       }
     });
   }
@@ -754,6 +782,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     alert.present();
   }
 
+
   /**
    * creating suggestion
    * @param fulltimer_uuid
@@ -798,6 +827,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
       }
     );
   }
+
 
   segmentChanged(event) {
     this.segment = event.target.value;
@@ -894,4 +924,88 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   changeSection(sec) {
     this.section = sec;
   }
+
+  /**
+   * show dialog to get reason for suggestion
+   * @param fulltimer_uuid
+   */
+  async createStory() {
+    const alert = await this.alertCtrl.create({
+      header: 'Provide number of employee for this story',
+      inputs: [
+        {
+          placeholder: 'number of employers',
+          name: 'employee',
+          type: 'number',
+          min: 1,
+          max: 15,
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancel',
+        },
+        {
+          text: 'Submit',
+          handler: async (data) => {
+            if (!data.employee) {
+              this.toastCtrl.create({
+                message: this.authService.errorMessage('Please provide employee'),
+                duration: 3000
+              }).then(toast => {
+                toast.present();
+              });
+              return false;
+            }
+
+            this.createStoryForRequest(data.employee);
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+  /**
+   * creating request
+   * @param employee
+   */
+  async createStoryForRequest(employee) {
+
+    const params = {
+      request_uuid: this.request_uuid,
+      employee
+    };
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...',
+      duration: 2000
+    });
+    loading.present();
+
+    this.storyService.create(params).subscribe(async response => {
+
+        this.loading = false;
+
+        // On Success
+        if (response.operation == 'success') {
+
+          this.loadDetail();
+        }
+
+        // On Failure
+        if (response.operation == 'error') {
+          const prompt = await this.alertCtrl.create({
+            message: this.authService.errorMessage(response.message),
+            buttons: ['Okay']
+          });
+          prompt.present();
+        }
+      }, () => {
+      },
+      () => {
+        loading.dismiss();
+      }
+    );
+  }
+
 }

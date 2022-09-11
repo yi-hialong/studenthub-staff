@@ -32,13 +32,21 @@
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
     <div *ngIf="filters.requestStatus || filters.storyStatus || filters.position_type || filters.startDate || filters.endDate || filters.story_position_type" class="filter-tag">
+      
       <ng-container *ngIf="segment == 'request'">
-        <ion-badge *ngIf="filters.requestStatus">{{this.filters.requestStatus}}</ion-badge>
+        
+        <ng-container [ngSwitch]="filters.requestStatus">
+          <ion-badge *ngSwitchCase="'re_work'">Re-Work</ion-badge>
+          <ion-badge *ngSwitchCase="'finished_by_recruitment'">Finished</ion-badge>
+          <ion-badge *ngSwitchDefault>{{ filters.requestStatus }}</ion-badge>
+       </ng-container>
+       
         <ion-badge *ngIf="filters.position_type">{{getPosition(this.filters.position_type)}}</ion-badge>
         <ion-badge *ngIf="filters.startDate">{{getDate(this.filters.startDate)}}</ion-badge>
         <ion-badge *ngIf="filters.endDate">{{getDate(this.filters.endDate)}}</ion-badge>
         <ion-badge color="danger" *ngIf="filters.requestStatus || filters.position_type || filters.startDate || filters.endDate" (click)="resetFilter('request')"  tappable>Reset</ion-badge>
       </ng-container>
+
       <ng-container *ngIf="segment == 'story'">
         <ion-badge *ngIf="filters.storyStatus">{{getStoryStatus(this.filters.storyStatus)}}</ion-badge>
         <ion-badge *ngIf="filters.story_position_type">{{getPosition(this.filters.story_position_type)}}</ion-badge>
@@ -47,10 +55,12 @@
 
     </div>
     <div *ngIf="segment == 'request'">
-        <request-listing *ngFor="let request of activeRequests" tappable (click)="requestDetail(request)"
+      
+      <request-listing *ngFor="let request of requests" tappable (click)="requestDetail(request)"
                          [request]="request" [showStatus]="false"></request-listing>
 
-      <no-items message="~ No Request Found ~" *ngIf="!loading && activeRequests.length == 0"></no-items>
+      <no-items message="~ No Request Found ~" *ngIf="!loading && requests.length == 0"></no-items>
+
       <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
       </ion-infinite-scroll>
@@ -65,6 +75,7 @@
       </ng-container>
 
       <no-items message="~ No Story Found ~" *ngIf="!loading && stories.length == 0"></no-items>
+      
       <ion-infinite-scroll *ngIf="storyCurrentPage < storyPageCount" (ionInfinite)="doInfiniteStories($event)">
         <ion-infinite-scroll-content></ion-infinite-scroll-content>
       </ion-infinite-scroll>

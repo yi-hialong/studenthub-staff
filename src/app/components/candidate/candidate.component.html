@@ -17,9 +17,21 @@
         <ion-icon class="verified" src="../../assets/images/ic_verified.svg" *ngIf="candidate.isProfileCompleted" title="Completed Profile"></ion-icon>
       </h2>
 
-      <p>{{ candidate.age }} years old <span class="sep">•</span>
-        {{ candidate.candidate_hourly_rate }} KD /hour</p>
+      <p>{{ candidate.candidate_birth_date | candidateAge }} 
+        <span *ngIf="candidate.candidate_hourly_rate > 0"><span class="sep">•</span>{{ candidate.candidate_hourly_rate }} KD /hour</span>
+      </p>
 
+      <p class="nationality" *ngIf="candidate.nationality">
+        {{
+        translateService.langContent(candidate.nationality.country_nationality_name_en,
+        candidate.nationality.country_nationality_name_ar) }}
+      </p>
+
+      <p class="nationality" *ngIf="!candidate.nationality && candidate.country">
+        {{
+        translateService.langContent(candidate.country.country_name_en,
+        candidate.country.country_name_ar) }}
+      </p>
 
       <p *ngIf="candidate.store">
         {{ candidate.store.store_name }}

@@ -83,6 +83,13 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
   public activeStory: Story;
 
+  public IPageCount = 0;
+  public IcurrentPage = 0;
+  public Itotal = 0;
+  public SPageCount = 0;
+  public ScurrentPage = 0;
+  public Stotal = 0;
+
   constructor(
     public popoverCtrl: PopoverController,
     public modalCtrl: ModalController,
@@ -219,16 +226,54 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
    */
   loadInvitations(loading = true) {
 
-    this.invitationService.list('&request_uuid=' + this.request_uuid).subscribe(invitations => {
+    this.invitationService.listWithPagination('&request_uuid=' + this.request_uuid).subscribe(invitations => {
 
-      this.allInvitedCandidates = invitations;
+      this.allInvitedCandidates = invitations.body;
+      this.IPageCount = parseInt(invitations.headers.get('X-Pagination-Page-Count'));
+      this.IcurrentPage = parseInt(invitations.headers.get('X-Pagination-Current-Page'));
+      this.Itotal = parseInt(invitations.headers.get('X-Pagination-Total-Count'));
 
-      this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
+      // this.invitedCandidates = invitations.body.filter(invitation => invitation.invitation_status == 1);
+      // this.rejectedCandidates = invitations.body.filter(invitation => invitation.invitation_status == 2);
+      // this.acceptedInvitations = invitations.body.filter(invitation => invitation.invitation_status == 3);
+    });
+  }
 
-      this.rejectedCandidates = invitations.filter(invitation => invitation.invitation_status == 2);
+  /**
+   * load more on scroll to bottom
+   * @param event
+   */
+  async doInfinite(event) {
 
-      this.acceptedInvitations = invitations.filter(invitation => invitation.invitation_status == 3);
-    })
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...',
+      duration: 2000
+    });
+    loading.present();
+
+    this.IcurrentPage++;
+
+    const urlParams = '&request_uuid=' + this.request_uuid + '&page=' + this.IcurrentPage;
+    this.invitationService.listWithPagination(urlParams).subscribe(invitations => {
+
+        this.IPageCount = parseInt(invitations.headers.get('X-Pagination-Page-Count'));
+        this.IcurrentPage = parseInt(invitations.headers.get('X-Pagination-Current-Page'));
+        this.Itotal = parseInt(invitations.headers.get('X-Pagination-Total-Count'));
+
+        this.allInvitedCandidates = this.allInvitedCandidates.concat(invitations.body);
+        //
+        // this.invitedCandidates = invitations.body.filter(invitation => invitation.invitation_status == 1);
+        // this.rejectedCandidates = invitations.body.filter(invitation => invitation.invitation_status == 2);
+        // this.acceptedInvitations = invitations.body.filter(invitation => invitation.invitation_status == 3);
+
+      },
+      error => { },
+      () => {
+        this.loading = false;
+        loading.dismiss();
+        event.target.complete();
+      }
+    );
   }
 
   /**
@@ -271,25 +316,12 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
 
     const params = '&request_uuid=' + this.request_uuid;
 
-    this.suggestionService.listAll(params).subscribe(data => {
+    this.suggestionService.list(1, params).subscribe(data => {
 
-      this.allSuggestions = data;
-
-      this.suggestedSuggestions = [];
-
-      this.acceptedSuggestions = [];
-
-      this.rejectedSuggestions = [];
-
-      data.forEach(element => {
-        if (element.suggestion_status == 1) {
-          this.suggestedSuggestions.push(element);
-        } else if (element.suggestion_status == 2) {
-          this.rejectedSuggestions.push(element);
-        } else if (element.suggestion_status == 3) {
-          this.acceptedSuggestions.push(element);
-        }
-      });
+      this.allSuggestions = data.body;
+      this.SPageCount = parseInt(data.headers.get('X-Pagination-Page-Count'));
+      this.ScurrentPage = parseInt(data.headers.get('X-Pagination-Current-Page'));
+      this.Stotal = parseInt(data.headers.get('X-Pagination-Total-Count'));
     });
   }
 
@@ -1003,6 +1035,34 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
       },
       () => {
         loading.dismiss();
+      }
+    );
+  }
+
+  async doInfiniteSuggestion(event) {
+
+    this.ScurrentPage++;
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...',
+      duration: 2000
+    });
+    loading.present();
+
+    const params = '&request_uuid=' + this.request_uuid;
+
+    this.suggestionService.list(this.ScurrentPage, params).subscribe(data => {
+
+      this.allSuggestions = this.allSuggestions.concat(data.body);
+      this.SPageCount = parseInt(data.headers.get('X-Pagination-Page-Count'));
+      this.ScurrentPage = parseInt(data.headers.get('X-Pagination-Current-Page'));
+      this.Stotal = parseInt(data.headers.get('X-Pagination-Total-Count'));
+      },
+      error => { },
+      () => {
+        this.loading = false;
+        loading.dismiss();
+        event.target.complete();
       }
     );
   }

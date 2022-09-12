@@ -153,26 +153,28 @@
         <p class="ion-text-center">There are no invited candidates!</p>
       </div>
 
-        <div *ngIf="invitedCandidates.length > 0">
-          <h4 class="txt-suggested-candidates">Invited Candidates <span class="count">({{ invitedCandidates.length }})</span></h4>
+        <div *ngIf="allInvitedCandidates.length > 0">
+          <h4 class="txt-suggested-candidates">Invited Candidates <span class="count">({{ Itotal }})</span></h4>
 
-          <invitation *ngFor="let invitation of invitedCandidates" [model]="invitation"></invitation>
+          <invitation *ngFor="let invitation of allInvitedCandidates" [model]="invitation"></invitation>
         </div>
 
-        <div *ngIf="rejectedCandidates.length > 0">
-          <h4 class="txt-suggested-candidates">Rejected Invitations by Candidates <span class="count">({{ rejectedCandidates.length }})</span></h4>
+<!--        <div *ngIf="rejectedCandidates.length > 0">-->
+<!--          <h4 class="txt-suggested-candidates">Rejected Invitations by Candidates <span class="count">({{ rejectedCandidates.length }})</span></h4>-->
 
-          <invitation *ngFor="let invitation of rejectedCandidates" [model]="invitation"></invitation>
-        </div>
+<!--          <invitation *ngFor="let invitation of rejectedCandidates" [model]="invitation"></invitation>-->
+<!--        </div>-->
 
-        <!-- - ability to move to suggestion -->
+<!--        &lt;!&ndash; - ability to move to suggestion &ndash;&gt;-->
 
-        <div *ngIf="acceptedInvitations.length > 0">
-          <h4 class="txt-suggested-candidates">Accepted Invitations by Candidates <span class="count">({{ acceptedInvitations.length }})</span></h4>
+<!--        <div *ngIf="acceptedInvitations.length > 0">-->
+<!--          <h4 class="txt-suggested-candidates">Accepted Invitations by Candidates <span class="count">({{ acceptedInvitations.length }})</span></h4>-->
 
-          <invitation *ngFor="let invitation of acceptedInvitations" (onUpdate)="onInvitationUpdated()" [model]="invitation"></invitation>
-        </div>
-
+<!--          <invitation *ngFor="let invitation of acceptedInvitations" (onUpdate)="onInvitationUpdated()" [model]="invitation"></invitation>-->
+<!--        </div>-->
+      <ion-infinite-scroll *ngIf="IcurrentPage < IPageCount" (ionInfinite)="doInfinite($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </div>
 
     <div *ngIf="segment == 'suggested'">
@@ -183,24 +185,28 @@
       </div>
 
         <div>
-          <div *ngIf="suggestedSuggestions.length > 0">
-            <h4 class="txt-suggested-candidates">Suggested Candidates <span class="count">({{ suggestedSuggestions.length }})</span></h4>
+          <div *ngIf="allSuggestions.length > 0">
+            <h4 class="txt-suggested-candidates">Suggested Candidates <span class="count">({{ Stotal }})</span></h4>
 
-            <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of suggestedSuggestions" [model]="suggestion"></suggestion>
+            <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of allSuggestions" [model]="suggestion"></suggestion>
           </div>
 
-          <div *ngIf="rejectedSuggestions.length > 0">
-            <h4 class="txt-suggested-candidates">Rejected Suggestions <span class="count">({{ rejectedSuggestions.length }})</span></h4>
+<!--          <div *ngIf="rejectedSuggestions.length > 0">-->
+<!--            <h4 class="txt-suggested-candidates">Rejected Suggestions <span class="count">({{ rejectedSuggestions.length }})</span></h4>-->
 
-            <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of rejectedSuggestions" [model]="suggestion"></suggestion>
-          </div>
+<!--            <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of rejectedSuggestions" [model]="suggestion"></suggestion>-->
+<!--          </div>-->
 
-          <div *ngIf="acceptedSuggestions.length > 0">
-            <h4 class="txt-suggested-candidates">Accepted Suggestions <span class="count">({{ acceptedSuggestions.length }})</span></h4>
+<!--          <div *ngIf="acceptedSuggestions.length > 0">-->
+<!--            <h4 class="txt-suggested-candidates">Accepted Suggestions <span class="count">({{ acceptedSuggestions.length }})</span></h4>-->
 
-            <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of acceptedSuggestions" [model]="suggestion"></suggestion>
-          </div>
+<!--            <suggestion tappable [routerLink]="'/suggestion-view/' + suggestion.suggestion_uuid" (onUpdate)="onSuggestionUpdate()" *ngFor="let suggestion of acceptedSuggestions" [model]="suggestion"></suggestion>-->
+<!--          </div>-->
         </div>
+
+      <ion-infinite-scroll *ngIf="ScurrentPage < SPageCount" (ionInfinite)="doInfiniteSuggestion($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </div>
   </div>
 </ion-content>
@@ -218,7 +224,7 @@
         </ion-button>
       </ion-col>
 
-      <ion-col size-xs="6" size-md="6" size-lg="6" *ngIf="(request.request_status == 'finished_by_recruitment' )" >
+      <ion-col size-xs="6" size-md="6" size-lg="6" *ngIf="request.request_status == 'finished_by_recruitment'" >
         <ion-button class="btn-update" (click)="deliveredRequest($event, request)">
           Mark delivered
         </ion-button>

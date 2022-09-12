@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Subject, interval } from 'rxjs';
 import {
   AlertController,
-  IonNav,
+  IonNav, LoadingController,
   ModalController,
   NavController,
   PopoverController,
@@ -78,8 +78,15 @@ export class StoryViewPage implements OnInit, OnDestroy {
   public hoursToDday;
   public daysToDday;
 
-  public alertRequestUpdated: boolean = false; 
-  
+  public alertRequestUpdated: boolean = false;
+
+  public IPageCount = 0;
+  public IcurrentPage = 0;
+  public Itotal = 0;
+  public SPageCount = 0;
+  public ScurrentPage = 0;
+  public Stotal = 0;
+
   constructor(
     private activatedRoute: ActivatedRoute,
     public suggestionService: SuggestionService,
@@ -96,7 +103,8 @@ export class StoryViewPage implements OnInit, OnDestroy {
     public alertCtrl: AlertController,
     public popoverCtrl: PopoverController,
     public toastCtrl: ToastController,
-    public noteService: NoteService
+    public noteService: NoteService,
+    public loadingCtrl: LoadingController,
   ) { }
 
   ngOnInit() {
@@ -177,9 +185,9 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
     this.storyService.detail(this.story_uuid, '?expand=staff,storyActivities,storyActivities.staff,request,request.contact,request.staffs,request.company').subscribe(res => {
 
-      //hide update alert 
+      //hide update alert
 
-      this.alertRequestUpdated = false; 
+      this.alertRequestUpdated = false;
 
       this.loading = false;
       this.story = res;
@@ -222,11 +230,12 @@ export class StoryViewPage implements OnInit, OnDestroy {
    * @param loading
    */
   loadStoryInvitations(loading = true) {
-    this.invitationService.list('&request_uuid=' + this.request.request_uuid).subscribe(invitations => {
-      this.allInvitedCandidates = invitations;
-      this.invitedCandidates = invitations.filter(invitation => invitation.invitation_status == 1);
-      this.rejectedCandidates = invitations.filter(invitation => invitation.invitation_status == 2);
-      this.acceptedInvitations = invitations.filter(invitation => invitation.invitation_status == 3);
+    this.invitationService.listWithPagination('&request_uuid=' + this.request.request_uuid).subscribe(invitations => {
+      this.allInvitedCandidates = invitations.body;
+
+      this.IPageCount = parseInt(invitations.headers.get('X-Pagination-Page-Count'));
+      this.IcurrentPage = parseInt(invitations.headers.get('X-Pagination-Current-Page'));
+      this.Itotal = parseInt(invitations.headers.get('X-Pagination-Total-Count'));
     });
   }
 
@@ -237,21 +246,11 @@ export class StoryViewPage implements OnInit, OnDestroy {
 
     const params = '&story_uuid=' + this.story_uuid;
 
-    this.suggestionService.listAll(params).subscribe(data => {
-      this.allSuggestions = data;
-      this.suggestedSuggestions = [];
-      this.acceptedSuggestions = [];
-      this.rejectedSuggestions = [];
-
-      data.forEach(element => {
-        if (element.suggestion_status == 1) {
-          this.suggestedSuggestions.push(element);
-        } else if (element.suggestion_status == 2) {
-          this.rejectedSuggestions.push(element);
-        } else if (element.suggestion_status == 3) {
-          this.acceptedSuggestions.push(element);
-        }
-      });
+    this.suggestionService.list(1, params).subscribe(data => {
+      this.allSuggestions = data.body;
+      this.SPageCount = parseInt(data.headers.get('X-Pagination-Page-Count'));
+      this.ScurrentPage = parseInt(data.headers.get('X-Pagination-Current-Page'));
+      this.Stotal = parseInt(data.headers.get('X-Pagination-Total-Count'));
     });
   }
 
@@ -676,4 +675,63 @@ export class StoryViewPage implements OnInit, OnDestroy {
       new Date(a.time).getTime() - new Date(b.time).getTime()
     );
   }
+
+  async doInfinite(event) {
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...',
+      duration: 2000
+    });
+    loading.present();
+
+    this.IcurrentPage++;
+
+    const urlParams = '&request_uuid=' + this.story.request_uuid + '&page=' + this.IcurrentPage;
+    this.invitationService.listWithPagination(urlParams).subscribe(invitations => {
+
+        this.IPageCount = parseInt(invitations.headers.get('X-Pagination-Page-Count'));
+        this.IcurrentPage = parseInt(invitations.headers.get('X-Pagination-Current-Page'));
+        this.Itotal = parseInt(invitations.headers.get('X-Pagination-Total-Count'));
+
+        this.allInvitedCandidates = this.allInvitedCandidates.concat(invitations.body);
+
+      },
+      error => { },
+      () => {
+        this.loading = false;
+        loading.dismiss();
+        event.target.complete();
+      }
+    );
+  }
+
+
+  async doInfiniteSuggestion(event) {
+
+    this.ScurrentPage++;
+
+    const loading = await this.loadingCtrl.create({
+      message: 'Please wait...',
+      duration: 2000
+    });
+    loading.present();
+
+    const params = '&request_uuid=' + this.story.request_uuid;
+
+    this.suggestionService.list(this.ScurrentPage, params).subscribe(data => {
+
+        this.allSuggestions = this.allSuggestions.concat(data.body);
+        this.SPageCount = parseInt(data.headers.get('X-Pagination-Page-Count'));
+        this.ScurrentPage = parseInt(data.headers.get('X-Pagination-Current-Page'));
+        this.Stotal = parseInt(data.headers.get('X-Pagination-Total-Count'));
+      },
+      error => { },
+      () => {
+        this.loading = false;
+        loading.dismiss();
+        event.target.complete();
+      }
+    );
+  }
+
 }

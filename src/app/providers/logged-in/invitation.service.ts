@@ -25,6 +25,15 @@ export class InvitationService {
     return this._authhttp.get(url);
   }
 
+ /**
+   * List of all invitations
+   * @returns {Observable<any>}
+   */
+  listWithPagination(params: string = ''): Observable<any> {
+    let url = this._endpoint + '?expand=story,candidate,request,note,request.storyOwners,updatedBy' + params;
+    return this._authhttp.getRaw(url);
+  }
+
   /**
    * get invitation details
    * @returns {Observable<any>}

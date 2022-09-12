@@ -173,24 +173,34 @@
     </ng-container>
   </div>
   <div class="container invite-tab" *ngIf="request && story && segment == 'invited'">
-    <h2>Invited Candidates <span class="count">({{allInvitedCandidates.length}})</span></h2>
-    
+    <h2>Invited Candidates <span class="count">({{Itotal}})</span></h2>
+
     <div *ngIf="allInvitedCandidates.length == 0" class="ion-text-center no-invi">
       <img src="assets/images/no-invitation.png"/>
       <p class="ion-text-center">There are no invited candidates!</p>
     </div>
 
     <invitation *ngFor="let invitation of allInvitedCandidates" (onUpdate)="loadData()" [model]="invitation"></invitation>
+
+    <ion-infinite-scroll *ngIf="IcurrentPage < IPageCount" (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
   </div>
   <div class="container" *ngIf="request && story && segment == 'suggestion'">
-    <h2>Suggested Candidates <span class="count">({{allSuggestions.length}})</span></h2>
-    
+    <h2>Suggested Candidates <span class="count">({{Stotal}})</span></h2>
+
     <div *ngIf="allSuggestions.length == 0" class="ion-text-center no-invi">
       <img src="assets/images/no-invitation.png"/>
       <p class="ion-text-center">There are no suggested candidates!</p>
     </div>
 
     <suggestion *ngFor="let suggestion of allSuggestions" [model]="suggestion" [showBadge]="false"></suggestion>
+
+    <ion-infinite-scroll *ngIf="ScurrentPage < SPageCount" (ionInfinite)="doInfiniteSuggestion($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+
   </div>
 
 </ion-content>

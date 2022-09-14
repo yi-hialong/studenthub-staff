@@ -142,6 +142,8 @@ export class CandidateAssignedHistoryPage implements OnInit {
       name: null,
       email: null,
       phone: null,
+      start_date: null,
+      end_date: null,
       page: 1
     };
     this.loadData(1); // reload all result

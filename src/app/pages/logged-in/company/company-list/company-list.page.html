@@ -1,8 +1,22 @@
 <ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container title">
-    <ion-title>
-      Clients <span *ngIf="totalCount && !this.loading">({{totalCount}})</span>
+    <ion-title class="ion-text-wrap">
+      Clients
+      <span *ngIf="totalCount && !this.loading">
+        ({{totalCount}})
+      </span>
+      <span *ngIf="loading">
+        (<ion-spinner></ion-spinner>)
+      </span>
     </ion-title>
+  </ion-toolbar>
+  <ion-toolbar class="container title filter">
+    <ion-badge *ngIf="filters.status == 1">Active</ion-badge>
+    <ion-badge *ngIf="filters.status == 2">Inactive</ion-badge>
+    <ion-badge *ngIf="filters.status == 3">Active + 40 days no payment</ion-badge>
+    <ion-badge *ngIf="filters.status == 4">Active + 40 days no new request</ion-badge>
+    <ion-badge *ngIf="filters.approved_to_hire == 1">Approved to hire</ion-badge>
+    <ion-badge *ngIf="filters.approved_to_hire == 0">Not approved to hire</ion-badge>
   </ion-toolbar>
   <ion-toolbar class="container search" [class.hidden]="borderLimit">
     <ion-searchbar debounce="500" placeholder="Type to search" (ionChange)="searchByName($event)"></ion-searchbar>
@@ -16,8 +30,8 @@
 
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
-    
-    <ion-list>
+
+    <ion-list *ngIf="!loading">
       <section>
         <app-company [company]="company" *ngFor="let company of companies" (click)="rowSelected(company)"></app-company>
       </section>

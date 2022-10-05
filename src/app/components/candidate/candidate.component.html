@@ -1,4 +1,4 @@
-<ion-card *ngIf="candidate">
+<ion-card *ngIf="candidate" [class.assigned]="candidate.store">
 
   <ion-item lines="none">
     <div tabindex="0"></div>
@@ -17,7 +17,7 @@
         <ion-icon class="verified" src="../../assets/images/ic_verified.svg" *ngIf="candidate.isProfileCompleted" title="Completed Profile"></ion-icon>
       </h2>
 
-      <p>{{ candidate.candidate_birth_date | candidateAge }} 
+      <p>{{ candidate.candidate_birth_date | candidateAge }}
         <span *ngIf="candidate.candidate_hourly_rate > 0"><span class="sep">•</span>{{ candidate.candidate_hourly_rate }} KD /hour</span>
       </p>
 

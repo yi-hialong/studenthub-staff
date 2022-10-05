@@ -1,8 +1,8 @@
 <ion-header mode="md" [class.add-border]="borderLimit" class="ion-no-border">
   <ion-toolbar class="container">
     <ion-buttons slot="start">
-<!--      <ion-back-button icon="assets/images/icon-back.svg" (click)="close()"></ion-back-button>-->
-      <ion-back-button defaultHref="/"></ion-back-button>
+      <ion-back-button icon="assets/images/icon-back.svg" (click)="close()"></ion-back-button>
+<!--      <ion-back-button defaultHref="/"></ion-back-button>-->
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar class="container" [class.hidden]="borderLimit">
@@ -57,20 +57,19 @@
         <ion-item class="input-wrapper">
           <div tabindex="0"></div>
           <ion-label position="floating">Description in English</ion-label>
-          <ion-textarea formControlName="description_en"></ion-textarea>
-          <!--<ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (ready)="onEditorReady()"
+<!--          <ion-textarea formControlName="description_en"></ion-textarea>-->
+          <ckeditor [config]="editorConfig" #ckeditor [editor]="Editor" (ready)="onEditorReady()"
             (change)="onChange($event)">
-          </ckeditor>-->
+          </ckeditor>
         </ion-item>
 
         <ion-item class="input-wrapper">
           <div tabindex="0"></div>
           <ion-label position="floating">Description in Arabic</ion-label>
-          <ion-textarea formControlName="description_ar"></ion-textarea>
-          <!--
+<!--          <ion-textarea formControlName="description_ar"></ion-textarea>-->
           <ckeditor [config]="editorConfig" #ckeditor_ar [editor]="Editor" (ready)="onArabicEditorReady()"
             (change)="onArabicEditorChange($event)">
-          </ckeditor>-->
+          </ckeditor>
         </ion-item>
 
         <h5>More Information</h5>

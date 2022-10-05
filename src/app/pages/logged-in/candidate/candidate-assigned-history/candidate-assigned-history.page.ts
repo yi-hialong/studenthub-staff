@@ -36,6 +36,7 @@ export class CandidateAssignedHistoryPage implements OnInit {
     phone: number,
     start_date: string,
     end_date: string,
+    working_time: number,
     page: number
   } = {
       name: null,
@@ -43,6 +44,7 @@ export class CandidateAssignedHistoryPage implements OnInit {
       phone: null,
       start_date: null,
       end_date: null,
+      working_time: null,
       page: 1
     };
 
@@ -129,6 +131,9 @@ export class CandidateAssignedHistoryPage implements OnInit {
     if (this.filters.page) {
       urlParams += '&export_page=' + this.filters.page;
     }
+    if (this.filters.working_time) {
+      urlParams += '&working_time=' + this.filters.working_time;
+    }
     urlParams += '&export_limit=5000';
 
     return urlParams;
@@ -143,6 +148,7 @@ export class CandidateAssignedHistoryPage implements OnInit {
       email: null,
       phone: null,
       start_date: null,
+      working_time: null,
       end_date: null,
       page: 1
     };

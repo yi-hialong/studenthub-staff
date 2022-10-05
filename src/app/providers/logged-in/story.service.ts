@@ -53,9 +53,9 @@ export class StoryService {
    * detail
    * @param storyUuid
    */
-  listAllOldHistory(urlParams= '?expand=staff,request,request.company'): Observable<any> {
-    const url = `${this.storyEndpoint}/all-old-stories${urlParams}`;
-    return this._authhttp.get(url);
+  listAllOldHistory(page = 1, urlParams= '&expand=staff,request,request.company'): Observable<any> {
+    const url = `${this.storyEndpoint}/all-old-stories?page=${page}${urlParams}`;
+    return this._authhttp.getRaw(url);
   }
 
   /**

@@ -24,7 +24,7 @@ import {Story} from "../../../../models/request";
 export class TeamViewPage implements OnInit {
 
   public borderLimit = false;
-w
+
   public staff_id: any;
   public staff: Staff;
   public loading = false;
@@ -32,6 +32,10 @@ w
 
   public pageCount = 0;
   public currentPage = 1;
+
+  public storiesPageCount = 0;
+  public storiesCurrentPage = 1;
+
   public notes: Note[] = [];
   public currentStory: Story[];
   public oldStories: Story[];
@@ -65,9 +69,9 @@ w
       this.staff = state.model;
     }
 
-    if (!this.staff) {
-      this.loadData();
-    }
+    // if (!this.staff) {
+      this.loadData(); // to load stories data
+    // }
 
     /*this.eventService.noteUpdated$.subscribe((data: any) => {
       if(data.staff_id == this.staff_id) {
@@ -80,9 +84,7 @@ w
     //this.loadNotes();
     //this.loadStories();
     this.loadSuggestions();
-    if (this.authService.staff_id == this.staff_id) {
-      this.loadProfileData();
-    }
+    this.loadProfileData();
   }
 
   loadData() {
@@ -148,6 +150,30 @@ w
     );
   }
 
+  /**
+   * load more
+   * @param event
+   */
+  doInfiniteStories(event) {
+    console.log('more');
+    this.loadMore = true;
+
+    this.storiesCurrentPage++;
+
+    let param = `&id=${this.staff_id}&expand=staff,request,request.company`;
+    this.storyService.listAllOldHistory(this.storiesCurrentPage, param).subscribe(res => {
+      this.oldStories = this.oldStories.concat(res.body);
+      event.target.complete();
+    },
+      error => {
+      },
+      () => {
+        this.loadMore = false;
+
+      }
+    );
+  }
+
   segmentChanged(event) {
     this.segment = event.target.value;
   }
@@ -198,14 +224,19 @@ w
   }
 
   loadActiveStories() {
-    this.storyService.loadActiveStory().subscribe(res => {
+    let param = `?id=${this.staff_id}&expand=staff,request,request.company`;
+    this.storyService.loadActiveStory(param).subscribe(res => {
       if(res.body)
         this.currentStory = res.body;
     });
   }
 
   loadAllOtherStories() {
-    this.storyService.listAllOldHistory().subscribe(res => {
+    let param = `&id=${this.staff_id}&expand=staff,request,request.company`;
+    this.storyService.listAllOldHistory(1, param).subscribe(res => {
+      this.storiesPageCount = parseInt(res.headers.get('X-Pagination-Page-Count'));
+      this.storiesCurrentPage = parseInt(res.headers.get('X-Pagination-Current-Page'));
+
       if(res.body)
         this.oldStories = res.body;
     });

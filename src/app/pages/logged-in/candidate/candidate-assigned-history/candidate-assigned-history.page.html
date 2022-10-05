@@ -58,6 +58,12 @@
                               placeholder="DD/MM/YYYY" [(ngModel)]="filters.end_date"></ion-datetime>
               </ion-item>
             </ion-col>
+            <ion-col  size-md="4" size-lg="4" size-sm="6" size-xs="12">
+              <ion-item>
+                <ion-label position="stacked">Date Range For Working Time?</ion-label>
+                <ion-checkbox slot="start" [(ngModel)]="filters.working_time"></ion-checkbox>
+              </ion-item>
+            </ion-col>
             <ion-col size-md="2" size-lg="2" size-sm="6" size-xs="12">
               <ion-item>
                 <ion-label position="floating" color="primary">Export data</ion-label>

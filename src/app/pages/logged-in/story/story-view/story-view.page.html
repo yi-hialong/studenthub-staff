@@ -55,12 +55,14 @@
             <ion-icon src="assets/images/Icon_Status.svg"></ion-icon>&nbsp;Status
           </ion-col>
           <ion-col class="value">
-            <span *ngIf="story.story_status == 0"> Unstarted </span>
+            <span *ngIf="story.story_status == 0"> UnStarted </span>
             <span *ngIf="story.story_status == 1"> Started </span>
             <span *ngIf="story.story_status == 3"> Delivered </span>
             <span *ngIf="story.story_status == 4"> Rejected </span>
             <span *ngIf="story.story_status == 5"> Accepted </span>
             <span *ngIf="story.story_status == 6">Cancelled </span>
+            <span *ngIf="story.story_status == 7">Re-Work </span>
+            <span *ngIf="story.story_status == 8">Stopped </span>
           </ion-col>
         </ion-row>
         <ion-row>
@@ -110,30 +112,33 @@
         <ion-card class="activity-list"  *ngIf="note?.type == 'activity'">
           <ion-card-content>
             <p class="activity">
+              <span *ngIf="note.data.activity_status == storyStatus.UNSTARTED">Story generated</span>
 
-              <span *ngIf="note.data.activity_status == 0 && !note.data.staff">Story generated</span>
-
-              <span *ngIf="note.data.activity_status == 0 && note.data.staff">
+              <span *ngIf="note.data.activity_status == storyStatus.STOPPED && note.data.staff">
               Story stopped by <b>{{note.data.staff.staff_name}}</b>
             </span>
 
-              <span *ngIf="note.data.activity_status == 1 && note.data.staff">
+            <span *ngIf="note.data.activity_status == storyStatus.STARTED && note.data.staff">
               <b>{{note.data.staff.staff_name}}</b> started working on story
             </span>
 
-              <span *ngIf="note.data.activity_status == 2 && note.data.staff">
-              <b>{{note.data.staff.staff_name}}</b> has stopped working on story
+            <span *ngIf="note.data.activity_status == storyStatus.REWORK && note.data.staff">
+              <b>{{note.data.staff.staff_name}}</b> Re-Started working on story
             </span>
 
-              <span *ngIf="note.data.activity_status == 3 && note.data.staff">
+              <span *ngIf="note.data.activity_status == storyStatus.FINISHED && note.data.staff">
+              <b>{{note.data.staff.staff_name}}</b> has finished working on story
+            </span>
+
+              <span *ngIf="note.data.activity_status == storyStatus.DELIVERED && note.data.staff">
               <b>{{note.data.staff.staff_name}}</b> delivered story
             </span>
 
-              <span *ngIf="note.data.activity_status == 4">
+              <span *ngIf="note.data.activity_status == storyStatus.REJECTED">
               Story rejected
             </span>
 
-              <span *ngIf="note.data.activity_status == 5">
+            <span *ngIf="note.data.activity_status == storyStatus.ACCEPTED">
               Story Accepted
             </span>
 
@@ -210,7 +215,7 @@
 
     <ion-row>
 
-      <ion-col size="6" size-sm="12" size-md="12" *ngIf="story.story_status == 1 && story.request && story.staff_id == authService.staff_id &&
+      <ion-col size="6" size-sm="12" size-md="12" *ngIf="(story.story_status == storyStatus.STARTED || story.story_status == storyStatus.REWORK) && story.request && story.staff_id == authService.staff_id &&
         ['cancelled', 'delivered'].indexOf(story.request.request_status) == -1">
         <ion-button class="invite-btn" (click)="showCandidates()">
           <span *ngIf="request && request.request_position_type == 2">Invite Candidates</span>
@@ -233,18 +238,17 @@
 
       <ion-col *ngIf="story.request && ['cancelled', 'delivered'].indexOf(story.request.request_status) == -1 &&
         (
-          story.story_status == 0 ||
-          (story.story_status == 1 && story.staff_id == authService.staff_id && allSuggestions.length == 0) ||
-          (story.story_status < 3 && allSuggestions.length > 0)
+          story.story_status == storyStatus.UNSTARTED || story.story_status == storyStatus.STOPPED || story.story_status == storyStatus.REWORK ||
+          (story.story_status == storyStatus.STARTED && story.staff_id == authService.staff_id && allSuggestions.length == 0) ||
+          (story.story_status < storyStatus.DELIVERED && allSuggestions.length > 0)
         )">
 
         <ion-button
-          *ngIf="story.story_status == 0"
-          class="start-btn" (click)="changeStoryStatus(1)">
+          *ngIf="story.story_status == storyStatus.UNSTARTED || story.story_status == storyStatus.STOPPED"
+          class="start-btn" (click)="changeStoryStatus(storyStatus.STARTED)">
           Start Work
         </ion-button>
-
-        <ion-button *ngIf="story.story_status == 1 && story.staff_id == authService.staff_id"
+        <ion-button *ngIf="(story.story_status == storyStatus.STARTED || story.story_status == storyStatus.REWORK) && story.staff_id == authService.staff_id"
                     class="stop-btn" fill="outline" (click)="closeStoryConfirmation()">
           <ion-label>
             Stop Work &nbsp;&nbsp;
@@ -255,11 +259,12 @@
         </ion-button>
 
 
-        <ion-button *ngIf="story.story_status < 3 && allSuggestions.length > 0 && story.staff_id == authService.staff_id"
-                    class="stop-btn delivery" fill="outline" (click)="changeStoryStatus(3)">
+        <ion-button
+          *ngIf="(story.story_status < storyStatus.DELIVERED || story.story_status == storyStatus.REWORK) && allSuggestions.length > 0 && story.staff_id == authService.staff_id"
+                    class="stop-btn delivery" fill="outline" (click)="changeStoryStatus(storyStatus.DELIVERED)">
           <ion-label>
             Mark Story as Delivered
-            <span class="timer ion-text-center" *ngIf="story.story_status == 1">
+            <span class="timer ion-text-center" *ngIf="(story.story_status == storyStatus.STARTED || story.story_status == storyStatus.REWORK)">
                 {{ story.story_last_updated_at | timer }}
             </span>
           </ion-label>
@@ -271,7 +276,7 @@
     </ion-row>
   </ion-grid>
   <div  class="container">
-    <ion-button *ngIf="story.story_status == 3" class="start-btn delivery" (click)="changeStoryStatus(7)">
+    <ion-button *ngIf="story.story_status == storyStatus.DELIVERED" class="start-btn delivery" (click)="changeStoryStatus(storyStatus.REWORK)">
       <ion-label>
         Re Work
       </ion-label>

@@ -12,11 +12,15 @@
         <ion-badge *ngIf="story" class="status">
           <span *ngIf="story.story_status == 0"> Unstarted </span>
           <span *ngIf="story.story_status == 1"> Started </span>
+          <span *ngIf="story.story_status == 2"> Finished </span>
           <span *ngIf="story.story_status == 3"> Delivered </span>
           <span *ngIf="story.story_status == 4"> Rejected </span>
           <span *ngIf="story.story_status == 5"> Accepted </span>
           <span *ngIf="story.story_status == 6"> Cancelled </span>
+          <span *ngIf="story.story_status == 7"> Re-work </span>
+          <span *ngIf="story.story_status == 8"> Stopped </span>
         </ion-badge>
+
         <ng-container *ngIf="request">
 
           <ion-badge *ngIf="request.request_position_type == 1">Full-time</ion-badge>
@@ -33,7 +37,7 @@
             Suggested : {{story.suggestion}}
           </ion-badge>
 
-          <p *ngIf="story.staff" class="working">{{ story.staff.staff_name }} is working on it</p>
+          <p *ngIf="story.staff" class="working">{{ story.staff.staff_name }} {{story.story_status == 1 || story.story_status == 7 ? 'is working': 'was working'}} on it</p>
         </ng-container>
       </div>
 

@@ -87,6 +87,18 @@ export class StoryViewPage implements OnInit, OnDestroy {
   public ScurrentPage = 0;
   public Stotal = 0;
 
+  public storyStatus = {
+    UNSTARTED : 0,
+    STARTED: 1,
+    FINISHED: 2,
+    DELIVERED: 3,
+    REJECTED: 4,
+    ACCEPTED: 5,
+    CANCELLED: 6,
+    REWORK: 7,
+    STOPPED: 8,
+  };
+
   constructor(
     private activatedRoute: ActivatedRoute,
     public suggestionService: SuggestionService,
@@ -492,7 +504,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
     const { data } = await modal.onWillDismiss();
 
     if (data && data.click) {
-      this.changeStoryStatus(0);
+      this.changeStoryStatus(8);
     }
   }
 

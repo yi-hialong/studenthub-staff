@@ -112,9 +112,12 @@
                 <span *ngIf="story.request.request_position_type == 1">Full-time</span>
                 <span *ngIf="story.request.request_position_type == 2">Part-time</span>
               </b>
+
             </ion-card-title>
             <ion-card-subtitle>
               <p *ngIf="story.request.request_additional_info" class="txt-additional-info">{{story.request.request_additional_info.substr(0,85)}}...</p>
+              <strong *ngIf="story.story_status == 1">Status : Started</strong>
+              <strong *ngIf="story.story_status == 7">Status : Re-Work </strong>
             </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content *ngIf="story.request.company" class="company-name">
@@ -133,9 +136,10 @@
           <ion-card-subtitle>
             <b>({{story.request.request_number_of_employees}})&nbsp;
               {{story.request.request_position_title}} &nbsp;
-              <span *ngIf="story.request.request_position_type == 1">Full-time</span>
-              <span *ngIf="story.request.request_position_type == 2">Part-time</span>
             </b>
+            <br/>
+            <strong *ngIf="story.story_status == 1">Status : Started</strong>
+            <strong *ngIf="story.story_status == 7">Status : Re-Work </strong>
           </ion-card-subtitle>
         </ion-card-header>
         <ion-card-content>
@@ -149,6 +153,8 @@
           <strong *ngIf="story.story_status == 4">Status : Rejected</strong>
           <strong *ngIf="story.story_status == 5">Status : Accepted</strong>
           <strong *ngIf="story.story_status == 6">Status : Cancelled </strong>
+          <strong *ngIf="story.story_status == 7">Status : Re-work </strong>
+          <strong *ngIf="story.story_status == 8">Status : Stopped </strong>
           <br/>
           <strong>
             Time spent : {{ story.story_time_spent | timeSpent }}

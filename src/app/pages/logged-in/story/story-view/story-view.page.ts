@@ -26,6 +26,7 @@ import {Note} from '../../../../models/note';
 import { StoryDeliveredComponent } from './story-delivered.component';
 import { StaffPage } from '../../pickers/staff/staff.page';
 import { CompanyRequestService } from 'src/app/providers/logged-in/company-request.service';
+import objectContaining = jasmine.objectContaining;
 
 
 export interface TimeSpan {
@@ -117,7 +118,8 @@ export class StoryViewPage implements OnInit, OnDestroy {
     public toastCtrl: ToastController,
     public noteService: NoteService,
     public loadingCtrl: LoadingController,
-  ) { }
+  ) {
+  }
 
   ngOnInit() {
     this.internvalSubscribe = setInterval(_ => {

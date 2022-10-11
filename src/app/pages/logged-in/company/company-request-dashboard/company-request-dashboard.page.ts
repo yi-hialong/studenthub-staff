@@ -118,9 +118,9 @@ export class CompanyRequestDashboardPage implements OnInit {
       this.loadStories(1);
     });
 
-    this.eventService.storyStatusUpdated$.subscribe(() => {
-      this.loadStories(1);
-    });
+    // this.eventService.storyStatusUpdated$.subscribe(() => {
+    //   this.loadStories(1);
+    // });
   }
 
   ionViewWillEnter() {
@@ -270,7 +270,6 @@ export class CompanyRequestDashboardPage implements OnInit {
     let param = this.urlParams();
     param += '&expand=staff,request,request.company,latestStoryActivity';
     param += '&query=' + this.query;
-    console.log(param);
     this.storyService.list(this.currentPage, param).subscribe(response => {
 
       this.storyPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
@@ -394,7 +393,7 @@ export class CompanyRequestDashboardPage implements OnInit {
       case '6':
         return 'Cancelled';
       case '7':
-        return 'Re-Work';  
+        return 'Re-Work';
       case '9':
         return 'Unstarted';
       case '10':

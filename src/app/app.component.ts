@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { EventService } from './providers/event.service';
 import { AuthService } from './providers/auth.service';
 import { TranslateLabelService } from './providers/translate-label.service';
+import {StoryService} from "./providers/logged-in/story.service";
 
 
 const { SplashScreen } = Plugins;
@@ -32,6 +33,7 @@ export class AppComponent implements OnInit {
     private navCtrl: NavController,
     public modalCtrl: ModalController,
     public authService: AuthService,
+    public storyService: StoryService,
     public translateService: TranslateLabelService,
   ) {
     this.initializeApp();
@@ -76,6 +78,18 @@ export class AppComponent implements OnInit {
 
       this.setServiceWorker();
     });
+
+    this.eventService.startStory$.subscribe(async ({status, story}) => {
+      await this.changeStoryStatus(status, story);
+    });
+
+    this.eventService.stopStory$.subscribe(async ({status, story}) => {
+      await this.changeStoryStatus(status, story);
+    });
+
+    this.eventService.deliverStory$.subscribe(async ({status, story}) => {
+      await this.changeStoryStatus(status, story);
+    });
   }
 
   async ngOnInit() {
@@ -94,7 +108,7 @@ export class AppComponent implements OnInit {
     this.eventService.errorStorage$.subscribe(() => {
       this.navCtrl.navigateRoot(['app-error']);
     });
-    
+
     // On Login Event, set root to Internal app page
     this.eventService.userLogined$.subscribe(userEventData => {
       this.navCtrl.navigateRoot(['/view/tasks']);
@@ -198,5 +212,56 @@ export class AppComponent implements OnInit {
    */
   onUpdateAlertClose() {
     this.updatesAvailable = false;
+  }
+
+  /**
+   * @param status
+   * @param story
+   */
+  async changeStoryStatus(status, story) {
+
+    this.storyService.changeStoryStatus(status, story.story_uuid).subscribe(async response => {
+
+      // On Success
+      if (response.operation == 'success') {
+
+        if (status == 0 || status == 3) {
+          this.authService.story = null;
+          this.authService.saveInStorage();
+        }
+
+        this.loadStoryData(story);
+      }
+
+      if (response.operation == 'error') {
+        const prompt = await this._alertCtrl.create({
+          message: this.authService.errorMessage(response.message),
+          buttons: ['Okay']
+        });
+        prompt.present();
+
+        /// in case if its alrady working
+        if (response.data) {
+          this.navCtrl.navigateForward(['story-view', response.data.story_uuid]);
+        }
+      }
+    }, () => {
+
+    });
+  }
+
+  loadStoryData(story) {
+    this.storyService.detail(story.story_uuid, '?expand=staff,storyActivities,storyActivities.staff,request,request.contact,request.staffs,request.company').subscribe(res => {
+      if (story.story_status == 1 && story.staff_id == this.authService.staff_id &&
+        ['cancelled', 'delivered'].indexOf(res.request.request_status) == -1)
+      {
+        this.authService.story = res;
+        this.authService.saveInStorage();
+      }
+
+      this.eventService.storyStatusUpdated$.next({
+        story: res
+      });
+    });
   }
 }

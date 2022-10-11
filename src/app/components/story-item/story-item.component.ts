@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 import {Request, Story} from '../../models/request';
+import {AuthService} from "../../providers/auth.service";
+import {AlertController} from "@ionic/angular";
+import {EventService} from "../../providers/event.service";
 
 
 @Component({
@@ -14,14 +17,35 @@ export class StoryItemComponent implements OnInit {
 
   @Input() story: Story;
 
+  public status = {
+    UNSTARTED : 0,
+    STARTED: 1,
+    FINISHED: 2,
+    DELIVERED: 3,
+    REJECTED: 4,
+    ACCEPTED: 5,
+    CANCELLED: 6,
+    REWORK: 7,
+    STOPPED: 8,
+  };
+
   constructor(
+      public authService: AuthService,
+      public alertCtrl: AlertController,
+      public eventService: EventService
   ) {
   }
 
-  ngOnInit() { 
+  ngOnInit() {
     if(!this.request && this.story.request) {
       this.request = this.story.request;
     }
+
+    this.eventService.storyStatusUpdated$.subscribe((story) => {
+      if (this.story.story_uuid == story.story.story_uuid) {
+        this.story = story.story;
+      }
+    });
   }
 
   /**
@@ -35,5 +59,84 @@ export class StoryItemComponent implements OnInit {
     if (date) {
       return new Date(date.replace(/-/g, '/'));
     }
+  }
+  async startStory(event, story): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Start work on story!',
+      message: 'Are you sure you want to start work on this story?',
+      buttons: [
+          {
+            text: 'Yes',
+            handler:  () => {
+              this.eventService.startStory$.next({status: this.status.STARTED, story});
+            }
+          },
+          {
+            text: 'No',
+            handler:  () => {
+              console.log('Cancelled clicked');
+            }
+          }
+      ]
+    });
+    alert.present();
+  }
+
+  /**
+   * @param event
+   * @param story
+   */
+  async stopStory(event, story): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Stop working on story!',
+      message: 'Are you sure you want to start work on this story?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler:  () => {
+            this.eventService.stopStory$.next({status: this.status.STOPPED, story});
+          }
+        },
+        {
+          text: 'No',
+          handler:  () => {
+            console.log('Cancelled clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
+  }
+
+  /**
+   * @param event
+   * @param story
+   */
+  async deliverStory(event, story): void {
+    event.preventDefault();
+    event.stopPropagation();
+    const alert = await this.alertCtrl.create({
+      header: 'Deliver this story!',
+      message: 'Are you sure you want to start work on this story?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler:  () => {
+            this.eventService.deliverStory$.next({status: this.status.DELIVERED, story});
+          }
+        },
+        {
+          text: 'No',
+          handler:  () => {
+            console.log('Cancelled clicked');
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

@@ -91,4 +91,5 @@ export class CandidateWorkingHour {
   created_at: string;
   updated_at: string;
   store:Store;
+  dateListByCandidate: any[];
 }

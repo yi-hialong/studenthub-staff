@@ -31,6 +31,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
 
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
+  public date  = null;
   public model: Fulltimer = new Fulltimer();
 
   public universitylistData = [];
@@ -90,6 +91,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
 
     if (state.model) {
       this.model = state.model;
+
     }
 
     this.initForm();
@@ -134,8 +136,8 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
   }
 
   setLicenseOption(value) {
-    this.form.controls['start_date'].setValue(value);
-    this.form.controls['start_date'].markAsDirty();
+    this.form.controls['driving_license'].setValue(value);
+    this.form.controls['driving_license'].markAsDirty();
     this.model.fulltimer_driving_license = value;
   }
 
@@ -193,10 +195,9 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
       }
 
     } else { // Show Update Form
-
       this.operation = 'Update';
 
-      let location, nationality;
+      let location, nationality,formattedString,university = null;
 
       if (this.model.area && this.model.country) {
         location = this.model.area.area_name_en + ', ' + this.model.country.country_name_en;
@@ -204,6 +205,14 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
 
       if (this.model.nationality) {
         nationality = this.model.nationality.country_name_en;
+      }
+
+      if (this.model.university) {
+        nationality = this.model.university.university_name_en;
+      }
+
+      if (this.model.fulltimer_birth_date) {
+        formattedString = format(parseISO(this.model.fulltimer_birth_date), 'MMM d, yyyy');
       }
 
       this.form = this.fb.group({
@@ -221,12 +230,12 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
         location: [location, Validators.required],
         current_salary: [this.model.fulltimer_current_salary, Validators.required],
         expected_salary: [this.model.fulltimer_expected_salary, Validators.required],
-
+        university: [null],
         university_id: [this.model.university_id],
         employed: [this.model.fulltimer_employed],
         gender: [this.model.fulltimer_gender],
         driving_license: [this.model.fulltimer_driving_license],
-        birth_date: [this.model.fulltimer_birth_date],
+        birth_date: [formattedString],
 
         tempPdfCVLocation: [''],
       });
@@ -548,7 +557,7 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
     this.model.fulltimer_employed = this.form.value.employed;
     this.model.fulltimer_gender = this.form.value.gender;
     this.model.fulltimer_driving_license = this.form.value.driving_license;
-    this.model.fulltimer_birth_date = format(parseISO(this.form.controls['birth_date'].value), 'yyyy-MM-dd');//, { timeZone: '+3:30' }
+    // this.model.fulltimer_birth_date = format(parseISO(this.form.controls['birth_date'].value), 'yyyy-MM-dd');//, { timeZone: '+3:30' }
   }
 
   /**
@@ -681,4 +690,12 @@ export class FulltimerFormPage implements OnInit, OnDestroy {
       }
       );
     }
+
+  selectDate($event) {
+    if ($event && $event.modified) {
+      this.form.controls['birth_date'].setValue($event.modified);
+      this.form.controls['birth_date'].markAsDirty();
+      this.model.fulltimer_birth_date = $event.original;
+    }
+  }
 }

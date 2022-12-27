@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
       this.zone.run(() => {
           // Example url: https://beerswift.app/tabs/tab2
           // slug = /tabs/tab2
-         
+
           // If no match, do nothing - let regular routing
           // logic take over
 
@@ -132,15 +132,15 @@ export class AppComponent implements OnInit {
        * when user comming back from auth0
        */
       this.auth.isAuthenticated$.subscribe(isAuthenticated => {
-        
+
         if(!isAuthenticated || this.authService.isLogged) return null;
-      
+
         //this.auth.idTokenClaims$.subscribe(r => {
-        this.auth.getAccessTokenSilently().subscribe(r => {  
+        this.auth.getAccessTokenSilently().subscribe(r => {
           this.authService.useTokenForAuth(r).then();
         });
       });
-      
+
       if (this.platform.is('hybrid')) {
         SplashScreen.hide();
       }
@@ -168,7 +168,8 @@ export class AppComponent implements OnInit {
 
     // On Login Event, set root to Internal app page
     this.eventService.userLogined$.subscribe(userEventData => {
-      this.navCtrl.navigateRoot(['/view/tasks']);
+      console.log(userEventData);
+      // this.navCtrl.navigateRoot(['/view/tasks']);
     });
 
     this.eventService.error500$.subscribe(userEventData => {
@@ -187,13 +188,13 @@ export class AppComponent implements OnInit {
     this.eventService.userLoggedOut$.subscribe((logoutReason) => {
       // Set root to Login Page
       this.navCtrl.navigateRoot(['/login']);
-      
+
       this.auth.isAuthenticated$.subscribe(isAuthenticated => {
         if(isAuthenticated) {
           this.auth.logout({ returnTo: document.location.origin });
         }
       })
-      
+
       // Show Message explaining logout reason if there's one set
       if (logoutReason) {
         console.log(logoutReason);

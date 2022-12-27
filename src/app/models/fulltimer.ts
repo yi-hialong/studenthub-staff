@@ -1,6 +1,7 @@
 import { Area } from './area';
 import { Country } from './country';
 import { Note } from './note';
+import {University} from "./university";
 
 export class FulltimerTag {
     fulltimer_tags_id: number;
@@ -37,5 +38,6 @@ export class Fulltimer {
     area: Area;
     country: Country;
     nationality: Country;
+    university: University;
     notes: Note[];
 }

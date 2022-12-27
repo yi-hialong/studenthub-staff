@@ -78,6 +78,7 @@ import { LeaveRequestPageModule } from './pages/logged-in/leave-request/leave-re
 import { File } from '@awesome-cordova-plugins/file/ngx';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { StorageService } from './providers/storage.service';
+import {DatePopupModule} from "./components/date-popup/date-popup.module";
 
 export function startupServiceFactory(authService) {
   return () => authService.load();
@@ -173,7 +174,8 @@ declare global {
     CompanyFilterPageModule,
     ActionComponentModule,
     CandidateAssignFormPageModule,
-    LeaveRequestPageModule
+    LeaveRequestPageModule,
+    DatePopupModule
   ],
   exports: [
     ActionComponentModule

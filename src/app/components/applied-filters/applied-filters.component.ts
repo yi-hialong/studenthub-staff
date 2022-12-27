@@ -33,7 +33,7 @@ export class AppliedFiltersComponent extends BaseWidget {
     public total;
 
     public average = null;
-    
+
     constructor(
         @Inject(forwardRef(() => NgAisInstantSearch))
         public instantSearchInstance,
@@ -241,10 +241,10 @@ export class AppliedFiltersComponent extends BaseWidget {
         /*if(this.instantSearchInstance.instantSearchInstance.searchParameters.query && this.instantSearchInstance.instantSearchInstance.searchParameters.query.length > 0) {
             a.push(this.instantSearchInstance.instantSearchInstance.searchParameters.query);
         }*/
- 
+
         for (let a of this.state.items) {
             for(let b of a.refinements) {
-                    
+
                 if (b.attribute == 'candidate_committed') {
                     b = this.committedTransformItems(b);
                 }
@@ -270,6 +270,9 @@ export class AppliedFiltersComponent extends BaseWidget {
                 //}
 
                 else if (b.attribute == 'candidate_driving_license') {
+                    b = this.licenseTransformItems(b);
+                }
+                else if (b.attribute == 'fulltimer_driving_license') {
                     b = this.licenseTransformItems(b);
                 }
 

@@ -11,11 +11,10 @@ import {format, parseISO} from "date-fns";
 })
 export class DatePopupComponent implements OnInit {
 
-  @Input() title;
   @Input() min;
   @Input() max;
   @Input() value = null;
-  @Output() onRefresh: EventEmitter<any> = new EventEmitter();
+  @Input() key = 'date'
   @Output() onClose: EventEmitter<any> = new EventEmitter();
 
   constructor() {
@@ -34,7 +33,6 @@ export class DatePopupComponent implements OnInit {
    * close update prompt
    */
   close($event) {
-    // console.log($event);
     const dateFromIonDatetime = $event.detail.value;
     const formattedString = format(parseISO(dateFromIonDatetime), 'MMM d, yyyy');
     this.onClose.emit({modified: formattedString,original: $event.detail.value});

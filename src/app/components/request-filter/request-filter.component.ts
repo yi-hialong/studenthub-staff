@@ -10,7 +10,7 @@ import { format, parseISO } from 'date-fns';
 export class RequestFilterComponent implements OnInit {
 
   @Input() tab = null;
-  
+
   public filters = {
     requestStatus: null,
     storyStatus: null,
@@ -59,9 +59,9 @@ export class RequestFilterComponent implements OnInit {
         endDate: null,
       };
     } else {
-      
+
       this.filters.startDate = format(parseISO(this.filters.startDate), 'yyyy-MM-dd');
-    
+
       this.filters.endDate = format(parseISO(this.filters.endDate), 'yyyy-MM-dd');
 
       this.filters = {
@@ -72,6 +72,13 @@ export class RequestFilterComponent implements OnInit {
         startDate: this.filters.startDate,
         endDate: this.filters.endDate,
       };
+    }
+  }
+  filterDate($event, type) {
+    if (type == 'startDate') {
+      this.filters.startDate = format(parseISO($event.original), 'yyyy-MM-dd');
+    } else {
+      this.filters.endDate = format(parseISO($event.original), 'yyyy-MM-dd');
     }
   }
 }

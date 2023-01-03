@@ -27,12 +27,15 @@ export class DefaultPage implements OnInit {
 
   public dailyStandupQuestion;
 
+  public counter = null;
   public staff_work_session: {
     leave: any,
     session: any
+    time: any
   } = {
     leave : null,
-    session: null
+    session: null,
+    time: null
   };
 
   public leave: StaffLeave;
@@ -121,8 +124,10 @@ export class DefaultPage implements OnInit {
 
       this.loadingSession = false;
 
-      if(response.session) {
-        this.staff_work_session = response.session;
+      if(response) {
+        this.staff_work_session.session = response.session;
+        this.staff_work_session.leave = response.leave;
+        console.log(this.staff_work_session,response);
         this.getStandupQuestion();
       }
 
@@ -136,10 +141,7 @@ export class DefaultPage implements OnInit {
     this.dailyStandupService.startSession().subscribe(async response => {
 
       if(response.operation == 'success') {
-
-        this.staff_work_session.session = response.model;
-
-        this.getStandupQuestion();
+        this.getSession();
 
       } else {
         this.loadingSession = false;
@@ -162,6 +164,7 @@ export class DefaultPage implements OnInit {
 
       if(response.operation == 'success') {
         this.staff_work_session.session = null;// response.model;
+        this.staff_work_session.time = null;// response.model;
       }
     });
   }

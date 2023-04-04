@@ -14,6 +14,7 @@ import { AccountService } from 'src/app/providers/logged-in/account.service';
 export class ChangePasswordComponent implements OnInit {
 
   public loading: boolean = false;
+  public validatingPassword: boolean = false;
 
   public form: FormGroup;
 
@@ -89,6 +90,31 @@ export class ChangePasswordComponent implements OnInit {
       if(o) {
         o.dismiss(data);
       }
+    });
+  }
+
+  /**
+   * validate password on type
+   * @param $event
+   */
+  async validateOldPassword($event) {
+    $event.stopPropagation();
+    this.validatingPassword = true;
+    this.accountService.validatePassword(this.form.value).subscribe(async result => {
+      this.validatingPassword = false;
+      this.form.controls['password'].setErrors(null);
+      if (!result) {
+          this.form.controls['password'].setErrors({'incorrect': true});
+      }
+    }, async (err) => {
+
+      const prompt = await this._alertCtrl.create({
+        message: err,
+        buttons: ['Okay']
+      });
+      prompt.present();
+    }, () => {
+      this.loading = false;
     });
   }
 }

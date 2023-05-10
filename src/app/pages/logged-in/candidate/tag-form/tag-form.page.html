@@ -10,6 +10,9 @@
 
   <div class="container max-width">
       <ion-list class="candidateTags" *ngIf="tagList">
+ 
+            
+        
 
         <ion-item *ngFor="let s of tmpTags;let i=index;">
           <div tabindex="0"></div>
@@ -18,12 +21,19 @@
             [(ngModel)]="tagList[i]" (ionFocus)="validateTags()"
             (ionChange)="change($event, i, s)" type="text" enterkeyhint="{{ 'Next'}}" (keyup)="nextOnEnter($event, i)"></ion-input>
 
-          <ion-button fill="clear" tabindex="-1" item-right *ngIf="tagList[i]" fill="clear" (click)="removeTags(i,s)"
+          <ion-button fill="clear" tabindex="-1" item-right *ngIf="tagList[i]" fill="clear" (click)="removeTag(i,s)"
             class="skip-hover">
             <img src="assets/images/ic_circledCancel.svg">
           </ion-button>
         </ion-item>
+
+        <ion-item>
+          <ion-label>Existing tags</ion-label>
+          <ion-chip (click)="onTagSelected(tag.tag)" *ngFor="let tag of tags">{{ tag.tag }}</ion-chip>
+        </ion-item>
       </ion-list>
+      
+      
 
       <ion-button (click)="save()" class="btn-submit" [disabled]="tagList.length < 1 || loading" type="submit">
         Done

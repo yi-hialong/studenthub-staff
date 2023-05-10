@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, ToastController, AlertController } from '@ionic/angular';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
+import { TagService } from 'src/app/providers/logged-in/tag.service';
 
 
 @Component({
@@ -23,11 +24,14 @@ export class TagFormPage implements OnInit {
 
   public borderLimit = false;
 
+  public tags = [];
+
   constructor(
     public alertCtrl: AlertController,
     public toastCtrl: ToastController,
     public modalCtrl: ModalController,
-    public analyticService: AnalyticsService
+    public analyticService: AnalyticsService,
+    public tagService: TagService
   ) { }
 
   ngOnInit() {
@@ -45,6 +49,19 @@ export class TagFormPage implements OnInit {
     }
  
     this.count = this.tmpTags.length; // to check to add new textbox when type
+
+    this.loadTags();
+  }
+
+  onTagSelected(tag) {
+   // this.tmpTags.push(this.tmpTags.length);
+    this.tagList.push(tag);
+  }
+
+  loadTags() {
+    this.tagService.list().subscribe(res => {
+      this.tags = res;
+    });
   }
 
   ionViewDidEnter() {
@@ -191,9 +208,7 @@ export class TagFormPage implements OnInit {
     if (!this.validateTags()) {
       return false;
     }
-
-    const ok = 'Okay';
-
+ 
     const tags = [];
 
     for (const candidateTag of this.tagList) {

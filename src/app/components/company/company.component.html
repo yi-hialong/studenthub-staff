@@ -20,8 +20,11 @@
         <ion-badge class="company_status_badge danger" slot="start" *ngIf="!company.company_status && !company.parent_company_id">
           Inactive
         </ion-badge>
-        <ion-badge class="company_status_badge success" slot="start" *ngIf="company.company_status && !company.parent_company_id">
+        <ion-badge class="company_status_badge success" slot="start" *ngIf="company.company_status !== 9 && !company.parent_company_id">
           Active
+        </ion-badge>
+        <ion-badge class="company_status_badge success" slot="start" *ngIf="company.company_status === 9 && !company.parent_company_id">
+          Under Review
         </ion-badge>
 
         <ion-badge slot="start" color="light">

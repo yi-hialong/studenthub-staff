@@ -25,6 +25,7 @@ import { CompanyStoresPage } from '../company-stores/company-stores.page';
 import {ModalPopPage} from "../../modal-pop/modal-pop.page";
 import { ActionComponent } from 'src/app/components/action/action.component';
 import { AnalyticsService } from 'src/app/providers/analytics.service';
+import { AuthService } from 'src/app/providers/auth.service';
 
 
 @Component({
@@ -76,6 +77,7 @@ export class CompanyViewPage implements OnInit {
     public activatedRoute: ActivatedRoute,
     public companyService: CompanyService,
     public aws: AwsService,
+    public authService: AuthService,
     private router: Router,
     public eventService: EventService,
     public analyticService: AnalyticsService,
@@ -387,7 +389,7 @@ export class CompanyViewPage implements OnInit {
 
       if (response && response.operation == 'success') {
         const toast = await this.toastCtrl.create({
-          message: response.message,
+          message: this.authService.errorMessage(response.message),
           duration: 3000
         });
         toast.present();
@@ -412,7 +414,7 @@ export class CompanyViewPage implements OnInit {
 
       if (response && response.operation == 'success') {
         const toast = await this.toastCtrl.create({
-          message: response.message,
+          message: this.authService.errorMessage(response.message),
           duration: 3000
         });
         toast.present();
@@ -476,7 +478,7 @@ export class CompanyViewPage implements OnInit {
               if (resp.operation != 'success') {
                 const prompt = await this.alertCtrl.create({
                   header: 'Error!',
-                  message: resp.message,
+                  message: this.authService.errorMessage(resp.message),
                   buttons: ['Ok']
                 });
                 prompt.present();
@@ -591,13 +593,21 @@ export class CompanyViewPage implements OnInit {
 
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
-    const actions = [
+    let actions = [
       {
         name: "Edit Client",
         icon: 'assets/icon/icon-edit-2.svg',
         trigger: 'edit'
-      },
+      },      
     ];
+
+    if(this.company.company_status_override == 9) {
+      actions.push({
+        name: "Remove from review list",
+        icon: 'assets/icon/icon-edit-2.svg',
+        trigger: 'remove-review'
+      });
+    }
 
     const modal = await this.popoverCtrl.create({
       component: ActionComponent,
@@ -623,7 +633,24 @@ export class CompanyViewPage implements OnInit {
     if (data && data.action) {
       if(data.action.trigger == 'edit') {
         this.update();
-      }
+      } else if(data.action.trigger == 'remove-review') {
+        //this.updateReviewStatus();
+
+        this.companyService.changeStatus(this.company, 0).subscribe(async resp => {
+          if (resp.operation != 'success') {
+            const prompt = await this.alertCtrl.create({
+              header: 'Error!',
+              message: this.authService.errorMessage(resp.message),
+              buttons: ['Ok']
+            });
+            prompt.present();
+          }
+          else {
+            this.company.company_status = resp.company_status;
+            this.company.company_status_override = 0;
+          }
+        });
+      } 
     }
   }
 

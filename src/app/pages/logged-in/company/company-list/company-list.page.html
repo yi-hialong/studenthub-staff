@@ -25,6 +25,7 @@
     <div *ngIf="filters.status || (filters.approved_to_hire || filters.approved_to_hire == 0)" class="filter-tag">
       <ion-badge *ngIf="filters.status == 1">Active</ion-badge>
       <ion-badge *ngIf="filters.status == 2">Inactive</ion-badge>
+      <ion-badge *ngIf="filters.status == 9">Under Review</ion-badge>
       <ion-badge *ngIf="filters.status == 3">Active + 40 days no payment</ion-badge>
       <ion-badge *ngIf="filters.status == 4">Active + 40 days no new request</ion-badge>
       <ion-badge *ngIf="filters.approved_to_hire == 1">Approved to hire</ion-badge>

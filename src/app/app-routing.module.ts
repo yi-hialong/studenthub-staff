@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
-import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { AuthService } from './providers/auth.service';
 import { LoginGuard } from './providers/guards/login-guard.service';
 import { SelectiveLoadingStrategy } from './util/SelectiveLoadingStrategy';
-import {StoryGuard} from './providers/guards/story-guard.service';
-import {CompanyFormPage} from "./pages/logged-in/company/company-form/company-form.page";
 
 const routes: Routes = [
   {
@@ -276,6 +274,7 @@ const routes: Routes = [
   },
   {
     path: 'candidate-committed-form',
+    canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/candidate/candidate-committed-form/candidate-committed-form.module').then( m => m.CandidateCommittedFormPageModule)
   },
   {
@@ -409,6 +408,7 @@ const routes: Routes = [
   },
   {
     path: 'fulltimer-notes',
+    canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/fulltimer/fulltimer-notes/fulltimer-notes.module').then( m => m.FulltimerNotesPageModule)
   },
   {
@@ -493,10 +493,12 @@ const routes: Routes = [
   },
   {
     path: 'store-option',
+    canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/store/store-option/store-option.module').then( m => m.StoreOptionPageModule)
   },
   {
     path: 'mall-option',
+    canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/mall/mall-option/mall-option.module').then( m => m.MallOptionPageModule)
   },
   {
@@ -545,10 +547,12 @@ const routes: Routes = [
   },
   {
     path: 'candidate-assign-form',
+    canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/candidate-assign-form/candidate-assign-form.module').then( m => m.CandidateAssignFormPageModule)
   },
   {
     path: 'leave-request',
+    canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/leave-request/leave-request.module').then( m => m.LeaveRequestPageModule)
   },
   {
@@ -669,14 +673,27 @@ const routes: Routes = [
     canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/transfer/transfer-candidate-list/transfer-candidate-list.module').then( m => m.TransferCandidateListPageModule)
   },
+   
+  {
+    path: 'company-candidates',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/company-candidates/company-candidates.module').then( m => m.CompanyCandidatesPageModule)
+  },
+   
+  {
+    path: 'company-registration-request-list',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/company-registration-request-list/company-registration-request-list.module').then( m => m.CompanyRegistrationRequestListPageModule)
+  },
+  {
+    path: 'company-registration-request-view',
+    canActivate: [AuthService],
+    loadChildren: () => import('./pages/logged-in/company/company-registration-request-view/company-registration-request-view.module').then( m => m.CompanyRegistrationRequestViewPageModule)
+  },
   {
     path: '**',
     redirectTo: 'not-found'
-  },  {
-    path: 'company-candidates',
-    loadChildren: () => import('./pages/logged-in/company/company-candidates/company-candidates.module').then( m => m.CompanyCandidatesPageModule)
   },
-
 ];
 
 @NgModule({
@@ -685,4 +702,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule { } 

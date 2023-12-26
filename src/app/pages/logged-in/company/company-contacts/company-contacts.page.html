@@ -4,23 +4,46 @@
     <ion-buttons slot="start">
       <ion-back-button icon="assets/images/icon-back.svg" (click)="dismiss()"></ion-back-button>
     </ion-buttons>
+    <!--
     <ion-buttons slot="end">
       <ion-button clear (click)="options()">
         <ion-icon class="setting-icon" name="ellipsis-vertical-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+-->
   </ion-toolbar>
   <ion-toolbar class="container" [class.hidden]="borderLimit">
     <ion-title>Contacts</ion-title>
+  </ion-toolbar>
+  <ion-toolbar *ngIf="query || companyContacts.length > 5" class="container searchbar-wrapper">
+
+    <ion-searchbar mode="md" [(ngModel)]="query" (ionChange)="loadContacts()" placeholder="Search by name / phone / email"
+      debounce="100"></ion-searchbar>
+
+    <ion-buttons slot="end">
+      <ion-button class="setting_btn" [class.active]="filter.filter_email_unverified" (click)="openFilter()">
+        <ion-icon name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 <ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
   <div class="container">
  
+    <ion-chip *ngIf="filter.filter_email_unverified" (click)="clearEmailFilter()">
+      Having unverified email  <ion-icon name="close-outline"></ion-icon>
+    </ion-chip>  
+
+    <!--
+    <ion-chip *ngIf="filter.filter_email_unverified == 0" (click)="clearEmailFilter()">
+      Having verified email  <ion-icon name="close-outline"></ion-icon>
+    </ion-chip>  -->
+
     <ion-card *ngFor="let companyContact of companyContacts">
       
       <ion-card-header>
-        <ion-item lines="none" tappable (click)="openContactDetail(companyContact)">
+        <ion-item lines="none" tappable (click)="openContactDetail(companyContact, $event)">
           <div tabindex="0"></div>
           
           <ion-thumbnail *ngIf="company && company.company_logo">
@@ -30,13 +53,17 @@
           <ion-label>
             <h4>{{ companyContact.contact_name }}</h4>
 
-            <h2 *ngIf="companyContact.companyContact">
-              {{ companyContact.companyContact.contact_position }}
+            <h2>
+              {{ companyContact.contact_position }}
             </h2>
 
             <h2 *ngIf="companyContact.contact_position">
               {{ companyContact.contact_position }}
             </h2>
+ 
+            <ion-badge *ngIf="!companyContact.contact_email_verification">
+              Email not verified
+            </ion-badge> 
           </ion-label>
 
           <ion-button (click)="toggleOpen(companyContact, $event)" [class.is-open]="companyContact.isOpen">
@@ -88,10 +115,15 @@
     <loading-modal type="contact-list" [loading]="loading"></loading-modal>
 
     <no-items *ngIf="!loading && companyContacts.length ==0" message="~ No Contact data ~"></no-items>
+    
+    <ion-infinite-scroll *ngIf="currentPage < pageCount" (ionInfinite)="doInfinite($event)">
+      <ion-infinite-scroll-content></ion-infinite-scroll-content>
+    </ion-infinite-scroll>
 
-    <div class="add-request " tappable (click)="addCompanyContact()">
+    <div class="add-request" *ngIf="company" tappable (click)="addCompanyContact()">
       <ion-icon name="add-outline"></ion-icon>
     </div>
     
+
   </div>
 </ion-content>

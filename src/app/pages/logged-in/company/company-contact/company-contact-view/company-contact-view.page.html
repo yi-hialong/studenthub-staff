@@ -70,8 +70,8 @@
           <ion-col size-lg="4" size-md="4" size-sm="12" size-xs="12" class="ion-align-self-center">
             Email <br />
             <b>{{ contact.contact_email }}</b>
-            <ion-badge color="warning" >Email not verified</ion-badge>
-<!--*ngIf="contact.contact_email_verification == '0'" -->
+            <ion-badge *ngIf="!contact.contact_email_verification" color="warning" >Email not verified</ion-badge>
+ 
             <!--
             <a href="mailto:{{ contactEmail.email_address }}" *ngFor="let contactEmail of contact.contactEmails">
               <ion-icon name="mail-outline"></ion-icon> {{ contactEmail.email_address }}

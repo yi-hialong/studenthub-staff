@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, expand } from 'rxjs';
 // Services
 import { AuthHttpService } from './authhttp.service';
 // Models
@@ -20,8 +20,8 @@ export class CompanyContactService {
    * get all company contacts
    * @param company_id
    */
-  list(page, query = ''): Observable<any>{
-    const url = `${this._endpoint}?expand=contactEmails,contactPhones,company,companies&page=${page}&query=${query}`;
+  list(page, query = '', expand='contactEmails,contactPhones,company,companies'): Observable<any>{
+    const url = `${this._endpoint}?expand=${expand}&page=${page}&query=${query}`;
     return this._authhttp.getRaw(url);
   }
 

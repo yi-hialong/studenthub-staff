@@ -335,8 +335,18 @@ const routes: Routes = [
   {
     path: 'company-followup-list',
     loadChildren: () => import('./pages/logged-in/company/company-followup-list/company-followup-list.module').then(m => m.CompanyFollowupListPageModule),
+    canActivate: [AuthService],
     data: {
       name: 'CompanyFollowupListPage',
+    }
+  },
+
+  {
+    path: 'company-contacts',
+    loadChildren: () => import('./pages/logged-in/company/company-contacts/company-contacts.module').then( m => m.CompanyContactsPageModule),
+    canActivate: [AuthService],
+    data: {
+      name: 'CompanyContactsPage'
     }
   },
 
@@ -357,7 +367,6 @@ const routes: Routes = [
       name: 'CompanyContactFormPage'
     }
   },
-
   {
     path: 'note-view',
     loadChildren: () => import('./pages/logged-in/note/note-view/note-view.module').then( m => m.NoteViewPageModule),
@@ -698,12 +707,12 @@ const routes: Routes = [
   },
   
   {
-    path: '**',
-    redirectTo: 'not-found'
-  },
-  {
     path: 'update-account',
     loadChildren: () => import('./pages/logged-in/update-account/update-account.module').then( m => m.UpdateAccountPageModule)
+  },
+  {
+    path: '**',
+    redirectTo: 'not-found'
   },
 
 ];

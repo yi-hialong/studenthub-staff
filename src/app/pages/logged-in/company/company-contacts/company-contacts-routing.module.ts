@@ -5,6 +5,10 @@ import { CompanyContactsPage } from './company-contacts.page';
 
 const routes: Routes = [
   {
+    path: '',
+    component: CompanyContactsPage
+  },
+  {
     path: ':company_id',
     component: CompanyContactsPage
   }

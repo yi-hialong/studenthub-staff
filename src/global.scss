@@ -67,6 +67,14 @@ ion-tabs ion-back-button {
     color: red;
 }
 
+.text-danger {
+  color: var(--ion-color-warning) !important;
+}
+
+.text-warning {
+  color: var(--ion-color-warning) !important;
+}
+
 .desktop-only {
   display: block;
 }

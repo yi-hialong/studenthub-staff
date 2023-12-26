@@ -9,11 +9,12 @@ import { Contact } from "../../../../models/contact";
 import { CompanyService } from "../../../../providers/logged-in/company.service";
 import { CompanyContactService } from 'src/app/providers/logged-in/company-contact.service';
 import { EventService } from 'src/app/providers/event.service';
+import { AwsService } from 'src/app/providers/aws.service';
+import { AnalyticsService } from 'src/app/providers/analytics.service';
 // pages
 import { ModalPopPage } from '../../modal-pop/modal-pop.page';
 import { CompanyContactFormPage } from "../company-contact-form/company-contact-form.page";
-import { AwsService } from 'src/app/providers/aws.service';
-import { AnalyticsService } from 'src/app/providers/analytics.service';
+import { ContactFilterComponent } from 'src/app/components/contact-filter/contact-filter.component';
 
 
 @Component({
@@ -31,6 +32,18 @@ export class CompanyContactsPage implements OnInit {
 
   public loading = false;
 
+  public filter: {
+    filter_email_unverified: boolean
+  } = {
+    filter_email_unverified: false
+  };
+
+  public currentPage: number;
+
+  public pageCount: number;
+
+  public query = '';
+
   constructor(
     public router: Router,
     public modalCtrl: ModalController,
@@ -45,26 +58,66 @@ export class CompanyContactsPage implements OnInit {
   ngOnInit() {
     this.analyticService.page('Company Contact List Page');
     
+    const state = window.history.state;
+
+    if (state) {
+      this.filter = state;
+    }
+
     this.loadContacts();
 
-    if (!this.company)
+    /*if (!this.company) {
       this.loadCompanyDetail();
+    }*/
+  }
+
+
+  /**
+   * open filter
+   * @returns
+   */
+  async openFilter() {
+
+    const modal = await this.modalCtrl.create({
+      component: ContactFilterComponent,
+      cssClass: 'modal-request-filter',
+      componentProps: {
+        filter: Object.assign({}, this.filter),
+      }
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+
+    if(data && data.filter_email_unverified != this.filter.filter_email_unverified) {
+      this.filter = data;
+      this.loadContacts();
+    }
   }
 
   /**
    * open contact detail page
    * @param companyContact
    */
-  async openContactDetail(companyContact) {
-    this.modalCtrl.dismiss().then(() => {
-      setTimeout(() => {
-        this.router.navigate(['company-contact-view', companyContact.contact_uuid, this.company.company_id], {
-          state: {
-            model: companyContact
-          }
-        });
-      }, 100);
-    });
+  async openContactDetail(companyContact, event) {
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.modalCtrl.getTop().then((overlay) => {
+      if(overlay) {
+        overlay.dismiss();
+      }
+
+      //this.company.company_id
+      
+      this.router.navigate(['company-contact-view', companyContact.contact_uuid], {
+        state: {
+          model: companyContact
+        }
+      });
+    }); 
     /*
     window.history.pushState({ navigationId: window.history.state.navigationId }, null, window.location.pathname);
 
@@ -84,12 +137,80 @@ export class CompanyContactsPage implements OnInit {
     });
     modal.present();*/
   }
+  
+  clearEmailFilter() {
+    this.filter.filter_email_unverified = false;
+    this.loadContacts();
+  }
 
+  /**
+   * retrun url params for filter
+   * @returns 
+   */
+  getUrlParams() {
+    let url = this.query;
+
+    if(this.company && this.company.company_id) {
+      url += '&company_id=' + this.company.company_id;
+    }
+ 
+    if(this.filter.filter_email_unverified) {
+      url += '&filter_email_unverified=' + this.filter.filter_email_unverified;
+    }
+
+    return url;
+  }
+
+  /**
+   * load contacts
+   */
   loadContacts() {
+    
     this.loading = true;
-    this.companyContactService.companyContacts(this.company.company_id, '', 'contactEmails,contactPhones,contactStats').subscribe(data => {
+
+    const urlParams = this.getUrlParams();
+
+    const expand = 'contactEmails,contactPhones,contactStats';
+
+    this.companyContactService.list(this.currentPage, urlParams, expand).subscribe(response => {
       this.loading = false;
-      this.companyContacts = data;
+      this.companyContacts = response.body;
+
+      this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+    });
+  }
+
+  /**
+   * infinite loader on scroll
+   * @param event
+   */
+  doInfinite(event) {
+
+    if(this.currentPage == this.pageCount) {
+      event.target.complete();
+      return null;
+    }
+
+    this.loading = true;
+
+    this.currentPage++;
+
+    const urlParams = this.getUrlParams();
+
+    const expand = 'contactEmails,contactPhones,contactStats';
+
+    this.companyContactService.list(this.currentPage, urlParams, expand).subscribe(response => {
+
+      this.pageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.currentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+
+      this.companyContacts = this.companyContacts.concat(response.body);
+    },
+    error => { },
+    () => {
+      this.loading = false;
+      event.target.complete();
     });
   }
 

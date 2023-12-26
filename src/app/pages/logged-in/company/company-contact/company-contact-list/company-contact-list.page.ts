@@ -42,9 +42,7 @@ export class CompanyContactListPage implements OnInit {
   }
 
   ngOnInit() {
-
-    console.log(this.type);
-    console.log(this.company);
+ 
     this.analyticService.page('Company Contact List Page');
 
     if (this.company && this.company.companyContacts) {

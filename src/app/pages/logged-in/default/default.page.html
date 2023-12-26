@@ -133,6 +133,18 @@
 
       <div *ngIf="eventsService.statistics.totalExpiredCards > 0 || eventsService.statistics.missingBankInfo > 0 || eventsService.statistics.assignedExpiredCivilID > 0 || eventsService.statistics.assignedIdleCandidates > 0 || eventsService.statistics.incompleteAssignedToWork > 0">
         <h3>Customer Operations</h3>
+ 
+        <ion-card (click)="showUnverifiedEmails()" *ngIf="eventsService.statistics.totalUnverifiedEmails > 0" tappable class="danger stats">
+          <ion-item class="ion" detail lines="none">
+            <div tabindex="0"></div>
+            <ion-label class="ion-text-wrap">
+              <span>{{ eventsService.statistics.totalUnverifiedEmails }}</span>
+              <p><b>Company contacts with unverified email addresses</b> that need to be verified. 
+                Let’s send them verification link and notify them to verify with provided link.</p>
+            </ion-label>
+          </ion-item>
+        </ion-card>
+        
         <ion-card (click)="showExpiredIDs()" *ngIf="eventsService.statistics.totalExpiredCards > 0" tappable class="danger stats">
           <ion-item class="ion" detail lines="none">
             <div tabindex="0"></div>
@@ -142,6 +154,7 @@
             </ion-label>
           </ion-item>
         </ion-card>
+
         <ion-card class="stats" *ngIf="eventsService.statistics.id_need_generated > 0" routerLink="/generate-id" tappable>
           <ion-item class="ion" detail lines="none">
             <div tabindex="0"></div>

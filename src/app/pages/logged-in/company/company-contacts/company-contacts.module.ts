@@ -10,6 +10,7 @@ import { CompanyContactsPage } from './company-contacts.page';
 import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
 import {PipesModule} from 'src/app/pipes/pipes.module';
 import {NoItemsModule} from "../../../../components/no-items/no-items.module";
+import { ContactFilterComponent } from 'src/app/components/contact-filter/contact-filter.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import {NoItemsModule} from "../../../../components/no-items/no-items.module";
     NoItemsModule,
     CompanyContactsPageRoutingModule
   ],
-  declarations: [CompanyContactsPage]
+  declarations: [CompanyContactsPage, ContactFilterComponent]
 })
 export class CompanyContactsPageModule {}

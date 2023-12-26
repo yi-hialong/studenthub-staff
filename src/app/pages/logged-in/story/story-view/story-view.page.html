@@ -14,6 +14,11 @@
   <ion-toolbar *ngIf="request && story" class="container title-name" >
     <h1>{{ story.number_of_employees +" "+request.request_position_title}}</h1>
     <p tappable [routerLink]="['/request-view/' +  request.request_uuid]">View main request</p>
+
+    <p *ngIf="request.contact && !request.contact.contact_email_verification" class="text-danger">
+      Contact email not verified, please ask them to verify to receive suggestions!
+    </p>
+
   </ion-toolbar>
 
   <ion-toolbar class="container">
@@ -217,7 +222,7 @@
 
       <ion-col size="6" size-sm="12" size-md="12" *ngIf="(story.story_status == storyStatus.STARTED || story.story_status == storyStatus.REWORK) && story.request && story.staff_id == authService.staff_id &&
         ['cancelled', 'delivered'].indexOf(story.request.request_status) == -1">
-        <ion-button class="invite-btn" (click)="showCandidates()">
+        <ion-button class="invite-btn" (click)="showCandidates()" [disabled]="request && request.contact && !request.contact.contact_email_verification">
           <span *ngIf="request && request.request_position_type == 2">Invite Candidates</span>
           <span *ngIf="request && request.request_position_type == 1">Suggest Candidates</span>
         </ion-button>

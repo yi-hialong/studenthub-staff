@@ -1,0 +1,33 @@
+<ion-header mode="md" [class.add-border]="borderLimit" [class.hidden]="borderLimit" class="ion-no-border">
+   
+  <ion-toolbar class="container">
+    <ion-buttons slot="start">
+      <ion-back-button icon="assets/images/icon-back.svg" (click)="submit()"></ion-back-button>
+    </ion-buttons>
+
+    <ion-title>
+      Filter Results
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button class="ion-text-capitalize setting" (click)="reset()">
+        Reset
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content scrollEvents="true" (ionScroll)="logScrolling($event)">
+    
+  <h5>Email verification</h5>
+  
+  <ion-button class="btn-option" (click)="filterByEmailStatus($event, null)" [class.active]="!filter.filter_email_unverified">All</ion-button>
+  <ion-button class="btn-option" (click)="filterByEmailStatus($event, true)" [class.active]="filter.filter_email_unverified">Un-Verified</ion-button>
+  <!--
+  <ion-button class="btn-option" (click)="filterByEmailStatus($event, 0)" [class.active]="filter.filter_email_unverified == 0">Not Verified</ion-button>
+-->
+</ion-content>
+<ion-footer>
+  <ion-button class="btn-filter" (click)="submit()">
+    Filter Results
+  </ion-button>
+</ion-footer>

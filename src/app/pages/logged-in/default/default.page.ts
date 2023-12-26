@@ -263,6 +263,15 @@ export class DefaultPage implements OnInit {
     );
   }
   
+  showUnverifiedEmails() {
+    this.navCtrl.navigateForward('/company-contacts', {
+      state : {
+        filter_email_unverified : true
+      }
+    }
+  );
+  }
+  
   companyListReview() {
     this.navCtrl.navigateForward('/company-registration-request-list');
     /*this.navCtrl.navigateForward('/view/company-list', {

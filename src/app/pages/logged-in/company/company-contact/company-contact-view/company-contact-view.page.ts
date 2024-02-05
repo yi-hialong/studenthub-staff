@@ -86,6 +86,9 @@ export class CompanyContactViewPage implements OnInit {
   ) { }
 
   ngOnInit() {
+  }
+
+  ionViewWillEnter() {
     this.analyticService.page('Company Contact View Page');
 
     if(!this.contact_uuid)
@@ -95,12 +98,12 @@ export class CompanyContactViewPage implements OnInit {
 
     const model = window.history.state.model;
 
-    /*if(model) {
-      // this.companyContact = model;
-      this.loadNotes();
-      this.loadRequests();
+    if(model) {
+      this.companyContact = model;
+      //this.loadNotes();
+      //this.loadRequests();
 
-    }*/
+    }
 
     //if(!this.companyContact) {
       this.loadDetail();
@@ -260,6 +263,48 @@ export class CompanyContactViewPage implements OnInit {
       }
     });
     modal.present();
+  }
+
+  async removeFromTeam() {
+
+    const confirm = await this.alertCtrl.create({
+      header: 'Remove from team',
+      message: 'Do you want to un-assign this contact?',
+      buttons: [
+        {
+          text: 'Yes',
+          handler: () => {
+
+            this.deleting = true;
+
+            this.companyContactService.removeFromTeam(this.contact_uuid, this.company_id).subscribe(async response => {
+
+              this.deleting = false;
+
+              if (response.operation == 'success') {
+                this.eventService.reloadStats$.next({
+                  company_id: this.companyContact.company_id
+                });
+                this.location.back();
+              }
+              else {
+                const prompt = await this.alertCtrl.create({
+                  message: this.authService.errorMessage(response.message),
+                  buttons: ['Ok']
+                });
+                prompt.present();
+              }
+            }, () => {
+              this.deleting = false;
+            });
+          },
+        },
+        {
+          text: 'No',
+        }
+      ]
+    });
+    confirm.present();
   }
 
   async delete() {
@@ -490,6 +535,11 @@ export class CompanyContactViewPage implements OnInit {
         trigger: 'edit'
       },
       {
+        name: "Unassign Contact",
+        icon: 'assets/icon/icon-trash-2.svg',
+        trigger: 'removeFromTeam'
+      },
+      {
         name: "Delete Contact",
         icon: 'assets/icon/icon-trash-2.svg',
         trigger: 'delete'
@@ -522,7 +572,9 @@ export class CompanyContactViewPage implements OnInit {
         this.edit()
       } else if(data.action.trigger == 'delete') {
         this.delete()
-      }  
+      } else if(data.action.trigger == 'removeFromTeam') {
+        this.removeFromTeam()
+      }
     }
   }
 }

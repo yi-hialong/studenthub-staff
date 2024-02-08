@@ -140,6 +140,19 @@ export class CompanyContactService {
   }
 
   /**
+   * remove from team 
+   * @param contact_uuid 
+   * @param company_id 
+   * @returns 
+   */
+  removeFromTeam(contact_uuid, company_id): Observable<any>{
+    const url = `${this._endpoint}/remove-from-team/${contact_uuid}`;
+    return this._authhttp.patch(url, {
+      company_id: company_id
+    });
+  }
+
+  /**
    * Deletes
    * @param {Contact} model
    * @returns {Observable<any>}

@@ -114,7 +114,7 @@ export class CompanyContactsPage implements OnInit {
 
     this.modalCtrl.dismiss().then(() => { 
       
-      this.router.navigate(['company-contact-view', companyContact.contact_uuid], {
+      this.router.navigateByUrl('company-contact-view/' + companyContact.contact_uuid + '/'+ this.company.company_id, {
         state: {
           model: companyContact
         }

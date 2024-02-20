@@ -25,7 +25,9 @@ import {CompanyRequestService} from './providers/logged-in/company-request.servi
 import { AuthService as Auth0Service } from '@auth0/auth0-angular';
 import { StorageService } from './providers/storage.service';
 import { CurrencyService } from './providers/currency.service';
+import { GoogleAuth } from '@codetrix-studio/capacitor-google-auth';
 
+//import { Plugins } from '@capacitor/core';
 
 @Component({
   selector: 'app-root',
@@ -61,6 +63,14 @@ export class AppComponent implements OnInit {
   }
 
   async initializeApp() {
+
+    // use hook after platform dom ready
+    GoogleAuth.initialize({
+      clientId: "123188361193-ijgbu581g8sp4qag6gt4nia3410160qk.apps.googleusercontent.com",
+      scopes: ['profile', 'email'],
+      grantOfflineAccess: false,
+    });
+
     if(!this.storageService._storage)
       this.storageService._storage = await this.storage.create();
 
@@ -185,6 +195,7 @@ export class AppComponent implements OnInit {
     });
 
     this.eventService.error500$.subscribe(userEventData => {
+      console.error(userEventData);
       this.navCtrl.navigateRoot(['/server-error']);
     });
 
@@ -214,7 +225,7 @@ export class AppComponent implements OnInit {
       }
     });
 
-    this.eventService.changeStoryStatus$.subscribe(async ({status, story}) => {
+    this.eventService.changeStoryStatus$.subscribe(async ({status, story}: any) => {
       await this.changeStoryStatus(status, story);
     });
 

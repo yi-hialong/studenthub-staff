@@ -350,4 +350,13 @@ export class DefaultPage implements OnInit {
 
     await modal.present();
   }
+
+  onCurrencyChange(event) {
+    //this.authService.currency_pref = event;
+    this.authService.saveInStorage();
+
+    //reload 
+    this.handleRefresh();
+    //window.location = location;
+  }
 }

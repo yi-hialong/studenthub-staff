@@ -43,6 +43,7 @@ export class TransferChartPage implements OnInit {
 
   loadChartStats() {
     this.statsData = this.company.parentTransfers.reverse();
+    
     const allTransfers = [];
     const complete = [];
     const paymentReceived = [];
@@ -243,7 +244,6 @@ export class TransferChartPage implements OnInit {
                     label += '\nDistribution in Progress on ' + context.label + '\n';
                   }
                 }
-
 
                 if (context.datasetIndex == 1) {
                   label += '\nProfit on ' + context.label + '\n';

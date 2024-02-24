@@ -37,6 +37,11 @@
             Suggested : {{story.suggestion}}
           </ion-badge>
 
+          <ng-container *ngIf="story.request.company">
+            <ion-badge>{{ story.request.company.currency_code }} </ion-badge>
+            <ion-badge *ngIf="story.request.company.country">{{ request.company.country.country_name_en }} </ion-badge>        
+          </ng-container>
+
           <p *ngIf="story.staff" class="working">{{ story.staff.staff_name }} {{story.story_status == 1 || story.story_status == 7 ? 'is working': 'was working'}} on it</p>
           <p *ngIf="!story.staff" class="working">No one has started work on it</p>
           

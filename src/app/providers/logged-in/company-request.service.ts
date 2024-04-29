@@ -42,6 +42,17 @@ export class CompanyRequestService {
   }
 
   /**
+   * list candidate applications
+   * @param request_uuid 
+   * @param page 
+   * @returns 
+   */
+  listApplications(request_uuid: string, page: number) : Observable<any> {
+    let url = this.companyRequestEndpoint + '/applications/'+ request_uuid +'?expand=candidate&page=' + page;
+    return this._authhttp.getRaw(url);
+  }
+
+  /**
    * view request
    * @param id
    */

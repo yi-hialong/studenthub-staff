@@ -36,6 +36,10 @@
         <ion-label>Invited</ion-label>
       </ion-segment-button>
 
+      <ion-segment-button mode="md" value="applied"  *ngIf="request && request.request_position_type == 2">
+        <ion-label>Applied</ion-label>
+      </ion-segment-button>
+
       <ion-segment-button mode="md" value="suggested">
         <ion-label>Suggested</ion-label>
       </ion-segment-button>
@@ -152,6 +156,22 @@
       <app-story-item *ngFor="let story of request.stories" [story]="story" [request]="request"
         (click)="storySelected(story)"></app-story-item>
 
+    </div>
+
+    <div *ngIf="segment == 'applied'" class="match-wrapper">
+
+      <div *ngIf="!loadingApplications && candidateApplications.length == 0" class="ion-text-center no-invi">
+        <img src="assets/images/no-invitation.png"/>
+        <p class="ion-text-center">No applications received yet!</p>
+      </div>
+      
+      <candidate tappable (click)="candidateSelected(candidateApplications.candidate)" [candidate]="candidateApplications.candidate" 
+        *ngFor="let candidateApplications of candidateApplications">
+      </candidate>
+  
+      <ion-infinite-scroll *ngIf="applicationCurrentPage < applicationPageCount" (ionInfinite)="doInfiniteApplications($event)">
+        <ion-infinite-scroll-content></ion-infinite-scroll-content>
+      </ion-infinite-scroll>
     </div>
 
     <div *ngIf="segment == 'matches'" class="match-wrapper">

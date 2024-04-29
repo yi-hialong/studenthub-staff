@@ -35,6 +35,7 @@ import {StoryService} from "../../../../providers/logged-in/story.service";
 import { AnalyticsService } from 'src/app/providers/analytics.service';
 import { CandidateService } from 'src/app/providers/logged-in/candidate.service';
 import { Candidate } from 'src/app/models/candidate';
+import { RequestApplication } from 'src/app/models/request-application';
 
 
 @Component({
@@ -97,6 +98,14 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
   public Mtotal = 0;
 
   public loadingMatched:boolean = false;
+
+  public loadingApplications: boolean = false; 
+
+  public candidateApplications: RequestApplication[] = [];
+  
+  public applicationPageCount = 0;
+  public applicationCurrentPage  = 0;
+  public applicationTotal = 0;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -885,9 +894,56 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
       if(this.matchedCandidates.length == 0) {
         this.loadMatched();
       }
+    } else if(this.segment == "applied") {
+      if(this.candidateApplications.length == 0) {
+        this.loadApplications();
+      }
     }
   }
 
+  
+  loadApplications() {
+ 
+    this.loadingApplications = true;
+
+    this.applicationCurrentPage = 1;
+
+    this.requestService.listApplications(this.request_uuid, this.applicationCurrentPage).subscribe(data => {
+
+      this.candidateApplications = data.body;
+      this.applicationPageCount = parseInt(data.headers.get('X-Pagination-Page-Count'));
+      this.applicationCurrentPage = parseInt(data.headers.get('X-Pagination-Current-Page'));
+      this.applicationTotal = parseInt(data.headers.get('X-Pagination-Total-Count'));
+    },
+    () => { },
+    () => {
+      this.loadingApplications = false;
+    });
+  }
+
+  /**
+   * load more on scroll to bottom
+   * @param event 
+   */
+  doInfiniteApplications(event) {
+
+    this.loadingApplications = true;
+
+    this.applicationCurrentPage++;
+
+    this.requestService.listApplications(this.request_uuid, this.applicationCurrentPage).subscribe(data => {
+
+      this.candidateApplications = data.body;
+      this.applicationPageCount = parseInt(data.headers.get('X-Pagination-Page-Count'));
+      this.applicationCurrentPage = parseInt(data.headers.get('X-Pagination-Current-Page'));
+      this.applicationTotal = parseInt(data.headers.get('X-Pagination-Total-Count'));
+    },
+    () => { },
+    () => {
+      this.loadingApplications = false;
+      event.target.complete();
+    });
+  }
 
   getTimeSpent(time) {
     let seconds = 0;

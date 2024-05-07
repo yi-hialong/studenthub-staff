@@ -38,6 +38,8 @@ export class Request {
     request_started_at: string;
     request_created_datetime: string;
     request_updated_datetime: string;
+    activeSuggestionCount: number; 
+    newApplicationCount: number;
     requestCreatedBy: Staff;
     requestUpdatedBy: Staff;
     contact: Contact;

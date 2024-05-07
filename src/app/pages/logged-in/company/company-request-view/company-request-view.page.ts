@@ -143,6 +143,7 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     this.loadRequestActivities();
     this.loadSuggestions();
     this.loadInvitations();
+    this.loadApplications();
 
     this.eventService.companyRequestUpdate$.subscribe((data: any) => {
       if (data && data.request_uuid == this.request_uuid) {
@@ -196,7 +197,8 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     if (loading)
       this.loading = true;
 
-    const urlParams = '?expand=storyOwners,staffs,staff,contact,company,stories,stories.staff,requestSkills';
+    const urlParams = '?expand=storyOwners,staffs,staff,contact,company,stories,stories.staff,' +
+      'requestSkills';//newApplicationCount,activeSuggestionCount
 
     this.requestService.view(this.request_uuid, urlParams).subscribe(data => {
 
@@ -895,9 +897,9 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
         this.loadMatched();
       }
     } else if(this.segment == "applied") {
-      if(this.candidateApplications.length == 0) {
+      //if(this.candidateApplications.length == 0) {
         this.loadApplications();
-      }
+      //}
     }
   }
 
@@ -1190,4 +1192,37 @@ export class CompanyRequestViewPage implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * refresh on pull to bottom
+   * @param event 
+   */
+  doRefresh(event) {
+    switch (this.segment) {
+      case "details":
+        this.loadDetail();
+        break;
+      case "activities":
+        this.loadRequestActivities();
+        break;
+      case "stories":
+        this.loadDetail();
+        break;
+      case "matches":
+        this.loadMatched();
+        break;
+      case "invited":
+        this.loadInvitations();
+        break;
+      case "applied":
+        this.loadApplications();
+        break;
+      case "suggested":
+        this.loadSuggestions();
+        break;
+      default:
+        break;
+    }
+   
+    event.target.complete();
+  }
 }

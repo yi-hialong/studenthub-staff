@@ -33,15 +33,15 @@
       </ion-segment-button>
 
       <ion-segment-button mode="md" value="invited"  *ngIf="request && request.request_position_type == 2">
-        <ion-label>Invited</ion-label>
+        <ion-label>Invited <ion-chip *ngIf="request">{{ allInvitedCandidates.length }}</ion-chip></ion-label>
       </ion-segment-button>
 
-      <ion-segment-button mode="md" value="applied"  *ngIf="request && request.request_position_type == 2">
-        <ion-label>Applied</ion-label>
+      <ion-segment-button mode="md" value="applied" *ngIf="request && request.request_position_type == 2">
+        <ion-label>Applied <ion-chip *ngIf="request">{{ applicationTotal }}</ion-chip></ion-label>
       </ion-segment-button>
 
       <ion-segment-button mode="md" value="suggested">
-        <ion-label>Suggested</ion-label>
+        <ion-label>Suggested <ion-chip *ngIf="request">{{ Stotal }}</ion-chip></ion-label>
       </ion-segment-button>
 
     </ion-segment>
@@ -51,6 +51,10 @@
 
 <ion-content [scrollEvents]="true" (ionScroll)="logScrolling($event)">
 
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  
   <div class="container">
 
     <!--

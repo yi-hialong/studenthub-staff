@@ -51,6 +51,7 @@ export class RequestFilterComponent implements OnInit {
   }
 
   reset() {
+    
     if (this.tab == 'request') {
       this.filters = {
         storyStatus: this.filters.storyStatus,
@@ -62,15 +63,18 @@ export class RequestFilterComponent implements OnInit {
       };
     } else {
 
-      this.filters.startDate = format(parseISO(this.filters.startDate), 'yyyy-MM-dd');
+      this.filters.startDate = this.filters.startDate?
+        format(parseISO(this.filters.startDate), 'yyyy-MM-dd'): null;
 
-      this.filters.endDate = format(parseISO(this.filters.endDate), 'yyyy-MM-dd');
+      this.filters.endDate = this.filters.endDate?
+        format(parseISO(this.filters.endDate), 'yyyy-MM-dd'): null;
 
       this.filters = {
         storyStatus: null,
         requestStatus: this.filters.requestStatus,
         position_type: this.filters.position_type,
         story_position_type: null,
+
         startDate: this.filters.startDate,
         endDate: this.filters.endDate,
       };

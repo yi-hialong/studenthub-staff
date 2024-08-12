@@ -103,8 +103,7 @@ export class TransferFormPage implements OnInit {
   }
 
   ngOnInit() {
-    this.analyticService.page('Transfer Form Page');
-
+     
     this.min = '1930/01/01';
 
     const d = new Date();
@@ -120,6 +119,8 @@ export class TransferFormPage implements OnInit {
 
       this.loadTransferDetail();
     }
+
+    this.analyticService.page('Transfer Form Page');
   }
 
   /**

@@ -33,7 +33,7 @@ export class ChatService {
     }
 
 
-    return this._authhttp.get(url, true);
+    return this._authhttp.getRaw(url);
   }
 
   messages(chat_uuid: string, page: number = 1, last_index: number = null): Observable<any> {

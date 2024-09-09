@@ -45,7 +45,7 @@
             Suggested : {{story.suggestion}}
           </ion-badge>
 
-          <ng-container *ngIf="story.request.company">
+          <ng-container *ngIf="story.request && story.request.company">
             <ion-badge color="light">{{ story.request.company.currency_code }} </ion-badge>
             <ion-badge color="light" *ngIf="story.request.company.country">{{ request.company.country.country_name_en }} </ion-badge>        
           </ng-container>

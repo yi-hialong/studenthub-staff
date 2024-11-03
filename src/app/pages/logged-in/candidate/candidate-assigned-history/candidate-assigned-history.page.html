@@ -117,8 +117,30 @@
             <ion-icon class="verified" src="../../assets/images/ic_verified.svg" *ngIf="history.candidate.isProfileCompleted" title="Completed Profile"></ion-icon>
           </h2>
 
-          <p>{{ history.candidate.candidate_birth_date | candidateAge }}
-            <span *ngIf="history.candidate.candidate_hourly_rate > 0"><span class="sep">•</span>{{ history.candidate.candidate_hourly_rate }} {{ history.candidate.currency_code }} /hour</span>
+          <p>
+            {{ history.candidate.candidate_birth_date | candidateAge }}
+
+            <span>
+              <span class="sep">•</span>
+
+              <ng-container *ngIf="!history.contract">
+                {{ history.candidate.candidate_hourly_rate }} {{ history.candidate.currency_code }} /hour
+              </ng-container>
+
+              <ng-container *ngIf="history.contract && history.contract.amount">
+                <ng-container class="txt-value" *ngIf=" history.contract.type == 'HOURLY'">
+                  {{ history.contract.amount.candidate_hourly_rate | number:'1.0-3' }} {{ history.contract.currency_code }}/hr
+                </ng-container>
+                
+                <ng-container class="txt-value" *ngIf="history.contract.type == 'FIXED_PRICE'">
+                  {{ history.contract.amount.candidate_total | number:'1.0-3' }} {{ history.contract.currency_code }} 
+                </ng-container>
+                
+                <ng-container class="txt-value" *ngIf="history.contract.type == 'MONTHLY_SALARY'">
+                  {{ history.contract.amount.candidate_total | number:'1.0-3' }} {{ history.contract.currency_code }}/month
+                </ng-container>
+              </ng-container>
+            </span>
           </p>
 
           <p class="nationality" *ngIf="history.candidate.nationality">
@@ -139,7 +161,13 @@
             <br/>
           </p>
 
-          <ion-badge *ngIf="history.candidate_hourly_rate == history.candidate.candidate_hourly_rate" color="danger">
+          <ion-badge *ngIf="!history.contract && history.candidate_hourly_rate == history.company_hourly_rate" color="danger">
+            Assigned on same rate
+          </ion-badge>
+
+          <ion-badge *ngIf="history.contract && history.contract.type == 'HOURLY' &&
+            history.contract.amount &&
+            history.contract.amount.candidate_hourly_rate == history.contract.amount.company_hourly_rate" color="danger">
             Assigned on same rate
           </ion-badge>
 

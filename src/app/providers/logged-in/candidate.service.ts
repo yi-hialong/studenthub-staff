@@ -396,7 +396,7 @@ export class CandidateService {
    * @param candidate
    */
   workHistory(candidate_id): Observable<any> {
-    const url = this._candidateEndpoint + '/work-history/' + candidate_id + '?expand=store,company';
+    const url = this._candidateEndpoint + '/work-history/' + candidate_id + '?expand=store,company,contract,contract.amount';
     return this._authhttp.get(url);
   }
 
@@ -520,7 +520,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listAssignHistoryList(search: string, page: number): Observable<any> {
-    const url = this._candidateEndpoint + '/assigned-history-list?page=' + page + search + '&expand=store,company,candidate';
+    const url = this._candidateEndpoint + '/assigned-history-list?page=' + page + search + '&expand=store,company,candidate,contract,contract.amount';
     return this._authhttp.getRaw(url);
   }
 

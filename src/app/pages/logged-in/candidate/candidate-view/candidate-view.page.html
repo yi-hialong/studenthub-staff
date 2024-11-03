@@ -476,9 +476,23 @@
 
           <ion-card-content *ngIf="history.isOpen">
 
-            <p>
+            <p *ngIf="!history.contract">
               {{ history.candidate_hourly_rate | number:'1.0-3' }} {{ history.company.currency_code }}/hr
             </p>
+
+            <ng-container *ngIf="history.contract && history.contract.amount">
+              <p *ngIf=" history.contract.type == 'HOURLY'">
+                {{ history.contract.amount.candidate_hourly_rate | number:'1.0-3' }} {{ history.contract.currency_code }}/hr
+              </p>
+              
+              <p *ngIf="history.contract.type == 'FIXED_PRICE'">
+                {{ history.contract.amount.candidate_total | number:'1.0-3' }} {{ history.contract.currency_code }} 
+              </p>
+              
+              <p *ngIf="history.contract.type == 'MONTHLY_SALARY'">
+                {{ history.contract.amount.candidate_total | number:'1.0-3' }} {{ history.contract.currency_code }}/month
+              </p>
+            </ng-container>
 
             <p>
               {{ toDate(history.start_date) | date }}

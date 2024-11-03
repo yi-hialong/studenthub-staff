@@ -293,6 +293,7 @@ export class CandidateService {
    * @param store_id
    */
   removeFromAssignedStore(candidate: Candidate, feedback: string, store_id:number = null): Observable<any> {
+    //todo: move feedback to body 
     const url = `${this._candidateEndpoint}/unassign/${candidate.candidate_id}?store_id=${store_id}&feedback=${feedback}`;
     return this._authhttp.delete(url);
   }
@@ -316,6 +317,7 @@ export class CandidateService {
       company_hourly_rate: number | null = null,
       company_transfer_cost: number | null = null,
       transfer_cost: number | null = null,
+      contract_uuid: string = null
   ): Observable<any> {
     const params = {
       store_id: store_id,
@@ -324,6 +326,7 @@ export class CandidateService {
       company_transfer_cost: company_transfer_cost,
       transfer_cost: transfer_cost,
       start_date: start_date,
+      contract_uuid: contract_uuid
     };
     const url = `${this._candidateEndpoint}/assign/${candidate.candidate_id}`;
     return this._authhttp.patch(url, params);
@@ -393,7 +396,7 @@ export class CandidateService {
    * @param candidate
    */
   workHistory(candidate_id): Observable<any> {
-    const url = this._candidateEndpoint + '/work-history/' + candidate_id + '?expand=store,company';
+    const url = this._candidateEndpoint + '/work-history/' + candidate_id + '?expand=store,company,contract,contract.amount';
     return this._authhttp.get(url);
   }
 
@@ -517,7 +520,7 @@ export class CandidateService {
    * @returns {Observable<any>}
    */
   listAssignHistoryList(search: string, page: number): Observable<any> {
-    const url = this._candidateEndpoint + '/assigned-history-list?page=' + page + search + '&expand=store,company,candidate';
+    const url = this._candidateEndpoint + '/assigned-history-list?page=' + page + search + '&expand=store,company,candidate,contract,contract.amount';
     return this._authhttp.getRaw(url);
   }
 

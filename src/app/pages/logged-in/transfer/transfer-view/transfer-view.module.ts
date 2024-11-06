@@ -9,6 +9,8 @@ import { TransferViewPageRoutingModule } from './transfer-view-routing.module';
 import { TransferViewPage } from './transfer-view.page';
 import { PipesModule } from 'src/app/pipes/pipes.module';
 import { LoadingModalModule } from "../../../../components/loading-modal/loading-modal.module";
+import { ContractModule } from 'src/app/components/contract/contract.module';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
     imports: [
@@ -17,6 +19,8 @@ import { LoadingModalModule } from "../../../../components/loading-modal/loading
         IonicModule,
         TransferViewPageRoutingModule,
         PipesModule,
+        ContractModule,
+        TranslateModule.forChild(),
         LoadingModalModule
     ],
     exports: [

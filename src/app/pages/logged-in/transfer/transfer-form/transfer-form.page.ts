@@ -471,7 +471,7 @@ export class TransferFormPage implements OnInit {
 
     //const params = "expand=candidates.store,candidates.company,candidates.currentWorkHistory,candidates.currentWorkHistory.transferCost";
     //expand=transferCandidates,transferCandidates.candidate
-    const query = 'expand=transferCandidates'
+    const query = 'expand=transferCandidates,contract,contract.amount'
 
     this.transferService.transferIdDetails(this.transfer.transfer_id, query).subscribe(response => {
       loading.dismiss();

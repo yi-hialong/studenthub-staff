@@ -838,3 +838,9 @@ ion-content {
   }
 }
 
+.modal-sheet,
+.footer-modal {
+  --max-width: 800px;
+  --border-radius: 30px;
+}
+ 

@@ -1,10 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AlertController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { CandidateWorkingHourAppeal } from 'src/app/models/candidate-working-hour-appeal';
 import { AuthService } from 'src/app/providers/auth.service';
 import { CandidateWorkingHourService } from 'src/app/providers/logged-in/candidate-working-hour.service';
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
+import { LogTimeManuallyPage } from '../log-time-manually/log-time-manually.page';
+import { CandidateWorkingHour } from 'src/app/models/candidate';
 
 @Component({
   selector: 'app-appeal-view',
@@ -26,6 +28,7 @@ export class AppealViewPage implements OnInit {
 
   constructor(
     public _alertCtrl: AlertController,
+    public modalCtrl: ModalController,
     public activatedRoute: ActivatedRoute,
     public authService: AuthService,
     public translateService: TranslateLabelService,
@@ -53,6 +56,35 @@ export class AppealViewPage implements OnInit {
       this.loading = false;
       this.appeal = response;
     });
+  }
+
+  async addManulaLog() {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, "", window.location.pathname);
+
+    let model = this.appeal.originalHour;
+    model.appeal_uuid = this.appeal_uuid;
+    
+    const modal = await this.modalCtrl.create({
+      component: LogTimeManuallyPage, 
+      initialBreakpoint: 0.75,
+      breakpoints: [0, 0.25, 0.5, 0.75],
+      cssClass: "footer-modal track-manual-modal",
+      componentProps: { 
+        model: model
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if(e.data && e.data.refresh) {
+        this.loadData();
+      }
+    });
+    modal.present();
   }
 
   onStatusChange(event) {

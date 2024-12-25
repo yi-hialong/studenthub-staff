@@ -74,6 +74,15 @@
 
     <app-work-log [hour]="appeal.originalHour"></app-work-log>
 
+    <ng-container *ngIf="appeal.correctedHours.length > 0">
+      <h5 class="text-[#22223d] text-lg font-semibold leading-7 my-4">
+        Corrected/Manually added Work Session
+      </h5>
+
+      <app-work-log *ngFor="let correctedHour of appeal.correctedHours" 
+        [hour]="correctedHour"></app-work-log>
+    </ng-container>  
+    
     <h5 class="text-[#22223d] text-lg font-semibold leading-7 my-4">
       Mediator Actions
     </h5>
@@ -86,7 +95,7 @@
           </ion-button>
         </ion-col>
         <ion-col>
-          <ion-button fill="outline" class="h-14  rounded-2xl">
+          <ion-button (click)="addManulaLog()" fill="outline" class="h-14  rounded-2xl">
             Add Manual Log
           </ion-button>
         </ion-col>

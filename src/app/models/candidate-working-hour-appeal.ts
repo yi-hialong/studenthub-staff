@@ -9,7 +9,7 @@ export class CandidateWorkingHourAppeal {
   candidate: Candidate;
   reason: string;
   status: number;
-  correntHours: CandidateWorkingHour[];
+  correctedHours: CandidateWorkingHour[];
   originalHour: CandidateWorkingHour;
   created_at: string;
   updated_at: string;

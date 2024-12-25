@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 //services
 import { AuthHttpService } from './authhttp.service';
+import { CandidateWorkingHour } from 'src/app/models/candidate';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,16 @@ export class CandidateWorkingHourService {
     return this._authhttp.getRaw(url);
   }
 
+  /**
+   * add session manually 
+   * @param model 
+   * @returns 
+   */
+  add(appeal_uuid: string, model: CandidateWorkingHour): Observable<any>{
+    const url = this._endpoint + '/add-hour/'+ appeal_uuid;
+    return this._authhttp.post(url, model);
+  }
+  
   /**
    * @param date
    * @param candidateId

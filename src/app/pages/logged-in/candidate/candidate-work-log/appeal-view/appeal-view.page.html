@@ -90,7 +90,7 @@
     <ion-grid class="action-buttons">
       <ion-row>
         <ion-col>
-          <ion-button class="h-14   bg-[#4c6ff2] rounded-2xl">
+          <ion-button (click)="addContactAttempt()" class="h-14 bg-[#4c6ff2] rounded-2xl">
             Contact Candidate
           </ion-button>
         </ion-col>
@@ -109,15 +109,16 @@
     <p class="text-[#7d7d8d] text-sm font-normal leading-tight mb-2.5">
       Send notes to keep everyone updated about the appeal progress.</p>
 
+      <!--
     <input type="text" [(ngModel)]="update" placeholder="Type your note about here..."
       class="my-2.5 w-full px-3 py-2 bg-white rounded-md border border-[#c5c5cc] 
        gap-2.5 flex grow shrink basis-0 placeholder-[#a4a4af]  text-sm font-normal leading-tight" />
-
+-->
     <textarea [(ngModel)]="note" placeholder="Type your note here..."
       class="my-2.5 w-full h-[113px] px-3 py-2 bg-white rounded-md border border-[#c5c5cc] 
        gap-2.5 flex grow shrink basis-0 placeholder-[#a4a4af] text-sm font-normal leading-tight"></textarea>
 
-    <ion-button [disabled]="!note || !update || sendingNote" (click)="addNote()" fill="outline" class="h-14  rounded-2xl">
+    <ion-button [disabled]="!note || sendingNote" (click)="addNote()" fill="outline" class="h-14  rounded-2xl">
       <span *ngIf="!sendingNote">Send Note</span>
       <ion-spinner *ngIf="sendingNote"></ion-spinner>
     </ion-button>
@@ -132,7 +133,7 @@
         </div>
        
         <div class="self-stretch text-[#4b4b61] text-sm font-normal leading-tight">
-          <b *ngIf="update.update">{{update.update}}:</b> {{update.detail}}
+          <b *ngIf="update.update">{{update.update}} - </b> {{update.detail}}
         </div>
       
         <div class="grow shrink basis-0 text-[#22223d] text-xs font-normal leading-none mt-1">

@@ -801,6 +801,10 @@ const routes: Routes = [
     path: '**',
     redirectTo: 'not-found'
   },
+  {
+    path: 'contact-attempt',
+    loadChildren: () => import('./pages/logged-in/candidate/candidate-work-log/contact-attempt/contact-attempt.module').then( m => m.ContactAttemptPageModule)
+  },
 ];
 
 @NgModule({

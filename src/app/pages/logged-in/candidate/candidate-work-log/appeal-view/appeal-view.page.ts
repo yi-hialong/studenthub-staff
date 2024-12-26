@@ -7,6 +7,7 @@ import { CandidateWorkingHourService } from 'src/app/providers/logged-in/candida
 import { TranslateLabelService } from 'src/app/providers/translate-label.service';
 import { LogTimeManuallyPage } from '../log-time-manually/log-time-manually.page';
 import { CandidateWorkingHour } from 'src/app/models/candidate';
+import { ContactAttemptPage } from '../contact-attempt/contact-attempt.page';
 
 @Component({
   selector: 'app-appeal-view',
@@ -103,6 +104,32 @@ export class AppealViewPage implements OnInit {
         prompt.present();
       }
     });
+  }
+
+  async addContactAttempt() {
+    window.history.pushState({ navigationId: window.history.state.navigationId }, "", window.location.pathname);
+
+    const modal = await this.modalCtrl.create({
+      component: ContactAttemptPage, 
+      initialBreakpoint: 0.75,
+      breakpoints: [0, 0.25, 0.5, 0.75],
+      cssClass: "footer-modal track-manual-modal",
+      componentProps: { 
+        appeal_uuid: this.appeal_uuid
+      }
+    });
+    modal.onDidDismiss().then(e => {
+
+      if (!e.data || e.data.from != 'native-back-btn') {
+        window['history-back-from'] = 'onDidDismiss';
+        window.history.back();
+      }
+
+      if(e.data && e.data.refresh) {
+        this.loadData();
+      }
+    });
+    modal.present();
   }
 
   addNote() {

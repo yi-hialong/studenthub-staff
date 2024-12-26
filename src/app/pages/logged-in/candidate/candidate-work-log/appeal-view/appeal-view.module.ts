@@ -10,6 +10,7 @@ import { AppealViewPage } from './appeal-view.page';
 import { WorkLogDayStatsModule } from 'src/app/components/work-log-day-stats/work-log-day-stats.module';
 import { WorkLogModule } from 'src/app/components/work-log/work-log.module';
 import { LogTimeManuallyPageModule } from '../log-time-manually/log-time-manually.module';
+import { ContactAttemptPageModule } from '../contact-attempt/contact-attempt.module';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { LogTimeManuallyPageModule } from '../log-time-manually/log-time-manuall
     IonicModule,
     AppealViewPageRoutingModule,
     WorkLogDayStatsModule,
+    ContactAttemptPageModule,
     WorkLogModule,
     LogTimeManuallyPageModule
   ],

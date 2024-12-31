@@ -16,6 +16,27 @@ export class JobService {
   constructor(private authhttp: AuthHttpService) { }
 
   /**
+   * view candidate interest in job 
+   * @param job_interest_uuid 
+   * @returns 
+   */
+  viewInterest(job_interest_uuid: string): Observable<any> {
+    let url = this.jobEndpoint + '/interest/' + job_interest_uuid + '?expand=candidate,job,job.area,job.jobSkills,job.createdBy';
+    return this.authhttp.get(url);
+  }
+
+  /**
+   * list candidate interests
+   * @param page 
+   * @param searchParams 
+   * @returns 
+   */
+  listInterests(page: number = 1, searchParams: string = ''): Observable<any> {
+    let url = this.jobEndpoint + '/interests?&page=' + page + searchParams + '&expand=candidate';
+    return this.authhttp.getRaw(url);
+  }
+
+  /**
    * List of all jobs
    * @param page
    * @param searchParams

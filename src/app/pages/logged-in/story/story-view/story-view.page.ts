@@ -31,6 +31,7 @@ import { CandidateService } from 'src/app/providers/logged-in/candidate.service'
 import { JobFormPage } from '../job-form/job-form.page';
 import { JobService } from 'src/app/providers/logged-in/job.service';
 import { Job } from 'src/app/models/job';
+import { JobInterest } from 'src/app/models/job-interest';
 
 
 export interface TimeSpan {
@@ -97,6 +98,12 @@ export class StoryViewPage implements OnInit, OnDestroy {
   public JPageCount = 0;
   public JcurrentPage = 0;
   public Jtotal = 0;
+
+  jobInterests: JobInterest[] = [];
+
+  InterestPageCount= 0;
+  InterestCurrentPage = 0;
+  InterestTotal = 0;
 
   public storyStatus = {
     UNSTARTED : 0,
@@ -165,6 +172,11 @@ export class StoryViewPage implements OnInit, OnDestroy {
     });
   }
 
+  //todo: 
+  inviteJobInterest(jobInterest) {
+
+  }
+
   ionViewWillEnter() {
 
     if (!this.story_uuid) {
@@ -212,6 +224,39 @@ export class StoryViewPage implements OnInit, OnDestroy {
   }
 
   /**
+   * list job interests
+   */
+  listInterests() {
+    this.jobService.listInterests(1, '?expand=candidate').subscribe(response => {
+      this.jobInterests = response.body;
+
+      this.InterestPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.InterestCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.InterestTotal = parseInt(response.headers.get('X-Pagination-Total-Count'));
+    });
+  }
+
+  doInfiniteJobInterest(event) {
+
+    if (this.InterestCurrentPage > this.InterestPageCount) {
+      event.target.complete();
+      return;
+    }
+
+    this.loadingJobs = true;
+    
+    this.InterestPageCount++;
+
+    this.jobService.listInterests(1, '?expand=candidate').subscribe(response => {
+      this.jobInterests = this.jobInterests.concat(response.body);
+
+      this.InterestPageCount = parseInt(response.headers.get('X-Pagination-Page-Count'));
+      this.InterestCurrentPage = parseInt(response.headers.get('X-Pagination-Current-Page'));
+      this.InterestTotal = parseInt(response.headers.get('X-Pagination-Total-Count'));
+    });
+  }
+
+  /**
    * load story details
    */
   loadData() {
@@ -230,6 +275,7 @@ export class StoryViewPage implements OnInit, OnDestroy {
       this.loadStoryInvitations();
       this.loadSuggestions();
       this.loadNotes();
+      this.listInterests();
 
       if (this.story.story_status == 1 && this.story.staff_id == this.authService.staff_id &&
         ['cancelled', 'delivered'].indexOf(this.story.request.request_status) == -1)
@@ -453,6 +499,16 @@ export class StoryViewPage implements OnInit, OnDestroy {
     });
   }
   
+  timeToApply(seen_at, created_at) {
+    const seconds = (new Date(seen_at).getTime() - new Date(created_at).getTime()) / 1000;
+
+    if (seconds > 60) {
+      return (seconds / 60).toFixed(2) + ' minutes';
+    }
+
+    return seconds.toFixed(2) + ' seconds';
+  }
+
   private getTimeDifference() {
     this.dDay = new Date(this.dDay);
     this.timeDifference = new Date().getTime() - this.dDay.getTime();

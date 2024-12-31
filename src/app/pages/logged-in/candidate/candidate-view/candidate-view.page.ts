@@ -718,7 +718,8 @@ export class CandidateViewPage implements OnInit {
       component: InvitePage,
       componentProps: {
         candidate: this.candidate,
-        story: this.story
+        story: this.story,
+        
       },
       cssClass: "popup-modal"
     });

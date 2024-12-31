@@ -11,7 +11,7 @@ export class JobInterest {
     notes: string;
     created_at: string;
     updated_at: string;
-     
+    seen_at: string;
     invitations: Invitation[]; 
     candidate: Candidate;
     job: Job; 

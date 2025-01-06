@@ -80,7 +80,8 @@ export class JobFormPage implements OnInit {
       jobSkills:  new FormArray(skillCtrls),
     });
 
-    this.operation = (this.model && this.model.request_uuid) ? 'Update Job Post' : 'Create Job Post';
+    this.operation = (this.model && this.model.job_uuid) ? 
+      'Update Job Post' : 'Create Job Post';
   }
 
   addSkill() {

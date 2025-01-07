@@ -109,7 +109,8 @@ export class JobFormPage implements OnInit {
       component: LocationPage,
       componentProps: {
         candidate: this.model,
-        hideCountry: true
+        hideCountry: true,
+        heading: 'Job location',
       },
       cssClass: "popup-modal"
     });

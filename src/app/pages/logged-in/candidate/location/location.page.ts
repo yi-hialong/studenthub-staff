@@ -51,6 +51,8 @@ export class LocationPage implements OnInit {
     'Qatar': 'Doha / Al Rayyan Municipality/ Al Wakrah / etc.',
   }
 
+  public heading: string = "In which area does candidate currently live?";
+  
   public selected = false;
 
   @ViewChild('searchInput', { static: false }) searchInput;

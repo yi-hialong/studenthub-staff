@@ -7,13 +7,19 @@ import { IonicModule } from '@ionic/angular';
 import { CandidateIdRequestDetailPageRoutingModule } from './candidate-id-request-detail-routing.module';
 
 import { CandidateIdRequestDetailPage } from './candidate-id-request-detail.page';
+import { LoadingModalModule } from 'src/app/components/loading-modal/loading-modal.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CandidateIdRequestDetailPageRoutingModule
+    CandidateIdRequestDetailPageRoutingModule,
+    PipesModule,
+    TranslateModule.forChild(),
+    LoadingModalModule
   ],
   declarations: [CandidateIdRequestDetailPage]
 })

@@ -819,7 +819,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/logged-in/candidate-id-request/candidate-id-request-detail/candidate-id-request-detail.module').then( m => m.CandidateIdRequestDetailPageModule)
   },
   {
-    path: 'candidate-id-request-list',
+    path: 'candidate-id-requests',
     canActivate: [AuthService],
     loadChildren: () => import('./pages/logged-in/candidate-id-request/candidate-id-request-list/candidate-id-request-list.module').then( m => m.CandidateIdRequestListPageModule)
   },

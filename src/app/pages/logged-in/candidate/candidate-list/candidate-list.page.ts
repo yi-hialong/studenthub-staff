@@ -39,7 +39,8 @@ export class CandidateListPage implements OnInit {
     type: string,
     page: number,
     candidate_civil_need_verification: boolean,
-    filterMinor: boolean
+    filterMinor: boolean,
+    incompleteProfiles: boolean
   } = {
       name: null,
       email: null,
@@ -49,7 +50,8 @@ export class CandidateListPage implements OnInit {
       civilId: null,
       page: 1,
       candidate_civil_need_verification: null,
-      filterMinor: false
+      filterMinor: false,
+      incompleteProfiles: false
     };
 
   public searchName = null;
@@ -156,6 +158,10 @@ export class CandidateListPage implements OnInit {
       urlParams += "&filter_minor=true";
     }
 
+    if (this.filters.incompleteProfiles) {
+      urlParams += '&incomplete_profiles=1';
+    }
+
     urlParams += '&export_limit=5000';
 
     return urlParams;
@@ -174,7 +180,8 @@ export class CandidateListPage implements OnInit {
       civilId: null,
       type: null,
       page: 1, 
-      candidate_civil_need_verification: null
+      candidate_civil_need_verification: null,
+      incompleteProfiles: false
     };
     this.loadData(1); // reload all result
   }

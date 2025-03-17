@@ -94,7 +94,15 @@
             <ion-checkbox value="1" [(ngModel)]="filters.candidate_civil_need_verification"></ion-checkbox>
           </ion-item>
         </ion-col>
-        
+
+        <ion-col size-md="2" size-lg="3" size-sm="6" size-xs="12">
+          <ion-item class="input-wrapper" lines="none">
+            <div tabindex="0"></div>
+            <ion-label color="primary">Incomplete Profiles</ion-label>
+            <ion-checkbox value="1" [(ngModel)]="filters.incompleteProfiles"></ion-checkbox>
+          </ion-item>
+        </ion-col>
+
         <!--
         <ion-col size-md="3" size-lg="3" size-sm="6" size-xs="12">
           <ion-item class="input-wrapper" >

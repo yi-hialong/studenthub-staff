@@ -9,7 +9,9 @@
       </div>
       <div class="flex-1 pr-1 inline-flex flex-col justify-start items-start">
           <div class="justify-start text-[#22223d] text-sm font-semibold leading-tight">Actively Looking for a Job</div>
-          <div class="self-stretch justify-start text-[#22223d] text-[10px] font-medium leading-[14px] tracking-wide">We will reach out to you to offer and discuss job opportunities.</div>
+          <div class="self-stretch justify-start text-[#22223d] text-[10px] font-medium leading-[14px] tracking-wide">
+            Candidate is actively looking for new opportunities.
+          </div>
       </div>
   </div>
 
@@ -25,7 +27,9 @@
       </div>
       <div class="flex-1 pr-1 inline-flex flex-col justify-start items-start">
           <div class="self-stretch justify-start text-[#22223d] text-sm font-semibold leading-tight">Not looking but open to offers</div>
-          <div class="self-stretch justify-start text-[#a4a4af] text-[10px] font-medium leading-[14px] tracking-wide">We will reach out to you about offers that match your preferences.</div>
+          <div class="self-stretch justify-start text-[#a4a4af] text-[10px] font-medium leading-[14px] tracking-wide">
+            Candidate is not actively looking, but open to offers.
+          </div>
       </div>
   </div>
   <div (click)="updateJobSearchStatus(0)" class="cursor-pointer self-stretch pl-1.5 py-1.5 bg-white rounded inline-flex justify-start items-start gap-1.5 overflow-hidden" [class.selected]="candidate.candidate_job_search_status == 0">
@@ -40,7 +44,9 @@
       </div>
       <div class="flex-1 pr-1 inline-flex flex-col justify-start items-start">
           <div class="self-stretch justify-start text-[#22223d] text-sm font-semibold leading-tight">Not Looking and closed to offers</div>
-          <div class="self-stretch justify-start text-[#a4a4af] text-[10px] font-medium leading-[14px] tracking-wide">Can manage assignees, review worked hours, and request for hire</div>
+          <div class="self-stretch justify-start text-[#a4a4af] text-[10px] font-medium leading-[14px] tracking-wide">
+            Candidate is not interested in new opportunities at this time.
+          </div>
       </div>
   </div>
 </div>

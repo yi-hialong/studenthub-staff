@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 
 @Injectable({ providedIn: 'root' })
 export class RestrictionService {
-  readonly RESTRICTED_COMPANY_ID = 1;
-  readonly ALLOWED_STAFF_IDS: number[] = [5];
+  readonly RESTRICTED_COMPANY_ID = 43;
+  readonly ALLOWED_STAFF_IDS: number[] = [2,19,165,167,168];
 
   /**
    * Returns true if the current company and staff are restricted.

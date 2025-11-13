@@ -76,7 +76,7 @@ export class DateRangeRefinementListComponent implements OnInit, OnDestroy {
           const lowerTimestamp = Math.floor(this.value.lower);
           const upperTimestamp = Math.floor(this.value.upper);
           this.searchService.setFilter(this.attribute, [`>= ${lowerTimestamp}`, `<= ${upperTimestamp}`]);
-          this.searchService.search();
+          // Search is auto-triggered by setFilter() in the service
       }
   };
 
@@ -118,7 +118,7 @@ export class DateRangeRefinementListComponent implements OnInit, OnDestroy {
       this.value = { lower: this.min, upper: this.max };
       this.dirty = false;
       this.searchService.removeFilter(this.attribute);
-      this.searchService.search();
+      // Search is auto-triggered by removeFilter() in the service
       event.preventDefault();
       event.stopPropagation();
   }

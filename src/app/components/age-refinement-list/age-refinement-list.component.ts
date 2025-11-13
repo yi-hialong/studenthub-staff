@@ -97,7 +97,7 @@ export class AgeRefinementListComponent implements OnInit, OnDestroy {
             const minAge = Math.floor(this.value.lower);
             const maxAge = Math.floor(this.value.upper);
             this.searchService.setFilter(this.attribute, [`>= ${minAge}`, `<= ${maxAge}`]);
-            this.searchService.search();
+            // Search is auto-triggered by setFilter() in the service
         }
     };
 
@@ -137,7 +137,7 @@ export class AgeRefinementListComponent implements OnInit, OnDestroy {
         this.value = { lower: this.min, upper: this.max };
         this.dirty = false;
         this.searchService.removeFilter(this.attribute);
-        this.searchService.search();
+        // Search is auto-triggered by removeFilter() in the service
         event.preventDefault();
         event.stopPropagation();
     }

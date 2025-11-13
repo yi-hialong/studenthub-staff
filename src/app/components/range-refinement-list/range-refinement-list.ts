@@ -85,7 +85,7 @@ export class RangeRefinementComponent implements OnInit, OnDestroy {
     handleChange = () => {
         if (this.value && this.attribute) {
             this.searchService.setFilter(this.attribute, [`>= ${this.value.lower}`, `<= ${this.value.upper}`]);
-            this.searchService.search();
+            // Search is auto-triggered by setFilter() in the service
         }
     };
 
@@ -125,7 +125,7 @@ export class RangeRefinementComponent implements OnInit, OnDestroy {
         this.value = { lower: this.min, upper: this.max };
         this.dirty = false;
         this.searchService.removeFilter(this.attribute);
-        this.searchService.search();
+        // Search is auto-triggered by removeFilter() in the service
         event.preventDefault();
         event.stopPropagation();
     }

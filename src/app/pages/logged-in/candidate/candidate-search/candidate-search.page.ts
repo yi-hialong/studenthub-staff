@@ -42,6 +42,12 @@ export class CandidateSearchPage implements OnInit, OnDestroy {
   public showFilter = false;
   public candidates: any[] = [];
   public searchQuery: string = '';
+  public allCandidates: any[] = []; // Accumulated results for infinite scroll
+  public paginationLoading: boolean = false;
+
+  // Track search session to detect new searches vs pagination
+  private currentSearchSession: string = '';
+  private lastPage: number = -1;
 
   private searchSubject = new Subject<string>();
   private subscriptions: Subscription[] = [];
@@ -84,20 +90,53 @@ export class CandidateSearchPage implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.searchService.results$.subscribe(results => {
         if (results) {
-          this.candidates = results.hits;
+          const currentState = this.searchService.getState();
+          
+          // Create a unique identifier for this search session (query + filters)
+          const searchSessionKey = JSON.stringify({
+            query: currentState.query || '',
+            filters: currentState.filters || {}
+          });
+
+          // Check if this is a new search (different query/filters) or pagination (same query/filters, different page)
+          const isNewSearch = searchSessionKey !== this.currentSearchSession;
+          const isPagination = !isNewSearch && results.pagination.page > this.lastPage && this.lastPage >= 0;
+
+          if (isNewSearch) {
+            // New search or filter - replace results
+            this.allCandidates = results.hits;
+            this.candidates = results.hits;
+            this.currentSearchSession = searchSessionKey;
+            this.lastPage = results.pagination.page;
+          } else if (isPagination) {
+            // Pagination - append results
+            this.allCandidates = [...this.allCandidates, ...results.hits];
+            this.candidates = this.allCandidates;
+            this.lastPage = results.pagination.page;
+          } else {
+            // Same page or going backwards - just update the page number
+            this.lastPage = results.pagination.page;
+          }
+          
           this.nbHits = results.pagination.total;
           this.nbPages = results.pagination.totalPages;
           this.page = results.pagination.page;
           this.noCandidateList = results.pagination.total === 0;
           this.showSearchBox = !this.noCandidateList || (this.searchQuery && this.searchQuery.length > 0);
+          this.paginationLoading = false;
         }
       })
     );
 
     this.subscriptions.push(
       this.searchService.loading$.subscribe(loading => {
-        this.loading = loading;
-        this.refreshingCandidates = loading;
+        const currentState = this.searchService.getState();
+        // Only set main loading state for new searches (page 0), not for pagination
+        if (currentState.page === 0) {
+          this.loading = loading;
+          this.refreshingCandidates = loading;
+        }
+        // For pagination, loading is handled by paginationLoading
       })
     );
 
@@ -232,6 +271,7 @@ export class CandidateSearchPage implements OnInit, OnDestroy {
    */
   onSearch(event) {
     this.searchQuery = event.target.value;
+    // Don't reset allCandidates here - let the results subscription handle it based on search session
     this.searchSubject.next(event.target.value);
   }
 
@@ -275,14 +315,52 @@ export class CandidateSearchPage implements OnInit, OnDestroy {
   }
 
   /**
-   * Load more results (pagination)
+   * Load more results (infinite scroll)
    */
-  loadMore() {
-    if (this.loading || this.page >= this.nbPages - 1) {
+  doInfinite(event) {
+    // Prevent multiple simultaneous requests
+    if (this.loading || this.paginationLoading) {
+      if (event) {
+        event.target.complete();
+      }
       return;
     }
-    this.searchService.setPage(this.page + 1);
-    this.performSearch();
+
+    // Check if we've reached the last page
+    if (this.page >= this.nbPages - 1) {
+      if (event) {
+        event.target.complete();
+        event.target.disabled = true;
+      }
+      return;
+    }
+    
+    // Set pagination loading state
+    this.paginationLoading = true;
+    
+    // Increment page and search
+    const nextPage = this.page + 1;
+    this.searchService.setPage(nextPage);
+    
+    this.performSearch().then(() => {
+      if (event) {
+        event.target.complete();
+      }
+      this.paginationLoading = false;
+    }).catch((error) => {
+      console.error('Error loading more results:', error);
+      if (event) {
+        event.target.complete();
+      }
+      this.paginationLoading = false;
+    });
+  }
+
+  /**
+   * Load more results (pagination) - legacy method
+   */
+  loadMore() {
+    this.doInfinite(null);
   }
 
   /**
@@ -301,6 +379,7 @@ export class CandidateSearchPage implements OnInit, OnDestroy {
    * Refresh list
    */
   async refreshCandidates() {
+    this.allCandidates = [];
     this.searchService.setPage(0);
     this.searchService.setQuery('');
     this.searchQuery = '';

@@ -87,7 +87,7 @@ export class CurrentRefinementComponent implements OnInit, OnDestroy {
         event.stopPropagation();
         if (refinement.refine) {
             refinement.refine();
-            this.searchService.search();
+            // Search is auto-triggered by filter methods in the service
         }
     }
 
@@ -108,7 +108,7 @@ export class CurrentRefinementComponent implements OnInit, OnDestroy {
         }*/
 
         this.searchService.removeFilter(this.attribute);
-        this.searchService.search();
+        // Search is auto-triggered by removeFilter() in the service
 
         event.preventDefault();
         event.stopPropagation();

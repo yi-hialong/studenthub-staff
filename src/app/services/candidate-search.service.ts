@@ -40,7 +40,7 @@ export class CandidateSearchService {
     filters: {},
     sort: [],
     page: 0,
-    hitsPerPage: 20,
+    hitsPerPage: 50, // Increased from 20 to 50 for better pagination
     facets: [
       'candidate_gender',
       'candidate_driving_license',
@@ -105,6 +105,8 @@ export class CandidateSearchService {
     }
     
     this.updateState({ ...state, filters, page: 0 });
+    // Auto-trigger search when filters change
+    this.search();
   }
 
   /**
@@ -122,7 +124,16 @@ export class CandidateSearchService {
       newValues = [...currentValues, value];
     }
     
-    this.setFilter(attribute, newValues);
+    const filters = { ...state.filters };
+    if (newValues.length === 0) {
+      delete filters[attribute];
+    } else {
+      filters[attribute] = newValues;
+    }
+    
+    this.updateState({ ...state, filters, page: 0 });
+    // Auto-trigger search when filters change
+    this.search();
   }
 
   /**
@@ -131,6 +142,8 @@ export class CandidateSearchService {
   setGeo(geo: { lat: number; lng: number; radius: number; unit: string } | undefined): void {
     const state = this.getState();
     this.updateState({ ...state, geo, page: 0 });
+    // Auto-trigger search when geo changes
+    this.search();
   }
 
   /**
@@ -142,11 +155,12 @@ export class CandidateSearchService {
   }
 
   /**
-   * Set current page
+   * Set current page (does NOT auto-trigger search - call search() separately for pagination)
    */
   setPage(page: number): void {
     const state = this.getState();
     this.updateState({ ...state, page });
+    // Note: We don't auto-trigger search here to allow manual control for pagination
   }
 
   /**
@@ -175,7 +189,12 @@ export class CandidateSearchService {
    * Remove a specific filter
    */
   removeFilter(attribute: string): void {
-    this.setFilter(attribute, []);
+    const state = this.getState();
+    const filters = { ...state.filters };
+    delete filters[attribute];
+    this.updateState({ ...state, filters, page: 0 });
+    // Auto-trigger search when filters change
+    this.search();
   }
 
   /**
@@ -199,6 +218,7 @@ export class CandidateSearchService {
     }
     return results.facets[attribute];
   }
+
 
   /**
    * Perform search

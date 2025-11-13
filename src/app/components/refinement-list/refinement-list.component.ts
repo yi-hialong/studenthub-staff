@@ -115,7 +115,7 @@ export class RefinementListComponent implements OnInit, OnDestroy {
         if (this.state.canRefine) {
             // Toggle filter value
             this.searchService.toggleFilter(this.attribute, item.value);
-            this.searchService.search();
+            // Search is auto-triggered by toggleFilter() in the service
             this.change.emit();
         }
     }

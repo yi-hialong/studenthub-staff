@@ -53,22 +53,27 @@
           </div>
 
           <div class="cv-list">
-            <div class="candidate-wrapper" *ngIf="!loading">
+            <!-- Always show candidates, even during pagination -->
+            <div class="candidate-wrapper" *ngIf="candidates && candidates.length > 0">
               <candidate tappable (click)="rowSelected(hit)" type='candidate' [fromMeilisearch]="true" [candidate]="hit" *ngFor="let hit of candidates"></candidate>
             </div>
 
-            <!-- Loading state -->
-            <div class="loading-candidate" *ngIf="loading">
+            <!-- Initial loading state (only for new searches) -->
+            <div class="loading-candidate" *ngIf="loading && candidates.length === 0">
               <loading-modal [loading]="true" type="candidate-list"></loading-modal>
             </div>
 
-            <!-- Load more button -->
-            <ion-button *ngIf="!loading && page < nbPages - 1" expand="block" (click)="loadMore()" fill="outline">
-              {{ "Load More" | translate }}
-            </ion-button>
+            <!-- Pagination loading indicator at bottom (doesn't hide existing results) -->
+            <div class="pagination-loading" *ngIf="paginationLoading && candidates.length > 0">
+              <ion-spinner></ion-spinner>
+              <p>Loading more...</p>
+            </div>
           </div>
 
-          <bawes-ais-pagination></bawes-ais-pagination>
+          <!-- Infinite scroll -->
+          <ion-infinite-scroll *ngIf="!loading && page < nbPages - 1" (ionInfinite)="doInfinite($event)">
+            <ion-infinite-scroll-content></ion-infinite-scroll-content>
+          </ion-infinite-scroll>
 
           <!-- No results message -->
           <p *ngIf="!loading && !refreshingCandidates && noCandidateList" class="no-candidate-on-filter">

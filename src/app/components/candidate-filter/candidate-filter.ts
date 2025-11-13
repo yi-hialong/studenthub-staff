@@ -167,7 +167,7 @@ export class CandidateFilterComponent implements OnInit, OnDestroy {
      */
     toggleFilter(attribute: string, value: string): void {
         this.searchService.toggleFilter(attribute, value);
-        this.searchService.search();
+        // Search is auto-triggered by toggleFilter() in the service
     }
 
     /**

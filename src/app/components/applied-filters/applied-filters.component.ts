@@ -81,11 +81,11 @@ export class AppliedFiltersComponent implements OnInit, OnDestroy {
                 // Regular filter - toggle the value
                 this.searchService.toggleFilter(currentSelection.attribute, currentSelection.value);
             }
-            this.searchService.search();
+            // Search is auto-triggered by removeFilter() and toggleFilter() in the service
         } else if (currentSelection.type === 'geo') {
             // Remove geo filter
             this.searchService.setGeo(undefined);
-            this.searchService.search();
+            // Search is auto-triggered by setGeo() in the service
         }
     }
 
